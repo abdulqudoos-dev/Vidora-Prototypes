@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vidora — 06 Prism</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300..700&family=DM+Sans:opsz,wght@9..40,400..700&display=swap" rel="stylesheet">
+<!--@ENGINE_CSS-->
+<style>
+:root{
+  --tx:#fbf9ff;--mu:rgba(240,234,255,.66);--mu2:rgba(240,234,255,.42);
+  --win:rgba(34,28,52,.5);--win2:rgba(255,255,255,.08);--bd:rgba(255,255,255,.14);--bd2:rgba(255,255,255,.24);
+  --ac:#9b7bff;--grad:linear-gradient(135deg,#d6c6ff,#9b7bff 45%,#6e44ff);--blur:blur(40px) saturate(1.5);
+  --ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.4,.64,1);
+  --v-surface:rgba(30,25,46,.92);--v-surface-2:rgba(255,255,255,.08);--v-line:rgba(255,255,255,.14);--v-text:var(--tx);--v-muted:var(--mu);--v-accent:#8b6bff;--v-accent-2:#e2d8ff;--v-radius:34px;--v-radius-sm:22px;--v-font:'DM Sans',sans-serif;--v-blur:40px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;color:var(--tx);font-family:'DM Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-size:15.5px;background:#07060c}
+body{min-height:100dvh;overflow-x:hidden}
+button{background:none;border:0;padding:0}
+h1,h2,h3{margin:0;font-family:'Sora',sans-serif;font-weight:600;letter-spacing:-.03em}
+p{margin:0}
+.mu{color:var(--mu)}
+/* environment */
+.env{position:fixed;inset:0;z-index:0;overflow:hidden}
+.env img{position:absolute;inset:-6%;width:112%;height:112%;object-fit:cover;filter:blur(38px) saturate(1.3) brightness(.42);transition:opacity 1.2s}
+.env::after{content:"";position:absolute;inset:0;background:radial-gradient(120% 80% at 50% 0%,transparent,rgba(7,6,12,.75))}
+.win{background:linear-gradient(160deg,rgba(255,255,255,.1),rgba(255,255,255,.03)),var(--win);border:1px solid var(--bd);border-radius:36px;backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);box-shadow:0 40px 80px -30px rgba(0,0,0,.7),inset 0 1px 0 rgba(255,255,255,.18)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:50px;padding:0 24px;border-radius:99px;font-weight:600;font-size:15px;background:var(--win2);border:1px solid var(--bd);transition:.3s var(--ease);white-space:nowrap}
+.btn:hover{background:rgba(255,255,255,.14);transform:translateY(-1px)}
+.btn .ic{width:18px;height:18px}
+.btn-p{background:#fff;color:#1a1030;border-color:#fff;box-shadow:0 12px 30px -10px rgba(255,255,255,.4)}
+.btn-p:hover{background:#fff;box-shadow:0 16px 40px -10px rgba(155,123,255,.8)}
+.btn-p[disabled]{opacity:.35;box-shadow:none}
+.btn-g{background:var(--grad);color:#fff;border-color:rgba(255,255,255,.3);box-shadow:0 12px 30px -10px rgba(155,123,255,.9)}
+.btn-lg{height:58px;padding:0 30px;font-size:16px}
+.ib{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--win2);border:1px solid var(--bd);transition:.2s}
+.ib:hover{background:rgba(255,255,255,.16)}
+.ib .ic{width:19px;height:19px}
+textarea,input[type=text]{width:100%;background:transparent;border:0;outline:0;color:var(--tx);font:inherit;resize:none}
+.view-in{animation:vin .8s var(--spring) both}
+@keyframes vin{from{opacity:0;transform:translateZ(0) scale(.94) translateY(20px);filter:blur(10px)}}
+input[type=range]{--track-h:6px;--thumb:24px;--range-track:rgba(255,255,255,.14);--range-fill:#fff;--thumb-bg:#fff;--thumb-shadow:0 4px 12px rgba(0,0,0,.4)}
+
+/* ornament (dock) */
+.app{position:relative;z-index:1;min-height:100dvh}
+body[data-current="welcome"] .app,body[data-current="welcome"] .orn{display:none}
+.orn{position:fixed;z-index:40;left:24px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:99px}
+.orn .dock{display:flex;flex-direction:column;gap:6px}
+.dock-item{position:relative;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:var(--mu);transition:.3s var(--ease)}
+.dock-item .ic{width:22px;height:22px}
+.dock-item:hover{background:rgba(255,255,255,.1);color:#fff}
+.dock-item[aria-current]{background:rgba(255,255,255,.92);color:#1a1030;box-shadow:0 8px 20px -6px rgba(0,0,0,.5)}
+.dock-label{position:absolute;left:calc(100% + 16px);top:50%;transform:translate(-8px,-50%);padding:8px 14px;border-radius:99px;font-size:13.5px;font-weight:600;white-space:nowrap;background:rgba(30,25,46,.85);border:1px solid var(--bd);backdrop-filter:blur(20px);color:#fff;opacity:0;pointer-events:none;transition:.25s var(--ease)}
+.dock-item:hover .dock-label{opacity:1;transform:translate(0,-50%)}
+.dock-x{display:none}
+.orn .sep{height:1px;margin:2px 10px;background:var(--bd)}
+.orn .ob{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:var(--mu);transition:.2s}
+.orn .ob:hover{background:rgba(255,255,255,.1);color:#fff}
+.orn .ob .ic{width:20px;height:20px}
+.top{position:fixed;z-index:30;top:20px;right:24px;display:flex;align-items:center;gap:10px}
+.top .pill{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 16px;border-radius:99px;font-weight:600;font-size:14px}
+.top .pill .ic{width:16px;height:16px;color:#d6c6ff}
+.top img{width:44px;height:44px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.3)}
+.brand{position:fixed;z-index:30;top:24px;left:30px;display:flex;align-items:center;gap:10px;font-family:'Sora';font-weight:600;font-size:18px}
+.prism{width:30px;height:30px;border-radius:10px;background:conic-gradient(from 210deg,#fff,#d6c6ff,#9b7bff,#6e44ff,#fff);box-shadow:0 0 24px rgba(155,123,255,.7);position:relative}
+.prism::after{content:"";position:absolute;inset:7px;border-radius:5px;background:rgba(7,6,12,.6)}
+.stage{padding:96px 40px 60px 120px;max-width:1280px;margin:0 auto;min-height:100dvh}
+
+/* home: app-icon grid */
+.hello{text-align:center;padding-top:4vh}
+.hello h1{font-size:clamp(34px,4.4vw,58px);line-height:1.05}
+.hello h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hello p{color:var(--mu);margin-top:12px;font-size:17px}
+.apps{display:flex;justify-content:center;gap:clamp(18px,3vw,44px);margin:48px 0 20px;flex-wrap:wrap}
+.appi{display:flex;flex-direction:column;align-items:center;gap:14px;width:150px;text-align:center}
+.appi .circ{position:relative;width:132px;height:132px;border-radius:50%;overflow:hidden;border:1px solid var(--bd2);box-shadow:0 30px 50px -20px rgba(0,0,0,.8),inset 0 1px 0 rgba(255,255,255,.3);transition:transform .6s var(--spring)}
+.appi .circ img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.appi .circ::after{content:"";position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 30% 20%,rgba(255,255,255,.35),transparent 45%)}
+.appi .glyph{position:absolute;right:6px;bottom:6px;width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:rgba(20,15,32,.6);backdrop-filter:blur(14px);border:1px solid var(--bd2);z-index:2}
+.appi .glyph .ic{width:18px;height:18px}
+.appi:hover .circ{transform:translateY(-8px) scale(1.06)}
+.appi:hover .circ img{transform:scale(1.12)}
+.appi b{font-family:'Sora';font-weight:600;font-size:15px;line-height:1.25}
+.appi small{color:var(--mu);font-size:13px;margin-top:-8px}
+.ask{max-width:680px;margin:30px auto 0;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 22px;border-radius:99px}
+.ask input{height:50px;font-size:16.5px}
+.ask .ic{width:18px;height:18px}
+.conts{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:56px}
+.cont{display:flex;gap:16px;align-items:center;padding:14px;border-radius:28px;text-align:left;transition:.4s var(--spring)}
+.cont:hover{transform:translateY(-4px)}
+.cont img{width:76px;height:76px;border-radius:20px;object-fit:cover}
+.cont b{font-family:'Sora';font-weight:600;font-size:15.5px;display:block}
+.cont small{color:var(--mu);font-size:13px}
+.cont .bar{height:5px;border-radius:9px;background:rgba(255,255,255,.12);margin-top:10px;overflow:hidden;width:140px}
+.cont .bar i{display:block;height:100%;background:#fff;border-radius:9px}
+.sec-t{font-family:'Sora';font-size:15px;font-weight:600;color:var(--mu);margin:56px 0 0;text-align:center}
+
+/* guided flow window */
+.flow{max-width:920px;margin:0 auto;padding:30px 36px 28px;position:relative}
+.flow-h{display:flex;align-items:center;gap:14px;margin-bottom:26px}
+.flow-h .ico{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.92);color:#1a1030}
+.flow-h .ico .ic{width:22px;height:22px}
+.flow-h b{font-family:'Sora';font-size:15px;display:block}
+.flow-h small{color:var(--mu);font-size:13px}
+.flow-h .r{margin-left:auto;display:flex;align-items:center;gap:10px}
+.dots{display:flex;gap:6px}
+.dots i{width:28px;height:6px;border-radius:9px;background:rgba(255,255,255,.18);transition:.4s var(--ease)}
+.q{font-size:clamp(28px,3.4vw,42px);line-height:1.1;margin-bottom:8px}
+.qsub{color:var(--mu);font-size:16px;margin-bottom:26px}
+.step{animation:stepIn .55s var(--spring) both}
+@keyframes stepIn{from{opacity:0;transform:translateX(30px)}}
+.flow-f{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:30px;padding-top:22px;border-top:1px solid var(--bd)}
+.flow-f .hint{color:var(--mu2);font-size:13px}
+.bigfield{padding:20px 24px;border-radius:28px;background:rgba(0,0,0,.25);border:1px solid var(--bd);transition:.3s}
+.bigfield:focus-within{border-color:rgba(214,198,255,.6);box-shadow:0 0 0 6px rgba(155,123,255,.15)}
+.bigfield textarea{font-size:21px;line-height:1.45;min-height:96px;font-family:'Sora';font-weight:400;letter-spacing:-.01em}
+.ideas{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.idea{display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 16px;border-radius:99px;background:var(--win2);border:1px solid var(--bd);font-size:14px;font-weight:500;transition:.2s}
+.idea:hover{background:rgba(255,255,255,.16)}
+.idea .ic{width:16px;height:16px}
+.idea.on{background:#fff;color:#1a1030}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.cards.c4{grid-template-columns:repeat(4,1fr)}
+.card{position:relative;border-radius:28px;overflow:hidden;text-align:left;border:2px solid transparent;transition:.4s var(--spring);background:rgba(0,0,0,.2)}
+.card .im{aspect-ratio:4/5;overflow:hidden}
+.card .im img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.card:hover{transform:translateY(-4px)}
+.card:hover .im img{transform:scale(1.06)}
+.card .lb{position:absolute;left:10px;right:10px;bottom:10px;padding:12px 14px;border-radius:20px;background:rgba(20,15,32,.55);backdrop-filter:blur(16px);border:1px solid var(--bd)}
+.card .lb b{font-family:'Sora';font-size:15px;font-weight:600;display:block}
+.card .lb small{font-size:12.5px;color:var(--mu)}
+.card .tick{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:#fff;color:#1a1030;display:grid;place-items:center;opacity:0;transform:scale(.5);transition:.35s var(--spring)}
+.card .tick .ic{width:16px;height:16px;stroke-width:3}
+.card.on{border-color:#fff;box-shadow:0 20px 40px -14px rgba(155,123,255,.8)}
+.card.on .tick{opacity:1;transform:none}
+.card.plain{padding:22px;display:flex;flex-direction:column;gap:10px;min-height:150px;background:rgba(255,255,255,.05);border:1px solid var(--bd)}
+.card.plain.on{border:2px solid #fff;background:rgba(255,255,255,.12)}
+.card.plain .em{font-size:34px}
+.card.plain .gl{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.1)}
+.card.plain .gl .ic{width:24px;height:24px}
+.card.plain b{font-family:'Sora';font-size:16px;font-weight:600}
+.card.plain small{color:var(--mu);font-size:13px}
+.shapes .card.plain{align-items:center;text-align:center;justify-content:center}
+.shp{border:2px solid currentColor;border-radius:6px;margin-bottom:6px}
+.review{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:22px}
+.review div{padding:14px 16px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--bd)}
+.review small{display:block;color:var(--mu);font-size:12px;margin-bottom:4px}
+.review b{font-family:'Sora';font-weight:600;font-size:15px}
+/* loading / done */
+.gen-wait{text-align:center;padding:40px 0 20px}
+.orb{width:160px;height:160px;margin:0 auto 26px;border-radius:50%;background:conic-gradient(#fff calc(var(--prog)*360deg),rgba(255,255,255,.1) 0);display:grid;place-items:center;position:relative;filter:drop-shadow(0 0 30px rgba(155,123,255,.6))}
+.orb::before{content:"";position:absolute;inset:8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#3b2a6b,#140e24)}
+.orb b{position:relative;font-family:'Sora';font-size:34px;font-weight:600}
+.gen-wait h3{font-size:26px}
+.gen-wait p{color:var(--mu);margin-top:8px}
+.gal{--ar:4/5;display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.gi{position:relative;aspect-ratio:var(--ar);border-radius:26px;overflow:hidden;border:1px solid var(--bd)}
+.gi img{width:100%;height:100%;object-fit:cover}
+.gi .ac{position:absolute;left:8px;right:8px;bottom:8px;display:flex;gap:6px}
+.gi .ac button{flex:1;height:38px;border-radius:99px;font-size:13px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:rgba(20,15,32,.6);backdrop-filter:blur(14px);border:1px solid var(--bd)}
+.gi .ac .p{background:#fff;color:#1a1030}
+.gi .ac .ic{width:15px;height:15px}
+.done-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:20px;flex-wrap:wrap}
+.done-h h3{font-size:30px}
+.okb{display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:99px;background:rgba(74,222,128,.15);color:#86efac;font-weight:600;font-size:13px;border:1px solid rgba(74,222,128,.3)}
+.okb .ic{width:15px;height:15px}
+.upl{border:2px dashed rgba(255,255,255,.25);border-radius:28px;padding:36px;text-align:center;cursor:pointer;transition:.3s}
+.upl:hover,.upl.drag{border-color:#fff;background:rgba(255,255,255,.05)}
+.upl .gl{width:68px;height:68px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#1a1030}
+.upl .gl .ic{width:28px;height:28px}
+.upl b{font-family:'Sora';font-size:19px}
+.upl p{color:var(--mu);margin:6px 0 18px}
+.has-files .upl{padding:18px;display:flex;align-items:center;gap:16px;text-align:left}
+.has-files .upl .gl{margin:0;width:52px;height:52px}
+.has-files .upl p{margin:2px 0 0}
+.has-files .upl .btn{margin-left:auto}
+.faces{display:grid;grid-template-columns:repeat(8,1fr);gap:10px;margin-top:16px}
+.faces .up-thumb{aspect-ratio:1;border-radius:50%;overflow:visible}
+.faces .up-thumb img{border-radius:50%;border:2px solid rgba(255,255,255,.3)}
+.faces .up-ok{left:auto;right:0;bottom:0}
+.meter{display:flex;align-items:center;gap:14px;margin-top:16px;color:var(--mu);font-size:14px}
+.meter .m{flex:1;height:8px;border-radius:9px;background:rgba(255,255,255,.12);overflow:hidden;--fill:0}
+.meter .m i{display:block;height:100%;width:calc(var(--fill)*100%);background:#fff;border-radius:9px;transition:width .5s var(--ease)}
+.namefield{display:flex;align-items:center;gap:18px;padding:16px 20px;border-radius:28px;background:rgba(0,0,0,.25);border:1px solid var(--bd)}
+.namefield img{width:84px;height:84px;border-radius:50%;object-fit:cover;border:2px solid rgba(255,255,255,.3)}
+.namefield input{font-family:'Sora';font-size:34px;font-weight:600}
+.idready{display:flex;gap:20px;align-items:center}
+.idready .big{width:180px;height:180px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 0 50px rgba(155,123,255,.7);flex:none}
+.idready .row{display:flex;gap:10px;margin:14px 0 18px}
+.idready .row img{width:64px;height:64px;border-radius:50%;object-fit:cover}
+.player{position:relative;aspect-ratio:16/9;border-radius:30px;overflow:hidden;border:1px solid var(--bd2)}
+.player img{width:100%;height:100%;object-fit:cover}
+.player.playing img{animation:kb 8s linear both}
+@keyframes kb{to{transform:scale(1.15) translate(-2%,-1%)}}
+.player .pp{position:absolute;left:50%;top:50%;width:84px;height:84px;margin:-42px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.2);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.4);transition:.3s}
+.player.playing .pp{opacity:0}
+.player:hover .pp{opacity:1}
+.player .pp .ic{width:28px;height:28px;fill:#fff;stroke:none}
+.player .tr{position:absolute;left:20px;right:20px;bottom:18px;height:6px;border-radius:9px;background:rgba(255,255,255,.25);cursor:pointer}
+.player .tr i{display:block;height:100%;width:calc(var(--t,0)*100%);background:#fff;border-radius:9px}
+.cams .card.plain .gl{transition:.4s var(--spring)}
+.cams .card.plain:hover .gl{transform:scale(1.12) rotate(-8deg)}
+.picker{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.picker .card .im{aspect-ratio:1}
+.picker .up-card{display:grid;place-items:center;aspect-ratio:1;border-radius:28px;border:2px dashed rgba(255,255,255,.3);color:var(--mu);font-size:13px;text-align:center;cursor:pointer}
+.picker .up-card .ic{width:26px;height:26px;margin:0 auto 6px;display:block}
+.voices .card.plain{flex-direction:row;align-items:center;min-height:auto;padding:16px}
+.voices .vf{width:56px;height:56px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-family:'Sora';font-weight:600;background:var(--grad);flex:none}
+.voices .vf img{width:100%;height:100%;object-fit:cover}
+.voices [data-wave]{--wave-h:26px;--wave-off:rgba(255,255,255,.22);width:90px;margin-left:auto;flex:none}
+.voices .on [data-wave]{--wave-off:#fff}
+.aud{display:flex;align-items:center;gap:16px;padding:16px;border-radius:99px;background:rgba(0,0,0,.25);border:1px solid var(--bd)}
+.aud .pp{width:56px;height:56px;border-radius:50%;background:#fff;color:#1a1030;display:grid;place-items:center;flex:none}
+.aud .pp .ic{width:20px;height:20px;fill:currentColor}
+.aud [data-wave]{flex:1;--wave-h:46px;--wave-on:#fff;--wave-off:rgba(255,255,255,.25);cursor:pointer}
+.aud .t{font-size:13px;color:var(--mu);min-width:40px}
+.recline{display:flex;align-items:center;gap:14px;margin-top:20px;padding:14px 16px;border-radius:24px;background:rgba(255,255,255,.05);border:1px solid var(--bd)}
+.recline .rb{width:46px;height:46px;border-radius:50%;background:#ef4444;display:grid;place-items:center;flex:none;transition:.3s}
+.recline .rb .ic{width:19px;height:19px}
+.rec .recline .rb,.recline.rec .rb{border-radius:14px;box-shadow:0 0 0 7px rgba(239,68,68,.2)}
+.recline [data-live]{flex:1;--wave-h:32px;--wave-on:#fca5a5}
+.recline:not(.rec) [data-live]{display:none}
+.recline .tx{flex:1}
+.recline.rec .tx{display:none}
+.recline b{font-size:14.5px;display:block}.recline small{color:var(--mu);font-size:13px}
+.nexts{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+/* studio (spatial) */
+body[data-current="studio"] .stage{max-width:none;padding:90px 24px 24px 116px}
+.studio{display:grid;grid-template-columns:1fr 300px;grid-template-rows:minmax(0,1fr) auto 236px;gap:16px;height:calc(100dvh - 114px)}
+.sv{display:flex;flex-direction:column;padding:16px;min-height:0;min-width:0}
+.sv-h{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sv-h b{font-family:'Sora';font-size:16px}
+.sv-h .r{margin-left:auto;display:flex;gap:8px}
+.chips-ar{display:flex;gap:6px}
+.pvw{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size}
+.screen{--ar:16/9;--arn:1.7778;width:min(100cqw,calc(100cqh * var(--arn)));aspect-ratio:var(--ar);border-radius:24px;overflow:hidden;position:relative;background:#000;--br:1;--ct:1;--sat:1;--filter:none}
+.screen img{width:100%;height:100%;object-fit:cover;filter:brightness(var(--br)) contrast(var(--ct)) saturate(var(--sat)) var(--filter);transform:scale(calc(1.02 + var(--k,0)*.1))}
+.screen .ttl{position:absolute;inset:auto 0 42% 0;text-align:center;font-family:'Sora';font-weight:300;font-size:clamp(22px,4vw,52px);letter-spacing:.12em}
+.screen .cap{position:absolute;left:0;right:0;bottom:7%;text-align:center;display:none}
+body.captions-on .screen .cap:not(:empty){display:block}
+.screen .cap{font-weight:600;font-size:clamp(12px,1.4vw,16px);text-shadow:0 2px 8px #000}
+.tools-orn{grid-column:1;justify-self:center;display:flex;gap:4px;padding:6px;border-radius:99px}
+.to{display:flex;align-items:center;gap:8px;height:46px;padding:0 16px;border-radius:99px;font-weight:600;font-size:14px;color:var(--mu);transition:.25s}
+.to .ic{width:18px;height:18px}
+.to:hover{color:#fff;background:rgba(255,255,255,.08)}
+.to.active{background:#fff;color:#1a1030}
+.to.play{background:var(--grad);color:#fff;width:46px;padding:0;justify-content:center}
+.to.play .ic{fill:#fff;stroke:none}
+.side{grid-column:2;grid-row:1/3;padding:18px;overflow:auto}
+.side h4{margin:0 0 12px;font-family:'Sora';font-size:15px;font-weight:600}
+.sel{display:flex;align-items:center;gap:12px;padding:12px;border-radius:22px;background:rgba(255,255,255,.06);margin-bottom:14px}
+.sel .th{width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.1) center/cover;flex:none}
+.sel b{display:block;font-size:14.5px}.sel small{color:var(--mu);font-size:12.5px}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:18px}
+.qa button{display:flex;flex-direction:column;align-items:center;gap:6px;padding:12px 0;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--bd);font-size:12px;font-weight:600}
+.qa button:hover{background:rgba(255,255,255,.12)}
+.qa .ic{width:18px;height:18px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mg button{aspect-ratio:1;border-radius:22px;overflow:hidden;border:1px solid var(--bd)}
+.mg img{width:100%;height:100%;object-fit:cover;transition:.5s var(--ease)}
+.mg button:hover img{transform:scale(1.08)}
+.lst{display:flex;flex-direction:column;gap:8px}
+.lst button{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:20px;background:rgba(255,255,255,.06);border:1px solid var(--bd);text-align:left;font-weight:600;font-size:14px}
+.lst button:hover{background:rgba(255,255,255,.12)}
+.lst .ic{width:18px;height:18px}
+.lst small{display:block;color:var(--mu);font-weight:400;font-size:12px}
+.lst .on{background:#fff;color:#1a1030}
+.tlw{grid-column:1/-1;padding:12px 16px;display:flex;flex-direction:column;min-width:0}
+.tlw-h{display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:13px;color:var(--mu)}
+.tlw-h b{font-family:'Sora';color:var(--tx);font-weight:600}
+.tlw-h .z{margin-left:auto;width:150px}
+[data-timeline]{--pps:30;flex:1;min-height:0;--v-line:rgba(255,255,255,.12)}
+[data-tl-scroll]{height:100%}
+[data-track]{height:32px;margin:5px 0}[data-track="video"]{height:48px}
+.clip{border-radius:16px;font-size:12px;font-weight:600;padding:6px 10px;display:flex;align-items:flex-start;white-space:nowrap;border:1px solid rgba(255,255,255,.22)}
+.clip .clip-name{position:relative;z-index:1;display:inline-flex;gap:5px;align-items:center;text-shadow:0 1px 4px rgba(0,0,0,.8)}
+.clip .clip-name .ic{width:13px;height:13px}
+.clip-video{background-color:rgba(30,25,46,.8)}
+.clip-text{background:rgba(255,255,255,.9);color:#1a1030;align-items:center}
+.clip-text .clip-name{text-shadow:none}
+.clip-voice{background:rgba(155,123,255,.35);flex-direction:column;gap:1px;padding-top:3px}
+.clip-music{background:rgba(255,255,255,.12);flex-direction:column;gap:1px;padding-top:3px}
+.clip .clip-wave{--wave-h:13px;--wave-off:rgba(255,255,255,.6);width:100%}
+.clip.sel{border:2px solid #fff;box-shadow:0 0 24px rgba(255,255,255,.35);z-index:2}
+.clip .h-l,.clip .h-r{background:#fff;width:8px}
+[data-playhead]::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:3px;border-radius:9px;background:#fff;box-shadow:0 0 12px rgba(255,255,255,.7)}
+.mtools{display:none}
+
+/* library */
+.libgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:24px}
+.libgrid .it{border-radius:28px;overflow:hidden;position:relative;aspect-ratio:4/5;border:1px solid var(--bd)}
+.libgrid .it img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.libgrid .it:hover img{transform:scale(1.05)}
+.libgrid .it .lb{position:absolute;left:10px;right:10px;bottom:10px;padding:10px 14px;border-radius:18px;background:rgba(20,15,32,.55);backdrop-filter:blur(14px);border:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:600}
+.libgrid .it .lb small{color:var(--mu);font-weight:500}
+.libgrid .vo{display:flex;flex-direction:column;justify-content:center;gap:16px;padding:20px}
+.libgrid .vo [data-wave]{--wave-h:70px;--wave-on:#fff}
+
+/* welcome */
+.welcome{position:relative;z-index:1;min-height:100dvh;display:grid;place-items:center;padding:40px 20px;text-align:center}
+.w-stack{position:relative;width:min(560px,90vw);height:300px;margin:0 auto 40px}
+.w-stack .w{position:absolute;border-radius:30px;overflow:hidden;border:1px solid var(--bd2);box-shadow:0 40px 80px -30px rgba(0,0,0,.9);animation:floaty 7s ease-in-out infinite}
+.w-stack .w img{width:100%;height:100%;object-fit:cover;display:block}
+.w-stack .w1{width:46%;height:100%;left:27%;top:0;z-index:3}
+.w-stack .w2{width:34%;height:76%;left:0;top:12%;z-index:2;transform:perspective(800px) rotateY(18deg);animation-delay:-2s}
+.w-stack .w3{width:34%;height:76%;right:0;top:12%;z-index:2;transform:perspective(800px) rotateY(-18deg);animation-delay:-4s}
+@keyframes floaty{50%{translate:0 -10px}}
+.welcome h1{font-size:clamp(40px,5.4vw,72px);line-height:1}
+.welcome h1 span{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.welcome p{color:var(--mu);font-size:18px;margin:16px auto 30px;max-width:460px}
+.w-acts{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.steps3{display:flex;gap:28px;justify-content:center;margin-top:34px;color:var(--mu);font-size:14px;flex-wrap:wrap}
+.steps3 span{display:flex;align-items:center;gap:8px}
+.steps3 i{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-weight:700;font-size:12px;background:rgba(255,255,255,.12)}
+
+/* modal */
+.modal{align-items:center;justify-content:center;padding:16px}
+.mbox{width:min(520px,100%);padding:28px;transform:scale(.94);transition:.5s var(--spring)}
+.modal.open .mbox{transform:none}
+
+/* step progress via tab state */
+body[data-tab_img="2"] .dots-img i:nth-child(-n+2),body[data-tab_img="3"] .dots-img i:nth-child(-n+3),body[data-tab_img="4"] .dots-img i,.dots-img i:first-child{background:#fff}
+body[data-tab_vid="2"] .dots-vid i:nth-child(-n+2),body[data-tab_vid="3"] .dots-vid i,.dots-vid i:first-child{background:#fff}
+body[data-tab_voc="2"] .dots-voc i:nth-child(-n+2),body[data-tab_voc="3"] .dots-voc i,.dots-voc i:first-child{background:#fff}
+body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-idt i,.dots-idt i:first-child{background:#fff}
+
+@media (max-width:900px){
+  .brand{top:calc(16px + env(safe-area-inset-top));left:18px;font-size:17px}
+  .top{top:calc(10px + env(safe-area-inset-top));right:12px}
+  .top .pill{height:40px;padding:0 12px}
+  .top img{width:40px;height:40px}
+  .stage{padding:78px 14px 130px}
+  .orn{left:50%;right:auto;top:auto;bottom:calc(14px + env(safe-area-inset-bottom));transform:translateX(-50%);flex-direction:row;padding:6px}
+  .orn .dock{flex-direction:row;gap:2px}
+  .orn .sep{width:1px;height:auto;margin:10px 2px}
+  .dock-item,.orn .ob{width:48px;height:48px}
+  .dock-label{display:none}
+  .orn .ob.d-only{display:none}
+  .apps{gap:16px 10px;margin-top:30px}
+  .appi{width:30%}
+  .appi .circ{width:96px;height:96px}
+  .appi .glyph{width:32px;height:32px;right:2px;bottom:2px}
+  .appi b{font-size:13px}
+  .appi small{display:none}
+  .conts{grid-template-columns:1fr}
+  .flow{padding:22px 18px 20px;border-radius:30px}
+  .flow-h .r .dots i{width:16px}
+  .flow-h small{display:none}
+  .cards,.cards.c4{grid-template-columns:1fr 1fr}
+  .cards.c4.shapes{grid-template-columns:1fr 1fr}
+  .picker{grid-template-columns:repeat(3,1fr)}
+  .review{grid-template-columns:1fr}
+  .gal{grid-template-columns:1fr 1fr}
+  .faces{grid-template-columns:repeat(4,1fr)}
+  .bigfield textarea{font-size:18px}
+  .idready{flex-direction:column;text-align:center}
+  .idready .row{justify-content:center}
+  .libgrid{grid-template-columns:1fr 1fr;gap:12px}
+  .flow-f .hint{display:none}
+  .flow-f .cr{display:none}
+  .flow-f .btn-lg{padding:0 20px}
+  .flow-f .btn-p,.flow-f .btn-g{flex:1}
+  .voices{grid-template-columns:1fr!important}
+  .w-stack{height:240px}
+  body[data-current="studio"] .stage{padding:70px 8px 8px}
+  body[data-current="studio"] .orn{display:none}
+  .studio{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto 190px;height:calc(100dvh - 78px);gap:10px}
+  .side{display:none}
+  .screen{--ar:9/16;--arn:.5625}
+  .sv-h .r .chips-ar,.sv-h .mu{display:none}
+  .done-h>div:last-child{flex-wrap:wrap}
+  .gi .ac button[aria-label]{display:none}.gi .ac button{font-size:12.5px;white-space:nowrap}
+  .tools-orn{overflow-x:auto;max-width:100%;scrollbar-width:none}
+  .to{padding:0 12px;font-size:13px;flex:none}
+  .to span.l{display:none}
+  .tlw-h{display:none}
+  [data-track]{height:28px;margin:4px 0}[data-track="video"]{height:42px}
+  body[data-tab_st]:not([data-tab_st=""]) .side{display:block;position:fixed;left:8px;right:8px;bottom:calc(80px + env(safe-area-inset-bottom));max-height:46vh;z-index:40;animation:vin .5s var(--spring)}
+}
+@media (min-width:901px){.m-only{display:none!important}}
+@media (min-width:901px) and (max-width:1200px){.to span.l{display:none}.studio{grid-template-columns:1fr 260px}.apps{gap:20px}.appi{width:130px}.appi .circ{width:112px;height:112px}.gal{grid-template-columns:repeat(2,1fr)}.cards.c4{grid-template-columns:repeat(2,1fr)}.picker{grid-template-columns:repeat(3,1fr)}}
+</style>
+</head>
+<body data-start="welcome">
+<div class="env" aria-hidden="true"><img data-img="city" alt="" id="envimg"></div>
+
+<!-- WELCOME -->
+<section class="welcome" data-view="welcome">
+  <div>
+    <div class="w-stack"><div class="w w2"><img data-img="jelly"></div><div class="w w1"><img data-img="hero2"></div><div class="w w3"><img data-img="chrome"></div></div>
+    <h1>Step into<br><span>your own story.</span></h1>
+    <p>Vidora walks you through every step. Just answer a few simple questions.</p>
+    <div class="w-acts"><button class="btn btn-p btn-lg" data-go="home">Get started<span data-i="arrow-right"></span></button><button class="btn btn-lg" data-go="home">I have an account</button></div>
+    <div class="steps3"><span><i>1</i>Add your face</span><span><i>2</i>Describe a scene</span><span><i>3</i>Watch it come alive</span></div>
+  </div>
+</section>
+
+<div class="app">
+  <div class="brand"><span class="prism"></span>Vidora</div>
+  <div class="top"><span class="pill win"><span data-i="zap"></span><span data-credits>1,240</span></span><img data-img="s1" alt="Profile"></div>
+  <nav class="orn win" aria-label="Main">
+    <div class="dock" data-dock="custom"></div>
+    <span class="sep"></span>
+    <button class="ob" data-open="v-create" aria-label="Create"><span data-i="plus"></span></button>
+    <button class="ob d-only" data-open="v-cmdk" aria-label="Search"><span data-i="search"></span></button>
+    <button class="ob" data-dock-edit aria-label="Customize"><span data-i="settings-2"></span></button>
+  </nav>
+
+  <main class="stage" data-scroll>
+
+<!-- HOME -->
+<section data-view="home">
+  <div class="hello"><h1>Hi Maya. What do you<br>want to <span>make today?</span></h1><p>Tap a tool. We’ll guide you, one simple step at a time.</p></div>
+  <div class="apps">
+    <button class="appi" data-go="identity"><span class="circ"><img data-img="nova"><span class="glyph"><span data-i="scan-face"></span></span></span><b>Create Your Identity</b><small>3 steps · 2 min</small></button>
+    <button class="appi" data-go="image"><span class="circ"><img data-img="chrome"><span class="glyph"><span data-i="image"></span></span></span><b>Bring To Life · Image</b><small>4 steps</small></button>
+    <button class="appi" data-go="video"><span class="circ"><img data-img="dancer"><span class="glyph"><span data-i="clapperboard"></span></span></span><b>Bring To Life · Video</b><small>3 steps</small></button>
+    <button class="appi" data-go="studio"><span class="circ"><img data-img="astro"><span class="glyph"><span data-i="scissors"></span></span></span><b>Editing Studio</b><small>Free editing</small></button>
+    <button class="appi" data-go="voice"><span class="circ"><img data-img="singer"><span class="glyph"><span data-i="audio-lines"></span></span></span><b>Give It A Voice</b><small>3 steps</small></button>
+  </div>
+  <div class="ask win"><span data-i="sparkles"></span><input type="text" data-prompt="home" aria-label="Or just describe it" data-typing="Or just describe it… a dancer in violet silk|Or just describe it… me, starring in a sci-fi film"><button class="btn btn-p" data-go="image" style="height:46px">Go</button></div>
+  <p class="sec-t">Continue where you left off</p>
+  <div class="conts">
+    <button class="cont win" data-go="studio"><img data-img="hero1"><div><b>Neon Nights</b><small>Editing · 80% done</small><div class="bar"><i style="width:80%"></i></div></div></button>
+    <button class="cont win" data-go="video"><img data-img="astro"><div><b>Lavender Dunes</b><small>Video · ready to edit</small><div class="bar"><i style="width:100%"></i></div></div></button>
+    <button class="cont win" data-go="voice"><img data-img="singer"><div><b>Intro voice</b><small>Voice · step 2 of 3</small><div class="bar"><i style="width:60%"></i></div></div></button>
+  </div>
+</section>
+
+<!-- IDENTITY (guided) -->
+<section data-view="identity" hidden>
+  <div class="flow win" data-gen="identity" data-ms="5000" data-steps="Looking at your photos|Learning your features|Building your identity|Almost ready">
+    <div class="flow-h"><span class="ico"><span data-i="scan-face"></span></span><div><b>Create Your Identity</b><small>So you can star in anything</small></div><div class="r"><div class="dots dots-idt"><i></i><i></i><i></i></div></div></div>
+    <div data-show="empty">
+      <div class="step active" data-pane="idt:1">
+        <h2 class="q">First, add some photos of you.</h2><p class="qsub">6 to 12 clear selfies. Different angles help.</p>
+        <div data-upload-host="identity"><div class="upl" data-upload="identity" data-min="4" data-goal="8" data-max="12"><span class="gl"><span data-i="image-plus"></span></span><div><b>Drop photos here</b><p>or tap to choose · <span data-upload-quality="identity">Add photos to start</span></p></div><button class="btn" data-demo-upload="identity"><span data-i="sparkles"></span>Use samples</button></div></div>
+        <div class="faces" data-upload-list="identity"></div>
+        <div class="meter"><span><b data-upload-count="identity">0</b> of 8</span><div class="m" data-upload-meter="identity"><i></i></div></div>
+        <div class="flow-f"><span class="hint">Tip: good light makes a better you.</span><button class="btn btn-p btn-lg" data-tab="idt:2" data-requires="identity">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="idt:2">
+        <h2 class="q">What should we call you?</h2><p class="qsub">You’ll type this name in your ideas, like “@Nova on a beach”.</p>
+        <div class="namefield"><img data-img="s1"><input type="text" value="Nova" aria-label="Name"></div>
+        <div class="cards" data-chips style="margin-top:16px;grid-template-columns:repeat(3,1fr)"><button class="card plain on" data-chip><span class="gl"><span data-i="user"></span></span><b>This is me</b><small>My own face</small></button><button class="card plain" data-chip><span class="gl"><span data-i="users"></span></span><b>Someone else</b><small>I have their permission</small></button><button class="card plain" data-chip><span class="gl"><span data-i="sparkles"></span></span><b>A character</b><small>Made up</small></button></div>
+        <div class="flow-f"><button class="btn" data-tab="idt:1"><span data-i="arrow-left"></span>Back</button><button class="btn btn-p btn-lg" data-tab="idt:3">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="idt:3">
+        <h2 class="q">All set. Ready to create Nova?</h2><p class="qsub">This takes about 2 minutes. You can leave and come back.</p>
+        <div class="review"><div><small>Photos</small><b><span data-upload-count="identity">0</span> added</b></div><div><small>Name</small><b>Nova</b></div><div><small>Who</small><b>This is me</b></div></div>
+        <div class="flow-f"><button class="btn" data-tab="idt:2"><span data-i="arrow-left"></span>Back</button><button class="btn btn-g btn-lg" data-generate="identity" data-done="Nova is ready!"><span data-i="sparkles"></span>Create Nova</button></div>
+      </div>
+    </div>
+    <div data-show="loading" class="gen-wait"><div class="orb"><b data-progress>0%</b></div><h3 data-step>Looking at your photos</h3><p>Feel free to explore — we’ll let you know.</p></div>
+    <div data-show="done">
+      <div class="idready"><img class="big" data-img="nova" data-reveal><div><span class="okb"><span data-i="check"></span>Ready</span><h2 class="q" style="margin-top:12px">Meet Nova.</h2><p class="qsub" style="margin:0">Here’s a sneak peek of you in new places.</p><div class="row"><img data-img="hero1" data-reveal><img data-img="hero2" data-reveal><img data-img="s4" data-reveal></div><button class="btn btn-p btn-lg" data-go="image">Make a picture of Nova<span data-i="arrow-right"></span></button></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE (guided) -->
+<section data-view="image" hidden>
+  <div class="flow win" data-gen="image" data-ms="3600" data-steps="Reading your idea|Placing Nova in the scene|Adding light and detail|Finishing up">
+    <div class="flow-h"><span class="ico"><span data-i="image"></span></span><div><b>Bring To Life · Image</b><small>Describe it. See it.</small></div><div class="r"><div class="dots dots-img"><i></i><i></i><i></i><i></i></div></div></div>
+    <div data-show="empty">
+      <div class="step active" data-pane="img:1">
+        <h2 class="q">What do you want to see?</h2><p class="qsub">Describe it like you’d tell a friend.</p>
+        <div class="bigfield"><textarea data-prompt="image" data-autogrow aria-label="Your idea">Nova standing on a rainy neon street at night</textarea></div>
+        <div class="ideas"><button class="idea" data-insert="image" data-text="Nova on a rooftop at golden hour"><span data-i="sun"></span>Golden rooftop</button><button class="idea" data-insert="image" data-text="Nova floating among glowing jellyfish"><span data-i="sparkles"></span>Dreamy sky</button><button class="idea" data-insert="image" data-text="Nova in a liquid chrome dress, fashion shoot"><span data-i="shirt"></span>Fashion shoot</button><button class="idea" data-enhance="image" data-text="Nova standing on a rain-soaked neon street at night, purple signs glowing on wet ground, movie look"><span data-i="wand-sparkles"></span>Improve my idea</button></div>
+        <div class="flow-f"><span class="hint">Step 1 of 4</span><button class="btn btn-p btn-lg" data-tab="img:2" data-needs-prompt="image">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="img:2">
+        <h2 class="q">Who’s in the picture?</h2><p class="qsub">Pick one of your identities, or nobody.</p>
+        <div class="cards c4" data-chips>
+          <button class="card on" data-chip><div class="im"><img data-img="nova"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Nova</b><small>You</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="kai"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Kai</b><small>Friend</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="robot"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Bolt</b><small>Character</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="forest"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Nobody</b><small>Just the scene</small></div></button>
+        </div>
+        <div class="flow-f"><button class="btn" data-tab="img:1"><span data-i="arrow-left"></span>Back</button><button class="btn btn-p btn-lg" data-tab="img:3">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="img:3">
+        <h2 class="q">Pick a look.</h2><p class="qsub">This changes the colors and mood.</p>
+        <div class="cards c4" data-chips>
+          <button class="card on" data-chip><div class="im"><img data-img="city"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Movie</b><small>Dramatic light</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="chrome"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Fashion</b><small>Clean studio</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="jelly"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>Dreamy</b><small>Soft &amp; magical</small></div></button>
+          <button class="card" data-chip><div class="im"><img data-img="robot"></div><span class="tick"><span data-i="check"></span></span><div class="lb"><b>3D</b><small>Toy-like</small></div></button>
+        </div>
+        <div class="flow-f"><button class="btn" data-tab="img:2"><span data-i="arrow-left"></span>Back</button><button class="btn btn-p btn-lg" data-tab="img:4">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="img:4">
+        <h2 class="q">Last thing — what shape?</h2><p class="qsub">Where will you share it?</p>
+        <div class="cards c4 shapes" data-chips data-css-target=".gal">
+          <button class="card plain" data-chip data-css="--ar:1/1"><span class="shp" style="width:34px;height:34px"></span><b>Square</b><small>Feed posts</small></button>
+          <button class="card plain on" data-chip data-css="--ar:4/5"><span class="shp" style="width:30px;height:38px"></span><b>Portrait</b><small>Best for people</small></button>
+          <button class="card plain" data-chip data-css="--ar:9/16"><span class="shp" style="width:24px;height:42px"></span><b>Story</b><small>Phone screens</small></button>
+          <button class="card plain" data-chip data-css="--ar:16/9"><span class="shp" style="width:44px;height:25px"></span><b>Wide</b><small>Videos &amp; web</small></button>
+        </div>
+        <div class="flow-f"><button class="btn" data-tab="img:3"><span data-i="arrow-left"></span>Back</button><button class="btn btn-g btn-lg" data-generate="image" data-cost="4" data-done="Your 4 pictures are ready"><span data-i="sparkles"></span>Create 4 pictures<span class="cr"> · 4 credits</span></button></div>
+      </div>
+    </div>
+    <div data-show="loading" class="gen-wait"><div class="orb"><b data-progress>0%</b></div><h3 data-step>Reading your idea</h3><p>About 6 seconds.</p></div>
+    <div data-show="done">
+      <div class="done-h"><div><span class="okb"><span data-i="check"></span>4 pictures</span><h3 style="margin-top:10px">Pick your favorite.</h3></div><div style="display:flex;gap:8px"><button class="btn" data-reset="image" data-tab="img:1"><span data-i="pencil"></span>Change idea</button><button class="btn" data-generate="image" data-cost="4" data-done="4 more pictures"><span data-i="refresh-cw"></span>More like these</button></div></div>
+      <div class="gal">
+        <div class="gi" data-reveal><img data-img="hero1"><div class="ac"><button class="p" data-send="videosrc" data-src-img="hero1" data-go="video"><span data-i="clapperboard"></span>Make it move</button><button data-toast="Saved" aria-label="Save" style="flex:0 0 38px"><span data-i="download"></span></button></div></div>
+        <div class="gi" data-reveal><img data-img="hero2"><div class="ac"><button class="p" data-send="videosrc" data-src-img="hero2" data-go="video"><span data-i="clapperboard"></span>Make it move</button><button data-toast="Saved" aria-label="Save" style="flex:0 0 38px"><span data-i="download"></span></button></div></div>
+        <div class="gi" data-reveal><img data-img="nova"><div class="ac"><button class="p" data-send="videosrc" data-src-img="nova" data-go="video"><span data-i="clapperboard"></span>Make it move</button><button data-toast="Saved" aria-label="Save" style="flex:0 0 38px"><span data-i="download"></span></button></div></div>
+        <div class="gi" data-reveal><img data-img="city"><div class="ac"><button class="p" data-send="videosrc" data-src-img="city" data-go="video"><span data-i="clapperboard"></span>Make it move</button><button data-toast="Saved" aria-label="Save" style="flex:0 0 38px"><span data-i="download"></span></button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO (guided) -->
+<section data-view="video" hidden>
+  <div class="flow win" data-gen="video" data-ms="4600" data-steps="Studying your picture|Planning the motion|Creating every frame|Adding sound">
+    <div class="flow-h"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Bring To Life · Video</b><small>Turn a picture into motion</small></div><div class="r"><div class="dots dots-vid"><i></i><i></i><i></i></div></div></div>
+    <div data-show="empty">
+      <div class="step active" data-pane="vid:1">
+        <h2 class="q">Which picture should move?</h2><p class="qsub">Choose one of yours, or upload a new one.</p>
+        <div class="picker" data-chips>
+          <button class="card on" data-chip data-send="videosrc" data-src-img="hero1"><div class="im"><img data-img="hero1"></div><span class="tick"><span data-i="check"></span></span></button>
+          <button class="card" data-chip data-send="videosrc" data-src-img="hero2"><div class="im"><img data-img="hero2"></div><span class="tick"><span data-i="check"></span></span></button>
+          <button class="card" data-chip data-send="videosrc" data-src-img="astro"><div class="im"><img data-img="astro"></div><span class="tick"><span data-i="check"></span></span></button>
+          <button class="card" data-chip data-send="videosrc" data-src-img="dancer"><div class="im"><img data-img="dancer"></div><span class="tick"><span data-i="check"></span></span></button>
+          <div class="up-card" data-upload="videosrc" data-single><div><span data-i="upload"></span>Upload</div></div>
+        </div>
+        <div class="flow-f"><span class="hint">Step 1 of 3</span><button class="btn btn-p btn-lg" data-tab="vid:2">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="vid:2">
+        <h2 class="q">What should happen?</h2><p class="qsub">Keep it short. One or two actions work best.</p>
+        <div class="bigfield"><textarea data-prompt="video" data-autogrow aria-label="What happens">She turns to the camera and smiles as rain falls</textarea></div>
+        <div class="ideas"><button class="idea" data-insert="video" data-text="Her hair moves gently in the wind"><span data-i="wind"></span>Hair in the wind</button><button class="idea" data-insert="video" data-text="She walks slowly toward the camera"><span data-i="footprints"></span>Walks closer</button><button class="idea" data-insert="video" data-text="Neon lights flicker behind her"><span data-i="zap"></span>Lights flicker</button></div>
+        <div class="flow-f"><button class="btn" data-tab="vid:1"><span data-i="arrow-left"></span>Back</button><button class="btn btn-p btn-lg" data-tab="vid:3">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="vid:3">
+        <h2 class="q">How should the camera move?</h2><p class="qsub">Not sure? “Zoom in” looks great on people.</p>
+        <div class="cards c4 cams" data-chips>
+          <button class="card plain" data-chip><span class="gl"><span data-i="square"></span></span><b>Stay still</b><small>Calm and simple</small></button>
+          <button class="card plain on" data-chip><span class="gl"><span data-i="zoom-in"></span></span><b>Zoom in</b><small>Slowly get closer</small></button>
+          <button class="card plain" data-chip><span class="gl"><span data-i="orbit"></span></span><b>Circle around</b><small>Very cinematic</small></button>
+          <button class="card plain" data-chip><span class="gl"><span data-i="move-up"></span></span><b>Fly up</b><small>Big reveal</small></button>
+        </div>
+        <div class="flow-f"><button class="btn" data-tab="vid:2"><span data-i="arrow-left"></span>Back</button><button class="btn btn-g btn-lg" data-generate="video" data-cost="20" data-done="Your video is ready" data-done-icon="clapperboard"><span data-i="clapperboard"></span>Create video<span class="cr"> · 20 credits</span></button></div>
+      </div>
+    </div>
+    <div data-show="loading" class="gen-wait"><div class="orb"><b data-progress>0%</b></div><h3 data-step>Studying your picture</h3><p>Videos take a little longer — about a minute.</p></div>
+    <div data-show="done">
+      <div class="done-h"><div><span class="okb"><span data-i="check"></span>5 seconds · HD</span><h3 style="margin-top:10px">It’s alive.</h3></div></div>
+      <div class="player" data-player data-dur="8" data-reveal><img data-slot="videosrc" data-img="hero1" alt="Your video"><button class="pp" data-play aria-label="Play"><span data-i="play"></span></button><div class="tr" data-seek><i></i></div></div>
+      <div class="nexts"><button class="btn btn-p btn-lg" data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="Nova · rain" data-go="studio" data-toast="Added to your project">Edit it<span data-i="arrow-right"></span></button><button class="btn btn-lg" data-go="voice"><span data-i="audio-lines"></span>Add a voice</button><button class="btn btn-lg" data-reset="video" data-tab="vid:1"><span data-i="refresh-cw"></span>Try again</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICE (guided) -->
+<section data-view="voice" hidden>
+  <div class="flow win" data-gen="voice" data-ms="2800" data-steps="Reading your words|Warming up the voice|Adding feeling">
+    <div class="flow-h"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Give It A Voice</b><small>Type it. Hear it.</small></div><div class="r"><div class="dots dots-voc"><i></i><i></i><i></i></div></div></div>
+    <div data-show="empty">
+      <div class="step active" data-pane="voc:1">
+        <h2 class="q">What should be said?</h2><p class="qsub">Type the words exactly as you want them spoken. <span data-est>~4s</span></p>
+        <div class="bigfield"><textarea data-prompt="voice" data-autogrow aria-label="Words">In a city that never sleeps, one light refused to go out. This is Nova.</textarea></div>
+        <div class="ideas"><button class="idea" data-insert="voice" data-mode="append" data-text="[pause]"><span data-i="pause"></span>Add a pause</button><button class="idea" data-enhance="voice" data-text="In a city that never sleeps… one light refused to go out. [pause] This is Nova."><span data-i="wand-sparkles"></span>Make it flow</button></div>
+        <div class="flow-f"><span class="hint">Step 1 of 3</span><button class="btn btn-p btn-lg" data-tab="voc:2" data-needs-prompt="voice">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="voc:2">
+        <h2 class="q">Who should say it?</h2><p class="qsub">Tap a voice to choose it. <b data-voice-name>Nova</b> is selected.</p>
+        <div class="cards voices" data-voices style="grid-template-columns:1fr 1fr">
+          <button class="card plain on" data-voice="Nova"><span class="vf"><img data-img="nova"></span><span><b>Nova</b><br><small>Your own voice</small></span><div data-wave data-bars="20" data-seed="4"></div></button>
+          <button class="card plain" data-voice="Aria"><span class="vf">A</span><span><b>Aria</b><br><small>Warm storyteller</small></span><div data-wave data-bars="20" data-seed="11"></div></button>
+          <button class="card plain" data-voice="Kai"><span class="vf"><img data-img="kai"></span><span><b>Kai</b><br><small>Deep, like a movie</small></span><div data-wave data-bars="20" data-seed="23"></div></button>
+          <button class="card plain" data-voice="Juno"><span class="vf">J</span><span><b>Juno</b><br><small>Bright and happy</small></span><div data-wave data-bars="20" data-seed="31"></div></button>
+        </div>
+        <div class="recline" data-rec-host><button class="rb" data-record aria-label="Record"><span data-i="mic"></span></button><div class="tx"><b>Or use your own voice</b><small>Tap and read for 15 seconds.</small></div><div data-live><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="mu" data-rec-time style="font-size:13px">0:00</span></div>
+        <div class="flow-f"><button class="btn" data-tab="voc:1"><span data-i="arrow-left"></span>Back</button><button class="btn btn-p btn-lg" data-tab="voc:3">Continue<span data-i="arrow-right"></span></button></div>
+      </div>
+      <div class="step" data-pane="voc:3">
+        <h2 class="q">How should it feel?</h2><p class="qsub">Choose a mood.</p>
+        <div class="cards c4" data-chips>
+          <button class="card plain on" data-chip><span class="em">😌</span><b>Calm</b><small>Soft and steady</small></button>
+          <button class="card plain" data-chip><span class="em">😊</span><b>Warm</b><small>Friendly</small></button>
+          <button class="card plain" data-chip><span class="em">🤩</span><b>Excited</b><small>Full of energy</small></button>
+          <button class="card plain" data-chip><span class="em">🤫</span><b>Whisper</b><small>Close and quiet</small></button>
+        </div>
+        <div style="display:grid;grid-template-columns:80px 1fr;gap:14px;align-items:center;margin-top:22px;color:var(--mu);font-size:14px"><span>Speed</span><input type="range" min="5" max="20" value="10"></div>
+        <div class="flow-f"><button class="btn" data-tab="voc:2"><span data-i="arrow-left"></span>Back</button><button class="btn btn-g btn-lg" data-generate="voice" data-cost="2" data-done="Your voice is ready" data-done-icon="audio-lines"><span data-i="audio-lines"></span>Create voice<span class="cr"> · 2 credits</span></button></div>
+      </div>
+    </div>
+    <div data-show="loading" class="gen-wait"><div class="orb"><b data-progress>0%</b></div><h3 data-step>Reading your words</h3><p>Just a few seconds.</p></div>
+    <div data-show="done">
+      <div class="done-h"><div><span class="okb"><span data-i="check"></span>9 seconds</span><h3 style="margin-top:10px">Have a listen.</h3></div></div>
+      <div class="aud" data-player data-dur="9" data-reveal><button class="pp" data-play aria-label="Play"><span data-i="play"></span></button><div data-wave data-bars="90" data-seed="8" data-seek></div><span class="t" data-time>0:00</span></div>
+      <div class="nexts"><button class="btn btn-p btn-lg" data-add-clip="voice" data-clip-len="9" data-clip-name="Nova · intro" data-go="studio" data-toast="Voice added to your video">Add to my video<span data-i="arrow-right"></span></button><button class="btn btn-lg" data-toast="Lips matched to your video" data-toast-icon="scan-face"><span data-i="scan-face"></span>Match lips</button><button class="btn btn-lg" data-reset="voice" data-tab="voc:1"><span data-i="refresh-cw"></span>Start over</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDIO (spatial) -->
+<section data-view="studio" hidden>
+  <div class="studio">
+    <div class="sv win">
+      <div class="sv-h"><button class="ib" data-go="home" aria-label="Back"><span data-i="chevron-left"></span></button><b>Neon Nights</b><span class="mu" style="font-size:13px">Saved</span><div class="r"><div class="chips-ar" data-chips data-css-target=".screen"><button class="idea on" data-chip data-css="--ar:16/9;--arn:1.7778" style="height:38px">Wide</button><button class="idea" data-chip data-css="--ar:9/16;--arn:.5625" style="height:38px">Story</button></div><button class="btn btn-p" data-open="export" style="height:42px"><span data-i="share"></span>Share</button></div></div>
+      <div class="pvw"><div class="screen"><img data-stage-img data-img="hero1" alt="Preview"><div class="ttl" data-stage-title>NEON NIGHTS</div><div class="cap" data-stage-caption></div></div></div>
+    </div>
+    <aside class="side win">
+      <div class="sel"><span class="th" data-insp-thumb></span><div><b data-insp-name>Nothing selected</b><small data-insp-kind>Tap a clip</small></div></div>
+      <div class="qa"><button data-studio="split"><span data-i="scissors"></span>Split</button><button data-studio="duplicate"><span data-i="copy"></span>Copy</button><button data-studio="delete"><span data-i="trash-2"></span>Delete</button></div>
+      <div data-pane="st:media" class="active"><h4>Add clips</h4><div class="mg">
+        <button data-add-clip="video" data-clip-img="city" data-clip-len="4" data-clip-name="City"><img data-img="city"></button>
+        <button data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="Nova · rain"><img data-img="hero2"></button>
+        <button data-add-clip="video" data-clip-img="jelly" data-clip-len="4" data-clip-name="Jellyfish"><img data-img="jelly"></button>
+        <button data-add-clip="video" data-clip-img="forest" data-clip-len="5" data-clip-name="Forest"><img data-img="forest"></button></div></div>
+      <div data-pane="st:text"><h4>Title</h4><div class="bigfield" style="padding:12px 16px;border-radius:20px"><input type="text" value="NEON NIGHTS" data-title-input aria-label="Title" style="font-family:Sora;font-size:18px"></div></div>
+      <div data-pane="st:music"><h4>Music</h4><div class="lst"><button data-add-clip="music" data-clip-len="12" data-clip-name="Starlight"><span data-i="music"></span><span>Starlight<small>Dreamy · 2:40</small></span></button><button data-add-clip="music" data-clip-len="12" data-clip-name="City Pulse"><span data-i="music"></span><span>City Pulse<small>Upbeat · 3:01</small></span></button><button data-go="voice"><span data-i="mic"></span><span>New voice<small>Give It A Voice</small></span></button></div></div>
+      <div data-pane="st:captions"><h4>Captions</h4><button class="btn btn-p" style="width:100%" data-toggle-body="captions-on" data-toast="Captions added" data-toast-icon="captions"><span data-i="captions"></span>Add captions for me</button></div>
+      <div data-pane="st:look"><h4>Look</h4><div class="lst" data-chips data-css-target=".screen"><button class="on" data-chip data-css="--filter:none"><span data-i="sun"></span>Natural</button><button data-chip data-css="--filter:hue-rotate(-20deg) saturate(1.4)"><span data-i="sparkles"></span>Prism</button><button data-chip data-css="--filter:grayscale(1) contrast(1.2)"><span data-i="contrast"></span>Black &amp; white</button></div></div>
+    </aside>
+    <nav class="tools-orn win">
+      <button class="to play" data-studio-play aria-label="Play"><span data-i="play"></span></button>
+      <button class="to active" data-tab="st:media" data-toggleable><span data-i="images"></span><span class="l">Clips</span></button>
+      <button class="to" data-tab="st:text" data-toggleable><span data-i="type"></span><span class="l">Title</span></button>
+      <button class="to" data-tab="st:music" data-toggleable><span data-i="music"></span><span class="l">Music</span></button>
+      <button class="to" data-tab="st:captions" data-toggleable><span data-i="captions"></span><span class="l">Captions</span></button>
+      <button class="to" data-tab="st:look" data-toggleable><span data-i="palette"></span><span class="l">Look</span></button>
+      <button class="to" data-studio="split" aria-label="Split"><span data-i="scissors"></span></button>
+    </nav>
+    <div class="tlw win">
+      <div class="tlw-h"><b data-timecode>0:00.00</b><span>/ <span data-total>0:24</span></span><span>· Drag the white line to move through your video</span><div class="z"><input type="range" min="14" max="70" value="30" data-tl-zoom aria-label="Zoom"></div></div>
+      <div data-timeline><div data-tl-scroll><div data-tl-inner>
+        <div data-ruler></div>
+        <div data-track="video">
+          <div class="clip clip-video" data-clip data-len="5" data-img="hero1" data-name="Nova"><span class="clip-name">Nova</span></div>
+          <div class="clip clip-video" data-clip data-len="4" data-img="city" data-name="City"><span class="clip-name">City</span></div>
+          <div class="clip clip-video" data-clip data-len="5" data-img="astro" data-name="Dunes"><span class="clip-name">Dunes</span></div>
+          <div class="clip clip-video" data-clip data-len="4" data-img="jelly" data-name="Jellyfish"><span class="clip-name">Jellyfish</span></div>
+          <div class="clip clip-video" data-clip data-len="6" data-img="dancer" data-name="Dancer"><span class="clip-name">Dancer</span></div>
+        </div>
+        <div data-track="text"><div class="gap" data-len="0.5"></div><div class="clip clip-text" data-clip data-len="3.5" data-text="NEON NIGHTS" data-name="Title"><span class="clip-name"><span data-i="type"></span>NEON NIGHTS</span></div></div>
+        <div data-track="voice"><div class="gap" data-len="1"></div><div class="clip clip-voice" data-clip data-len="9" data-name="Nova · intro"><span class="clip-name"><span data-i="mic"></span>Nova</span><span class="clip-wave" data-wave data-bars="60" data-seed="12"></span></div></div>
+        <div data-track="music"><div class="clip clip-music" data-clip data-len="24" data-name="Starlight"><span class="clip-name"><span data-i="music"></span>Starlight</span><span class="clip-wave" data-wave data-bars="150" data-seed="5"></span></div></div>
+        <div data-playhead></div>
+      </div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section data-view="library" hidden>
+  <div class="hello" style="padding-top:0"><h1>Your <span>creations</span></h1><p><span data-countup="128">0</span> things made with Vidora</p></div>
+  <div style="display:flex;gap:8px;justify-content:center;margin-top:20px;flex-wrap:wrap"><button class="idea on" data-filter="lib:all">All</button><button class="idea" data-filter="lib:image"><span data-i="image"></span>Pictures</button><button class="idea" data-filter="lib:video"><span data-i="clapperboard"></span>Videos</button><button class="idea" data-filter="lib:voice"><span data-i="audio-lines"></span>Voices</button></div>
+  <div class="libgrid" data-filterable="lib">
+    <div class="it" data-kind="video"><img data-img="hero1"><div class="lb">Neon Nights<small>0:24</small></div></div>
+    <div class="it" data-kind="image"><img data-img="chrome"><div class="lb">Chrome<small>Picture</small></div></div>
+    <div class="it win vo" data-kind="voice" data-player data-dur="9"><div data-wave data-bars="34" data-seed="8"></div><button class="btn btn-p" data-play><span data-i="play"></span>Nova · intro</button></div>
+    <div class="it" data-kind="image"><img data-img="jelly"><div class="lb">Jellyfish sky<small>Picture</small></div></div>
+    <div class="it" data-kind="video"><img data-img="astro"><div class="lb">Dunes<small>0:10</small></div></div>
+    <div class="it" data-kind="image"><img data-img="perfume"><div class="lb">Amethyst<small>Picture</small></div></div>
+    <div class="it" data-kind="video"><img data-img="dancer"><div class="lb">The leap<small>0:06</small></div></div>
+    <div class="it" data-kind="image"><img data-img="hero2"><div class="lb">Nova in rain<small>Picture</small></div></div>
+  </div>
+</section>
+
+  </main>
+</div>
+
+<div class="modal" id="export" data-modal aria-label="Share">
+  <div class="mbox win" data-gen="export" data-ms="3000" data-steps="Putting it together|Adding music|Almost done">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><h3 style="font-size:24px">Share your video</h3><button class="ib" data-close aria-label="Close"><span data-i="x"></span></button></div>
+    <div data-show="empty">
+      <p class="mu" style="margin-bottom:14px">Where will people watch it?</p>
+      <div class="cards" data-chips style="grid-template-columns:1fr 1fr 1fr"><button class="card plain on" data-chip style="min-height:120px"><span class="gl"><span data-i="smartphone"></span></span><b>Phone</b></button><button class="card plain" data-chip style="min-height:120px"><span class="gl"><span data-i="monitor"></span></span><b>Computer</b></button><button class="card plain" data-chip style="min-height:120px"><span class="gl"><span data-i="tv"></span></span><b>Big screen</b></button></div>
+      <button class="btn btn-g btn-lg" style="width:100%;margin-top:20px" data-generate="export" data-done="Ready to share!"><span data-i="sparkles"></span>Make my video</button>
+    </div>
+    <div data-show="loading" class="gen-wait" style="padding:10px 0"><div class="orb" style="width:120px;height:120px"><b data-progress style="font-size:26px">0%</b></div><h3 data-step style="font-size:20px">Putting it together</h3></div>
+    <div data-show="done" style="text-align:center"><span class="okb"><span data-i="check"></span>HD · 18 MB</span><h3 style="font-size:26px;margin:14px 0 18px">It’s ready to share.</h3><div style="display:flex;gap:10px"><button class="btn" style="flex:1" data-copy="https://vidora.ai/v/neon-nights"><span data-i="link"></span>Copy link</button><button class="btn btn-p" style="flex:1" data-close data-reset="export">Done</button></div></div>
+  </div>
+</div>
+
+<script>
+// the blurred environment follows the tool you're in
+const ENV = { home: 'city', identity: 'nova', image: 'chrome', video: 'dancer', voice: 'singer', studio: 'astro', library: 'jelly', welcome: 'hero2' };
+document.addEventListener('vidora:view', e => { const i = document.getElementById('envimg'); const k = ENV[e.detail.view]; if (i && k && window.Vidora) { i.style.opacity = 0; setTimeout(() => { i.src = window.Vidora.IMG[k]; i.style.opacity = 1; }, 300); } });
+// reset each guided flow to step 1 when re-entering via reset
+document.addEventListener('click', e => { const r = e.target.closest('[data-reset][data-tab]'); if (r) { /* tab handler already moved to step 1 */ } });
+</script>
+<!--@ENGINE-->
+</body>
+</html>

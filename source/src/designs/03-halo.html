@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vidora — 03 Halo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400..800;1,400..600&display=swap" rel="stylesheet">
+<!--@ENGINE_CSS-->
+<style>
+:root{
+  --bg:#050409;--tx:#f7f4ff;--mu:rgba(235,228,255,.62);--mu2:rgba(235,228,255,.4);
+  --g:rgba(255,255,255,.055);--g2:rgba(255,255,255,.09);--gl:rgba(255,255,255,.12);--gl2:rgba(255,255,255,.2);
+  --ac:#a855f7;--grad:linear-gradient(135deg,#c084fc,#8b5cf6 50%,#6d28d9);--blur:blur(28px) saturate(1.6);
+  --ease:cubic-bezier(.2,.8,.2,1);--spring:cubic-bezier(.34,1.56,.64,1);
+  --v-surface:rgba(22,18,34,.88);--v-surface-2:rgba(255,255,255,.07);--v-line:rgba(255,255,255,.12);--v-text:var(--tx);--v-muted:var(--mu);--v-accent:#9d5cf6;--v-accent-2:#e9d5ff;--v-radius:28px;--v-font:'Plus Jakarta Sans',sans-serif;--v-blur:30px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'Plus Jakarta Sans',system-ui,sans-serif;-webkit-font-smoothing:antialiased;font-size:15px}
+body{min-height:100dvh;overflow-x:hidden}
+button{background:none;border:0;padding:0}
+h1,h2,h3{margin:0;font-weight:650;letter-spacing:-.03em}
+p{margin:0}
+.muted{color:var(--mu)}
+/* aurora */
+.aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+.aurora i{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:drift 22s ease-in-out infinite alternate}
+.aurora i:nth-child(1){width:60vw;height:60vw;left:-15vw;top:-25vw;background:#5b21b6}
+.aurora i:nth-child(2){width:45vw;height:45vw;right:-10vw;top:10vh;background:#a21caf;opacity:.32;animation-duration:28s}
+.aurora i:nth-child(3){width:55vw;height:40vw;left:20vw;bottom:-25vw;background:#4338ca;opacity:.4;animation-duration:32s}
+@keyframes drift{to{transform:translate(8vw,6vh) scale(1.15)}}
+.aurora::after{content:"";position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.5'/%3E%3C/svg%3E");opacity:.06;mix-blend-mode:overlay}
+.glass{background:linear-gradient(160deg,rgba(255,255,255,.085),rgba(255,255,255,.03));border:1px solid var(--gl);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);box-shadow:0 20px 60px -20px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.12)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;border-radius:99px;font-weight:600;font-size:14px;border:1px solid var(--gl);background:var(--g);backdrop-filter:var(--blur);transition:.3s var(--ease);white-space:nowrap}
+.btn:hover{background:var(--g2);border-color:var(--gl2)}
+.btn .ic{width:17px;height:17px}
+.btn-p{background:var(--grad);border-color:rgba(255,255,255,.25);color:#fff;box-shadow:0 10px 30px -8px rgba(168,85,247,.8),inset 0 1px 0 rgba(255,255,255,.4)}
+.btn-p:hover{background:var(--grad);filter:brightness(1.1);transform:translateY(-1px)}
+.btn-p[disabled]{filter:grayscale(.8) brightness(.5)}
+.btn-lg{height:50px;padding:0 24px;font-size:15px}
+.cost{font-size:12px;padding:2px 8px;border-radius:99px;background:rgba(0,0,0,.22);display:inline-flex;gap:3px;align-items:center}.cost .ic{width:12px;height:12px}
+.ibtn{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;color:var(--mu);transition:.2s;border:1px solid transparent}
+.ibtn:hover{color:var(--tx);background:var(--g);border-color:var(--gl)}
+.ibtn .ic{width:18px;height:18px}
+.pill{display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:99px;font-size:13px;font-weight:550;color:var(--mu);border:1px solid var(--gl);background:var(--g);transition:.25s var(--ease);white-space:nowrap}
+.pill:hover{color:var(--tx);border-color:var(--gl2)}
+.pill .ic{width:15px;height:15px}
+.pill img{width:22px;height:22px;border-radius:50%;object-fit:cover;margin-left:-8px}
+.pill.on{color:#fff;background:rgba(168,85,247,.25);border-color:rgba(216,180,254,.5)}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+textarea,input[type=text]{width:100%;background:transparent;border:0;outline:0;color:var(--tx);font:inherit;resize:none}
+.view-in{animation:vin .7s var(--ease) both}
+@keyframes vin{from{opacity:0;transform:scale(.985);filter:blur(6px)}}
+.app{position:relative;z-index:1;min-height:100dvh}
+body[data-current="welcome"] .app{display:none}
+
+/* top */
+.top{position:fixed;z-index:30;top:16px;left:50%;transform:translateX(-50%);width:min(1240px,calc(100% - 32px));display:flex;align-items:center;gap:10px;height:56px;padding:0 8px 0 18px;border-radius:99px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.03em}
+.orbmark{width:28px;height:28px;border-radius:50%;background:conic-gradient(from 200deg,#c084fc,#6d28d9,#e879f9,#c084fc);box-shadow:0 0 20px rgba(192,132,252,.7),inset 0 0 0 5px rgba(5,4,9,.55)}
+.where{margin:0 auto;font-size:13.5px;color:var(--mu);display:flex;align-items:center;gap:8px}
+.where b{color:var(--tx);font-weight:600}
+.top .r{display:flex;align-items:center;gap:6px}
+.top .av{width:38px;height:38px;border-radius:50%;object-fit:cover;border:1px solid var(--gl2)}
+
+/* dock */
+.dock-wrap{position:fixed;z-index:40;left:50%;bottom:calc(16px + env(safe-area-inset-bottom));transform:translateX(-50%);display:flex;align-items:flex-end;gap:6px;padding:8px;border-radius:26px}
+body[data-current="studio"] .dock-wrap{display:none}
+.dock{display:flex;align-items:flex-end;gap:6px}
+.dock-item{position:relative;width:50px;height:50px;border-radius:16px;display:grid;place-items:center;color:var(--mu);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.08);transition:width .35s var(--spring),height .35s var(--spring),transform .35s var(--spring),color .2s,background .2s}
+.dock-item .ic{width:22px;height:22px}
+.dock-label{position:absolute;bottom:calc(100% + 12px);left:50%;transform:translate(-50%,6px);padding:6px 10px;border-radius:9px;background:rgba(20,16,30,.92);border:1px solid var(--gl);font-size:12px;font-weight:600;white-space:nowrap;opacity:0;pointer-events:none;transition:.2s}
+.dock-item:hover{width:62px;height:62px;color:#fff}
+.dock-item:hover .dock-label{opacity:1;transform:translate(-50%,0)}
+.dock-item:hover+.dock-item{width:56px;height:56px}
+.dock-item[aria-current]{color:#fff;background:linear-gradient(160deg,rgba(192,132,252,.45),rgba(109,40,217,.35));border-color:rgba(216,180,254,.45);box-shadow:0 8px 24px -6px rgba(168,85,247,.7)}
+.dock-item[aria-current]::after{content:"";position:absolute;bottom:-6px;width:4px;height:4px;border-radius:50%;background:#e9d5ff}
+.dock-x{display:none}
+.dock-sep{width:1px;height:34px;margin:0 4px 8px;background:var(--gl)}
+.dock-tool{width:50px;height:50px;border-radius:16px;display:grid;place-items:center;color:var(--mu);transition:.2s}
+.dock-tool:hover{color:#fff;background:var(--g)}
+.dock-tool .ic{width:20px;height:20px}
+
+.page{max-width:1240px;margin:0 auto;padding:100px 24px 230px;min-height:100dvh}
+.center{text-align:center}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;height:30px;padding:0 12px;border-radius:99px;font-size:12.5px;font-weight:600;color:#e9d5ff;border:1px solid rgba(216,180,254,.3);background:rgba(168,85,247,.12)}
+.eyebrow .ic{width:14px;height:14px}
+.title{font-size:clamp(34px,4.6vw,58px);line-height:1.02;margin:16px 0 10px}
+.title em{font-style:italic;font-weight:500;background:linear-gradient(90deg,#e9d5ff,#c084fc,#e879f9);-webkit-background-clip:text;background-clip:text;color:transparent;padding-right:4px}
+.sub{color:var(--mu);font-size:16px}
+
+/* composer (bottom prompt bar) */
+.composer{position:fixed;z-index:35;left:50%;transform:translateX(-50%);bottom:calc(98px + env(safe-area-inset-bottom));width:min(860px,calc(100% - 32px));border-radius:28px;padding:12px 12px 12px 18px}
+.composer .row1{display:flex;gap:12px;align-items:flex-start}
+.composer textarea{font-size:16px;line-height:1.5;padding-top:8px;min-height:28px;max-height:120px}
+.composer .row2{display:flex;align-items:center;gap:8px;margin-top:10px;overflow-x:auto;scrollbar-width:none}
+.composer .row2 .sp{flex:1}
+.composer .attach{width:46px;height:46px;border-radius:14px;overflow:hidden;flex:none;position:relative;border:1px solid var(--gl2)}
+.composer .attach img{width:100%;height:100%;object-fit:cover}
+.send{width:46px;height:46px;border-radius:50%;flex:none;display:grid;place-items:center;background:var(--grad);box-shadow:0 8px 24px -6px rgba(168,85,247,.9),inset 0 1px 0 rgba(255,255,255,.4);transition:.3s var(--spring)}
+.send:hover{transform:scale(1.07)}
+.send .ic{width:20px;height:20px;stroke-width:2.3}
+.send.busy{animation:spin 1.2s linear infinite;background:conic-gradient(#c084fc,transparent 70%)}
+.send[disabled]{filter:grayscale(.8) brightness(.5)}
+@keyframes spin{to{transform:rotate(360deg)}}
+.composer .meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mu2);white-space:nowrap}
+.composer .meta .ic{width:13px;height:13px}
+.composer:not(.for-image) .settings-image,.composer:not(.for-video) .settings-video{display:none}
+.popover{position:absolute;bottom:calc(100% + 10px);left:0;right:0;border-radius:24px;padding:18px;opacity:0;transform:translateY(10px);pointer-events:none;transition:.35s var(--ease)}
+body.show-settings .composer .popover{opacity:1;transform:none;pointer-events:auto}
+.pop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pop-grid h5{margin:0 0 10px;font-size:12px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.08em}
+.composers [data-view-composer]{display:none}
+body[data-current="image"] .composer.for-image,body[data-current="video"] .composer.for-video,body[data-current="voice"] .composer.for-voice{display:block}
+.composer{display:none}
+
+/* home */
+.home-hero{padding-top:6vh;text-align:center}
+.bigprompt{max-width:760px;margin:30px auto 0;border-radius:30px;padding:10px 10px 10px 22px;display:flex;align-items:center;gap:10px}
+.bigprompt input{font-size:17px;height:52px}
+.modes{display:flex;gap:8px;justify-content:center;margin-top:16px;flex-wrap:wrap}
+.rail{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:56px}
+.tcard{position:relative;border-radius:28px;overflow:hidden;aspect-ratio:3/4;text-align:left;isolation:isolate;border:1px solid var(--gl);transition:transform .6s var(--ease);transform:perspective(900px) rotateX(var(--rx,0)) rotateY(var(--ry,0))}
+.tcard img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform 1s var(--ease)}
+.tcard:hover img{transform:scale(1.07)}
+.tcard::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(5,4,9,0) 35%,rgba(5,4,9,.85))}
+.tcard .gl{position:absolute;left:10px;right:10px;bottom:10px;padding:14px;border-radius:20px}
+.tcard .ico{width:34px;height:34px;border-radius:12px;display:grid;place-items:center;background:var(--grad);margin-bottom:10px;box-shadow:0 6px 16px -4px rgba(168,85,247,.8)}
+.tcard .ico .ic{width:17px;height:17px}
+.tcard h3{font-size:16px;letter-spacing:-.02em}
+.tcard p{font-size:12.5px;color:var(--mu);margin-top:3px}
+.tcard .n{position:absolute;top:14px;left:14px;font-size:12px;font-weight:600;color:rgba(255,255,255,.75);padding:4px 9px;border-radius:99px;background:rgba(0,0,0,.35);backdrop-filter:blur(10px)}
+.sec{display:flex;justify-content:space-between;align-items:center;margin:48px 0 16px}
+.sec h2{font-size:20px}
+.strip{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.rec{display:flex;align-items:center;gap:12px;padding:10px;border-radius:20px;text-align:left;transition:.3s var(--ease)}
+.rec:hover{transform:translateY(-2px);background:var(--g2)}
+.rec img{width:56px;height:56px;border-radius:14px;object-fit:cover}
+.rec b{font-size:14px;font-weight:600;display:block}.rec small{font-size:12px;color:var(--mu)}
+
+/* identity orbit */
+.id-wrap{display:grid;grid-template-columns:1fr 380px;gap:40px;align-items:center;min-height:calc(100dvh - 330px)}
+.orbit{position:relative;width:min(520px,100%);aspect-ratio:1;margin:0 auto;display:grid;place-items:center}
+.orbit::before,.orbit::after{content:"";position:absolute;border-radius:50%;border:1px dashed rgba(216,180,254,.22)}
+.orbit::before{inset:6%}.orbit::after{inset:24%;border-style:solid;border-color:rgba(255,255,255,.06)}
+.core{position:relative;z-index:2;width:44%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;text-align:center;cursor:pointer;overflow:hidden;transition:.4s var(--ease)}
+.core.drag{transform:scale(1.05);box-shadow:0 0 0 6px rgba(168,85,247,.3)}
+.core .in{display:flex;flex-direction:column;align-items:center;gap:8px;padding:16px;font-size:13px;color:var(--mu)}
+.core .in .ic{width:30px;height:30px;color:#e9d5ff}
+.core .in b{color:var(--tx);font-size:15px}
+.core .face{position:absolute;inset:0}
+.core .face img{width:100%;height:100%;object-fit:cover}
+.glow{position:absolute;inset:-2px;border-radius:50%;background:conic-gradient(from 0deg,#c084fc calc(var(--prog,0)*360deg),transparent 0);-webkit-mask:radial-gradient(circle,transparent 67%,#000 68%);mask:radial-gradient(circle,transparent 67%,#000 68%);z-index:3}
+.halo-ring{position:absolute;inset:-14px;border-radius:50%;background:conic-gradient(#c084fc,#6d28d9,#e879f9,#c084fc);filter:blur(18px);opacity:.5;animation:spin 6s linear infinite;z-index:-1}
+.sats{position:absolute;inset:0;animation:spin 80s linear infinite}
+.sats{--R:min(230px,42vw)}
+.sats .up-thumb{position:absolute;left:calc(50% + cos(calc(var(--a)*1deg))*var(--R));top:calc(50% + sin(calc(var(--a)*1deg))*var(--R));width:15%;aspect-ratio:1;margin:-7.5% 0 0 -7.5%;border-radius:50%;overflow:visible}
+.sats .up-thumb img{border-radius:50%;border:2px solid rgba(255,255,255,.25);box-shadow:0 10px 24px -6px rgba(0,0,0,.6);animation:spin 80s linear infinite reverse}
+.sats .up-thumb:nth-child(1){--a:-90}.sats .up-thumb:nth-child(2){--a:-45}.sats .up-thumb:nth-child(3){--a:0}.sats .up-thumb:nth-child(4){--a:45}.sats .up-thumb:nth-child(5){--a:90}.sats .up-thumb:nth-child(6){--a:135}.sats .up-thumb:nth-child(7){--a:180}.sats .up-thumb:nth-child(8){--a:225}.sats .up-thumb:nth-child(9){--a:-67}.sats .up-thumb:nth-child(10){--a:22}.sats .up-thumb:nth-child(11){--a:112}.sats .up-thumb:nth-child(12){--a:202}
+.sats .up-ok{left:auto;right:0;bottom:0}
+.id-card{border-radius:30px;padding:26px}
+.id-card h2{font-size:28px;margin:14px 0 8px}
+.steps{display:flex;flex-direction:column;gap:2px;margin:20px 0}
+.st{display:flex;gap:12px;align-items:center;padding:10px 0;font-size:14px;color:var(--mu)}
+.st i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;font-weight:700;border:1px solid var(--gl2)}
+.st.on{color:var(--tx)}.st.on i{background:var(--grad);border-color:transparent}
+.bar{height:6px;border-radius:9px;background:rgba(255,255,255,.08);overflow:hidden;--fill:0}
+.bar i{display:block;height:100%;width:calc(var(--fill)*100%);background:var(--grad);border-radius:9px;transition:width .5s var(--ease);box-shadow:0 0 12px #a855f7}
+.fineprint{font-size:12px;color:var(--mu2);margin-top:12px;display:flex;gap:8px;align-items:center}
+.fineprint .ic{width:14px;height:14px}
+
+/* canvas */
+.canvas-empty{min-height:calc(100dvh - 380px);display:grid;place-items:center;text-align:center}
+.ghost{display:grid;grid-template-columns:repeat(4,110px);gap:12px;justify-content:center;margin-bottom:28px;opacity:.85}
+.ghost span{aspect-ratio:4/5;border-radius:18px;border:1px dashed rgba(216,180,254,.25);background:linear-gradient(160deg,rgba(255,255,255,.04),transparent)}
+.ghost span:nth-child(odd){transform:translateY(14px)}
+.results{--ar:4/5;display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:24px}
+.res{position:relative;aspect-ratio:var(--ar);border-radius:24px;overflow:hidden;border:1px solid var(--gl)}
+.res img{width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+.res:hover img{transform:scale(1.04)}
+.res .ov{position:absolute;inset:auto 8px 8px;display:flex;gap:6px;padding:6px;border-radius:16px;opacity:0;transform:translateY(8px);transition:.3s var(--ease)}
+.res:hover .ov{opacity:1;transform:none}
+@media (hover:none){.res .ov{opacity:1;transform:none}}
+.res .ov button{flex:1;height:34px;border-radius:12px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:12.5px;font-weight:600}
+.res .ov .a{background:var(--grad)}
+.res .ov .ic{width:15px;height:15px}
+.skel{aspect-ratio:var(--ar);border-radius:24px;border:1px solid var(--gl);background:linear-gradient(110deg,rgba(255,255,255,.03) 30%,rgba(192,132,252,.14) 50%,rgba(255,255,255,.03) 70%) 0 0/200% 100%;animation:sh 1.5s linear infinite}
+@keyframes sh{from{background-position:150% 0}to{background-position:-50% 0}}
+.status{display:inline-flex;align-items:center;gap:12px;height:44px;padding:0 18px;border-radius:99px;font-size:14px}
+.status .ic{width:16px;height:16px;color:#e9d5ff;animation:spin 2s linear infinite}
+.status .pr{font-variant-numeric:tabular-nums;color:var(--mu)}
+.res-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.player{position:relative;max-width:960px;margin:24px auto 0;aspect-ratio:16/9;border-radius:30px;overflow:hidden;border:1px solid var(--gl2);box-shadow:0 40px 100px -30px rgba(109,40,217,.6)}
+.player img{width:100%;height:100%;object-fit:cover}
+.player.playing img{animation:kb 8s linear both}
+@keyframes kb{to{transform:scale(1.15) translate(-2%,-1%)}}
+.player .ctl{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:12px;padding:8px 14px 8px 8px;border-radius:99px}
+.player .pp{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:#fff;color:#000}
+.player .pp .ic{width:16px;height:16px;fill:#000;stroke:none}
+.player .trk{flex:1;height:4px;border-radius:9px;background:rgba(255,255,255,.2);cursor:pointer;position:relative}
+.player .trk i{position:absolute;inset:0 auto 0 0;width:calc(var(--t,0)*100%);background:#fff;border-radius:9px}
+.player .t{font-size:12px;font-variant-numeric:tabular-nums;color:var(--mu)}
+.after{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap}
+
+/* voice orb */
+.vstage{display:grid;grid-template-columns:minmax(0,1fr);place-items:center;min-height:calc(100dvh - 420px);text-align:center}
+.vorb{position:relative;width:min(300px,70vw);aspect-ratio:1;border-radius:50%;display:grid;place-items:center;margin:0 auto}
+.vorb .o{position:absolute;inset:0;border-radius:50%;background:radial-gradient(circle at 35% 30%,#f5d0fe,#a855f7 40%,#4c1d95 75%);box-shadow:0 0 80px rgba(168,85,247,.6),inset -20px -30px 60px rgba(30,0,60,.6);animation:breathe 4s ease-in-out infinite}
+.playing .vorb .o,.vorb.live .o{animation:talk .5s ease-in-out infinite alternate}
+@keyframes breathe{50%{transform:scale(1.04)}}
+@keyframes talk{to{transform:scale(1.09);box-shadow:0 0 120px rgba(232,121,249,.7),inset -20px -30px 60px rgba(30,0,60,.6)}}
+.vorb .ring2{position:absolute;inset:-26px;border-radius:50%;border:1px solid rgba(216,180,254,.25)}
+.vorb .ring2:nth-child(2){inset:-56px;border-color:rgba(216,180,254,.12)}
+.vorb .name{position:relative;z-index:2;font-size:22px;font-weight:700;text-shadow:0 2px 12px rgba(0,0,0,.4)}
+.vpick{display:flex;gap:10px;justify-content:center;margin-top:60px;flex-wrap:wrap}
+.vp{display:flex;align-items:center;gap:10px;height:52px;padding:0 16px 0 6px;border-radius:99px;font-weight:600;font-size:14px;transition:.3s var(--ease)}
+.vp .f{width:40px;height:40px;border-radius:50%;overflow:hidden;display:grid;place-items:center;font-size:14px;background:var(--grad)}
+.vp .f img{width:100%;height:100%;object-fit:cover}
+.vp small{display:block;font-size:11.5px;color:var(--mu);font-weight:500;text-align:left}
+.vp.on{border-color:rgba(216,180,254,.6);background:rgba(168,85,247,.22)}
+.wave-row{display:flex;align-items:center;gap:14px;max-width:720px;margin:28px auto 0;padding:12px 18px 12px 12px;border-radius:99px}
+.wave-row [data-wave]{flex:1;--wave-h:36px;--wave-on:#e9d5ff;cursor:pointer}
+.rec-panel{max-width:720px;margin:20px auto 0;padding:16px 18px;border-radius:24px;display:flex;align-items:center;gap:14px;text-align:left}
+.rec-panel .rb{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;background:#ef4444;flex:none;transition:.3s var(--ease)}
+.rec-panel .rb .ic{width:20px;height:20px}
+.rec .rec-panel .rb,.rec-panel.rec .rb{border-radius:14px;box-shadow:0 0 0 8px rgba(239,68,68,.18)}
+.rec-panel [data-live]{flex:1;--wave-h:30px;--wave-on:#fca5a5}
+.rec-panel b{font-size:14px;display:block}.rec-panel small{color:var(--mu);font-size:12.5px}
+.rec-panel .txt{flex:1}
+.rec-panel.rec .txt{display:none}
+.rec-panel:not(.rec) [data-live]{display:none}
+
+/* studio */
+body[data-current="studio"] .page{max-width:none;padding:86px 16px 16px}
+.studio{display:grid;grid-template-columns:76px 1fr 300px;grid-template-rows:minmax(0,1fr) 290px;gap:14px;height:calc(100dvh - 102px)}
+.st-tools{grid-row:1/3;border-radius:26px;padding:10px 8px;display:flex;flex-direction:column;gap:4px}
+.tt{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;border-radius:16px;font-size:10.5px;color:var(--mu);font-weight:600;transition:.2s}
+.tt .ic{width:20px;height:20px}
+.tt:hover{color:#fff;background:var(--g)}
+.tt.active{color:#fff;background:linear-gradient(160deg,rgba(192,132,252,.4),rgba(109,40,217,.3))}
+.st-prev{border-radius:26px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0;min-height:0}
+.pv-wrap{flex:1;min-height:0;display:flex;align-items:center;justify-content:center;container-type:size}
+.screen{--ar:16/9;--arn:1.7778;width:min(100cqw,calc(100cqh * var(--arn)));aspect-ratio:var(--ar);border-radius:18px;overflow:hidden;position:relative;background:#000;box-shadow:0 30px 80px -20px rgba(0,0,0,.8);--br:1;--ct:1;--sat:1;--filter:none}
+.screen img{width:100%;height:100%;object-fit:cover;filter:brightness(var(--br)) contrast(var(--ct)) saturate(var(--sat)) var(--filter);transform:scale(calc(1.02 + var(--k,0)*.1))}
+.screen .ttl{position:absolute;inset:auto 0 42% 0;text-align:center;font-size:clamp(20px,3.6vw,46px);font-weight:300;font-style:italic;letter-spacing:.06em;text-shadow:0 0 30px rgba(192,132,252,.9)}
+.screen .cap{position:absolute;left:0;right:0;bottom:7%;text-align:center;font-weight:600;font-size:clamp(12px,1.4vw,16px);display:none}
+body.captions-on .screen .cap:not(:empty){display:block}
+.screen .cap{text-shadow:0 2px 8px #000}
+.trans{display:flex;align-items:center;justify-content:center;gap:10px}
+.trans .tc{font-variant-numeric:tabular-nums;font-size:13px;color:var(--mu);min-width:110px;text-align:center}
+.trans .tc b{color:var(--tx);font-weight:600}
+.pbig{width:46px;height:46px;border-radius:50%;background:#fff;display:grid;place-items:center}
+.pbig .ic{width:18px;height:18px;fill:#000;stroke:none}
+.st-side{border-radius:26px;padding:16px;overflow:auto}
+.st-side h4{margin:0 0 12px;font-size:14px;display:flex;justify-content:space-between;align-items:center}
+.sel{display:flex;align-items:center;gap:10px;padding:10px;border-radius:18px;background:var(--g);margin-bottom:12px}
+.sel .th{width:52px;height:38px;border-radius:10px;background:rgba(255,255,255,.08) center/cover}
+.sel b{font-size:13.5px;display:block}.sel small{font-size:12px;color:var(--mu)}
+.qa{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:16px}
+.qa button{display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 0;border-radius:14px;border:1px solid var(--gl);font-size:11px;color:var(--mu)}
+.qa button:hover{color:#fff;background:var(--g)}
+.qa .ic{width:16px;height:16px}
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mg button{aspect-ratio:4/3;border-radius:14px;overflow:hidden;position:relative;border:1px solid var(--gl)}
+.mg img{width:100%;height:100%;object-fit:cover;transition:.4s var(--ease)}
+.mg button:hover img{transform:scale(1.08);filter:brightness(.7)}
+.mg .plus{position:absolute;inset:0;display:grid;place-items:center;opacity:0;transition:.2s}
+.mg button:hover .plus{opacity:1}
+.list{display:flex;flex-direction:column;gap:8px}
+.list button{text-align:left;padding:12px 14px;border-radius:16px;border:1px solid var(--gl);background:var(--g);font-size:13.5px;font-weight:600;transition:.2s}
+.list button:hover{border-color:rgba(216,180,254,.5)}
+.list small{display:block;color:var(--mu);font-weight:500;font-size:12px;margin-top:2px}
+.st-tl{grid-column:2/4;border-radius:26px;padding:10px 14px;display:flex;flex-direction:column;min-width:0}
+.tlh{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.tlh .z{margin-left:auto;width:160px}
+[data-timeline]{--pps:30;flex:1;min-height:0}
+[data-tl-scroll]{height:100%}
+[data-track]{height:38px;margin:6px 0}[data-track="video"]{height:54px}
+.clip{border-radius:12px;font-size:11.5px;font-weight:600;padding:5px 9px;display:flex;align-items:flex-start;white-space:nowrap;border:1px solid rgba(255,255,255,.18)}
+.clip .clip-name{display:inline-flex;gap:5px;align-items:center;position:relative;z-index:1;text-shadow:0 1px 3px rgba(0,0,0,.8)}
+.clip .clip-name .ic{width:12px;height:12px}
+.clip-video{background-color:#24183a}
+.clip-text{background:linear-gradient(90deg,rgba(192,132,252,.55),rgba(232,121,249,.45));backdrop-filter:blur(10px);align-items:center}
+.clip-voice{background:rgba(168,85,247,.18);flex-direction:column;gap:2px}
+.clip-music{background:rgba(99,102,241,.18);flex-direction:column;gap:2px}
+.clip .clip-wave{--wave-h:16px;--wave-off:rgba(233,213,255,.55);width:100%}
+.clip.sel{border-color:#fff;box-shadow:0 0 0 1px #fff,0 0 24px rgba(192,132,252,.6);z-index:2}
+.clip .h-l,.clip .h-r{background:#fff;width:8px}
+[data-playhead]::before{content:"";position:absolute;top:0;bottom:0;left:-1px;width:2px;background:linear-gradient(#fff,#e9d5ff);box-shadow:0 0 12px #c084fc}
+[data-playhead]::after{content:"";position:absolute;top:2px;left:-6px;width:12px;height:12px;border-radius:50%;background:#fff;box-shadow:0 0 12px #c084fc}
+.mtools,.mtrans{display:none}
+
+/* library */
+.lib{columns:4 220px;column-gap:14px;margin-top:28px}
+.lib .it{break-inside:avoid;margin-bottom:14px;border-radius:22px;overflow:hidden;position:relative;border:1px solid var(--gl)}
+.lib .it img{width:100%;display:block}
+.lib .it .k{position:absolute;left:10px;top:10px;font-size:11.5px;padding:4px 9px;border-radius:99px;display:flex;gap:5px;align-items:center}
+.lib .it .k .ic{width:12px;height:12px}
+.lib .aud{padding:16px}
+.lib .aud [data-wave]{--wave-h:46px;--wave-on:#e9d5ff;margin-top:12px}
+
+/* welcome */
+.welcome{position:relative;z-index:1;min-height:100dvh;display:grid;place-items:center;text-align:center;padding:40px 20px;overflow:hidden}
+.w-orb{position:relative;width:min(300px,62vw);aspect-ratio:1;margin:0 auto 30px}
+.w-orb .face{position:absolute;inset:0;border-radius:50%;overflow:hidden;border:1px solid rgba(255,255,255,.25)}
+.w-orb .face img{width:100%;height:100%;object-fit:cover}
+.w-orb .halo-ring{inset:-18px;opacity:.7}
+.w-orb .chip-f{position:absolute;display:flex;align-items:center;gap:8px;height:40px;padding:0 14px 0 6px;border-radius:99px;font-size:13px;font-weight:600;white-space:nowrap;animation:float 5s ease-in-out infinite}
+.w-orb .chip-f .ic{width:15px;height:15px}
+.w-orb .chip-f span.i{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:var(--grad)}
+@keyframes float{50%{transform:translateY(-10px)}}
+.w-orb .c1{left:-150px;top:30px}.w-orb .c2{right:-160px;top:90px;animation-delay:-1.5s}.w-orb .c3{left:-120px;bottom:20px;animation-delay:-3s}.w-orb .c4{right:-130px;bottom:-10px;animation-delay:-2s}
+.w-actions{display:flex;gap:10px;justify-content:center;margin-top:30px;flex-wrap:wrap}
+
+/* modal */
+.modal{align-items:center;justify-content:center;padding:16px}
+.mbox{width:min(480px,100%);border-radius:30px;padding:24px;transform:translateY(14px) scale(.97);transition:.45s var(--ease);background:rgba(22,18,34,.85)}
+.modal.open .mbox{transform:none}
+.mh{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.lbl{font-size:12px;color:var(--mu);text-transform:uppercase;letter-spacing:.08em;font-weight:600;margin:16px 0 10px}
+.done-c{text-align:center;padding:10px 0}
+.done-c .ok{width:72px;height:72px;margin:0 auto 14px;border-radius:50%;display:grid;place-items:center;background:var(--grad);box-shadow:0 0 40px rgba(168,85,247,.7);animation:v-pop .5s var(--spring)}
+.done-c .ok .ic{width:30px;height:30px;stroke-width:2.6}
+
+@media (max-width:900px){
+  .top{top:calc(10px + env(safe-area-inset-top));height:52px;padding:0 6px 0 14px;width:calc(100% - 20px)}
+  .where{display:none}.top .r{margin-left:auto}
+  .page{padding:84px 16px 250px}
+  .dock-wrap{bottom:calc(10px + env(safe-area-inset-bottom));padding:6px;gap:4px;max-width:calc(100% - 20px)}
+  .dock-item,.dock-tool{width:48px;height:48px}
+  .dock-item:hover,.dock-item:hover+.dock-item{width:48px;height:48px}
+  .dock-label{display:none}
+  .dock-sep{margin:0 2px 7px}
+  .dock-tool.d-only{display:none}
+  .composer{bottom:calc(80px + env(safe-area-inset-bottom));width:calc(100% - 20px);padding:10px 10px 10px 14px;border-radius:24px}
+  .pop-grid{grid-template-columns:1fr}
+  .rail{grid-template-columns:repeat(5,64%);overflow-x:auto;scroll-snap-type:x mandatory;margin:40px -16px 0;padding:0 16px;scrollbar-width:none}
+  .rail>*{scroll-snap-align:center}
+  .strip{grid-template-columns:1fr}
+  .results{grid-template-columns:1fr 1fr}
+  .ghost{grid-template-columns:repeat(3,80px)}.ghost span:nth-child(4){display:none}
+  .id-wrap{grid-template-columns:1fr;gap:20px}
+  .sats{--R:41vw}
+  .m-hide{display:none!important}
+  .orbit{width:92vw;margin:0 -10px}
+  .vpick{margin-top:40px}
+  .vp{height:46px}
+  .lib{columns:2;column-gap:10px}
+  .w-orb .chip-f{display:none}
+  body[data-current="studio"] .page{padding:72px 8px 0}
+  .studio{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto 200px auto;height:calc(100dvh - 72px);gap:8px}
+  .st-tools,.st-side{display:none}
+  .st-prev .trans{display:none}
+  .screen{--ar:9/16;--arn:.5625}
+  .mtrans{display:flex;align-items:center;justify-content:center;gap:10px}
+  .st-tl{grid-column:1;padding:8px}
+  .tlh{display:none}
+  [data-track]{height:30px;margin:4px 0}[data-track="video"]{height:44px}
+  .mtools{display:flex;gap:4px;overflow-x:auto;padding:6px 6px calc(8px + env(safe-area-inset-bottom));scrollbar-width:none;border-radius:22px 22px 0 0}
+  .mtools .tt{flex:none;width:66px}
+  body[data-tab_st]:not([data-tab_st=""]) .st-side{display:block;position:fixed;left:8px;right:8px;bottom:calc(86px + env(safe-area-inset-bottom));max-height:44vh;z-index:40;animation:vin .4s var(--ease)}
+}
+@media (min-width:901px){.m-only{display:none!important}}
+@media (min-width:901px) and (max-width:1200px){.rail{grid-template-columns:repeat(3,1fr)}.results{grid-template-columns:repeat(2,1fr);max-width:720px;margin-inline:auto}.studio{grid-template-columns:76px 1fr 260px}}
+</style>
+</head>
+<body data-start="welcome">
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<!-- WELCOME -->
+<section class="welcome" data-view="welcome">
+  <div>
+    <div class="w-orb">
+      <div class="halo-ring"></div>
+      <div class="face"><img data-img="hero1" alt=""></div>
+      <span class="chip-f glass c1"><span class="i"><span data-i="scan-face"></span></span>Your identity</span>
+      <span class="chip-f glass c2"><span class="i"><span data-i="clapperboard"></span></span>Moves on cue</span>
+      <span class="chip-f glass c3"><span class="i"><span data-i="audio-lines"></span></span>Speaks your words</span>
+      <span class="chip-f glass c4"><span class="i"><span data-i="scissors"></span></span>Edited in minutes</span>
+    </div>
+    <span class="eyebrow"><span data-i="sparkles"></span>Vidora AI Creative Studio</span>
+    <h1 class="title">Imagine it.<br><em>Become it.</em></h1>
+    <p class="sub">Images, video and voice — all starring you.</p>
+    <div class="w-actions"><button class="btn btn-p btn-lg" data-go="home">Start creating<span data-i="arrow-right"></span></button><button class="btn btn-lg" data-go="home">Sign in</button></div>
+  </div>
+</section>
+
+<div class="app">
+  <header class="top glass">
+    <div class="logo"><span class="orbmark"></span>Vidora</div>
+    <div class="where"><span>Maya’s space</span><span data-i="chevron-right" style="opacity:.5"></span><b id="crumb">Home</b></div>
+    <div class="r">
+      <button class="pill" data-toast="Plans open in the full product"><span data-i="zap"></span><span data-credits>1,240</span></button>
+      <img class="av" data-img="s1" alt="Profile">
+    </div>
+  </header>
+
+  <main class="page" data-scroll>
+
+<!-- HOME -->
+<section data-view="home">
+  <div class="home-hero">
+    <span class="eyebrow"><span data-i="moon"></span>Good evening, Maya</span>
+    <h1 class="title">What should we<br><em>bring to life?</em></h1>
+    <div class="bigprompt glass">
+      <span data-i="sparkles" style="color:#e9d5ff"></span>
+      <input type="text" data-prompt="home" aria-label="Your idea" data-typing="Nova on a rooftop at golden hour…|A jellyfish sky over a calm sea…|A 10-second perfume teaser…">
+      <button class="send" data-go="image" aria-label="Create"><span data-i="arrow-up"></span></button>
+    </div>
+    <div class="modes">
+      <button class="pill on" data-go="image"><span data-i="image"></span>Image</button>
+      <button class="pill" data-go="video"><span data-i="clapperboard"></span>Video</button>
+      <button class="pill" data-go="voice"><span data-i="audio-lines"></span>Voice</button>
+      <button class="pill" data-go="identity"><img data-img="nova" style="margin-left:-8px">@Nova</button>
+    </div>
+  </div>
+  <div class="rail">
+    <button class="tcard" data-go="identity" data-tilt><img data-img="nova"><span class="n">01</span><div class="gl glass"><span class="ico"><span data-i="scan-face"></span></span><h3>Create Your Identity</h3><p>Become the star.</p></div></button>
+    <button class="tcard" data-go="image" data-tilt><img data-img="chrome"><span class="n">02</span><div class="gl glass"><span class="ico"><span data-i="image"></span></span><h3>Bring To Life · Image</h3><p>Describe it. See it.</p></div></button>
+    <button class="tcard" data-go="video" data-tilt><img data-img="dancer"><span class="n">03</span><div class="gl glass"><span class="ico"><span data-i="clapperboard"></span></span><h3>Bring To Life · Video</h3><p>Make it move.</p></div></button>
+    <button class="tcard" data-go="studio" data-tilt><img data-img="jelly"><span class="n">04</span><div class="gl glass"><span class="ico"><span data-i="scissors"></span></span><h3>Editing Studio</h3><p>Cut and polish.</p></div></button>
+    <button class="tcard" data-go="voice" data-tilt><img data-img="singer"><span class="n">05</span><div class="gl glass"><span class="ico"><span data-i="audio-lines"></span></span><h3>Give It A Voice</h3><p>Type it. Hear it.</p></div></button>
+  </div>
+  <div class="sec"><h2>Pick up where you left off</h2><button class="pill" data-go="library">Library<span data-i="arrow-right"></span></button></div>
+  <div class="strip">
+    <button class="rec glass" data-go="studio"><img data-img="hero1"><div><b>Neon Nights</b><small>Studio · 12 min ago</small></div></button>
+    <button class="rec glass" data-go="video"><img data-img="astro"><div><b>Lavender Dunes</b><small>Video · yesterday</small></div></button>
+    <button class="rec glass" data-go="image"><img data-img="perfume"><div><b>Amethyst Launch</b><small>4 images · 2d</small></div></button>
+    <button class="rec glass" data-go="voice"><img data-img="singer"><div><b>Intro voice-over</b><small>Voice · 3d</small></div></button>
+  </div>
+</section>
+
+<!-- IDENTITY -->
+<section data-view="identity" hidden>
+  <div class="id-wrap">
+    <div class="orbit">
+      <div class="sats" data-upload-list="identity"></div>
+      <div class="core glass" data-upload="identity" data-min="4" data-goal="8" data-max="12" data-upload-host="identity" data-gen="identity" data-ms="5000" data-steps="Checking photos|Learning features|Building identity|Final checks">
+        <div class="halo-ring" data-show="loading"></div>
+        <div class="in" data-show="empty"><span data-i="image-plus"></span><b>Drop your selfies</b>or click to browse</div>
+        <div class="face" data-show="loading"><img data-img="nova" style="filter:grayscale(.6) brightness(.6)"></div>
+        <div class="glow" data-show="loading"></div>
+        <div class="in" data-show="loading" style="position:relative;z-index:4;color:#fff"><b data-progress style="font-size:30px">0%</b><span data-step>Checking photos</span></div>
+        <div class="face" data-show="done"><img data-img="nova" data-reveal></div>
+      </div>
+    </div>
+    <div class="id-card glass">
+      <span class="eyebrow"><span data-i="scan-face"></span>Create Your Identity</span>
+      <h2>Teach Vidora your face</h2>
+      <p class="muted">Add 6–12 clear selfies. We’ll build a private model of you in about two minutes.</p>
+      <div class="steps">
+        <div class="st on"><i>1</i>Add photos — <b data-upload-count="identity" style="margin-left:4px">0</b>/8</div>
+        <div class="bar" data-upload-meter="identity"><i></i></div>
+        <div class="st" id="h2"><i>2</i><span data-upload-quality="identity">Add photos to start</span></div>
+        <div class="st" id="h3"><i>3</i>Your identity is ready</div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn" data-demo-upload="identity"><span data-i="sparkles"></span>Use sample photos</button>
+        <button class="btn btn-p" data-generate="identity" data-requires="identity" data-done="Nova is ready"><span data-i="wand-sparkles"></span>Create identity</button>
+      </div>
+      <button class="btn btn-p btn-lg" id="useNova" data-go="image" style="width:100%;margin-top:12px;display:none">Use @Nova in an image<span data-i="arrow-right"></span></button>
+      <p class="fineprint"><span data-i="lock"></span>Private to you. Delete anytime.</p>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE -->
+<section data-view="image" hidden>
+  <div data-gen="image" data-ms="3600" data-steps="Reading your idea|Composing the scene|Painting light|Final touches">
+    <div class="canvas-empty" data-show="empty"><div>
+      <div class="ghost"><span></span><span></span><span></span><span></span></div>
+      <span class="eyebrow"><span data-i="image"></span>Bring To Life · Image</span>
+      <h1 class="title" style="font-size:44px">Describe it. <em>See it.</em></h1>
+      <p class="sub">Type below. Add @Nova to put yourself in the scene.</p>
+    </div></div>
+    <div data-show="loading" class="center" style="padding-top:4vh"><span class="status glass"><span data-i="loader"></span><span data-step>Reading your idea</span><span class="pr" data-progress>0%</span></span>
+      <div class="results"><div class="skel"></div><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></div>
+    <div data-show="done">
+      <div class="res-head"><div><span class="eyebrow"><span data-i="check"></span>4 images · 6s</span><h2 style="margin-top:10px;font-size:24px">@Nova on a neon street</h2></div><div style="display:flex;gap:8px"><button class="pill" data-reset="image"><span data-i="rotate-ccw"></span>Clear</button><button class="pill" data-generate="image" data-cost="4" data-done="4 new variations"><span data-i="refresh-cw"></span>Variations</button></div></div>
+      <div class="results">
+        <div class="res" data-reveal><img data-img="hero1"><div class="ov glass"><button class="a" data-send="videosrc" data-src-img="hero1" data-go="video"><span data-i="clapperboard"></span>Animate</button><button data-toast="Saved" aria-label="Save"><span data-i="download"></span></button></div></div>
+        <div class="res" data-reveal><img data-img="hero2"><div class="ov glass"><button class="a" data-send="videosrc" data-src-img="hero2" data-go="video"><span data-i="clapperboard"></span>Animate</button><button data-toast="Saved" aria-label="Save"><span data-i="download"></span></button></div></div>
+        <div class="res" data-reveal><img data-img="nova"><div class="ov glass"><button class="a" data-send="videosrc" data-src-img="nova" data-go="video"><span data-i="clapperboard"></span>Animate</button><button data-toast="Saved" aria-label="Save"><span data-i="download"></span></button></div></div>
+        <div class="res" data-reveal><img data-img="city"><div class="ov glass"><button class="a" data-send="videosrc" data-src-img="city" data-go="video"><span data-i="clapperboard"></span>Animate</button><button data-toast="Saved" aria-label="Save"><span data-i="download"></span></button></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section data-view="video" hidden>
+  <div data-gen="video" data-ms="4600" data-steps="Studying your image|Planning motion|Rendering frames|Adding sound">
+    <div class="canvas-empty" data-show="empty"><div>
+      <div class="player" style="max-width:640px;margin:0 auto 26px;box-shadow:none" data-slot-host><img data-slot="videosrc" data-img="hero1" alt="" style="filter:brightness(.55) saturate(.8)"></div>
+      <span class="eyebrow"><span data-i="clapperboard"></span>Bring To Life · Video</span>
+      <h1 class="title" style="font-size:44px">Turn it into <em>motion.</em></h1>
+      <p class="sub">Say what should move. Pick a camera move below.</p>
+    </div></div>
+    <div data-show="loading" class="center" style="padding-top:4vh"><span class="status glass"><span data-i="loader"></span><span data-step>Studying your image</span><span class="pr" data-progress>0%</span></span><div class="player skel" style="border-radius:30px"></div></div>
+    <div data-show="done">
+      <div class="player" data-player data-dur="8" data-reveal><img data-slot="videosrc" data-img="hero1" alt="Video"><div class="ctl glass"><button class="pp" data-play aria-label="Play"><span data-i="play"></span></button><span class="t" data-time>0:00</span><div class="trk" data-seek><i></i></div><span class="t">0:08</span></div></div>
+      <div class="after"><button class="btn btn-p" data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="Nova · rain" data-go="studio" data-toast="Added to Neon Nights"><span data-i="scissors"></span>Edit in Studio</button><button class="btn" data-go="voice"><span data-i="audio-lines"></span>Give it a voice</button><button class="btn" data-toast="Saved to Library"><span data-i="download"></span>Save</button></div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICE -->
+<section data-view="voice" hidden>
+  <div class="vstage" data-gen="voice" data-ms="2800" data-steps="Reading the script|Shaping the voice|Adding emotion">
+    <div style="width:100%" data-player data-dur="9">
+      <div class="vorb"><span class="ring2"></span><span class="ring2"></span><span class="o"></span><span class="name" data-voice-name>Nova</span></div>
+      <div class="vpick" data-voices>
+        <button class="vp glass on" data-voice="Nova"><span class="f"><img data-img="nova"></span><span>Nova<small>Your voice</small></span></button>
+        <button class="vp glass" data-voice="Aria"><span class="f">A</span><span>Aria<small>Warm</small></span></button>
+        <button class="vp glass" data-voice="Kai"><span class="f"><img data-img="kai"></span><span>Kai<small>Cinematic</small></span></button>
+        <button class="vp glass" data-voice="Juno"><span class="f">J</span><span>Juno<small>Bright</small></span></button>
+        <button class="vp glass" data-voice="Mira"><span class="f">M</span><span>Mira<small>Whisper</small></span></button>
+      </div>
+      <div data-show="loading" style="margin-top:24px"><span class="status glass"><span data-i="loader"></span><span data-step>Reading the script</span><span class="pr" data-progress>0%</span></span></div>
+      <div data-show="done"><div class="wave-row glass" data-reveal><button class="pp send" data-play aria-label="Play" style="width:42px;height:42px"><span data-i="play"></span></button><div data-wave data-bars="80" data-seed="8" data-seek></div><span class="t muted" data-time style="font-size:12px">0:00</span></div>
+        <div class="after"><button class="btn btn-p" data-add-clip="voice" data-clip-len="9" data-clip-name="Nova · intro" data-go="studio" data-toast="Voice added to timeline"><span data-i="scissors"></span>Add to timeline</button><button class="btn" data-toast="Lip-sync started" data-toast-icon="scan-face"><span data-i="scan-face"></span>Lip-sync</button></div></div>
+      <div class="rec-panel glass" data-rec-host data-show="empty"><button class="rb" data-record aria-label="Record"><span data-i="mic"></span></button><div class="txt"><b>Clone your voice</b><small>Read aloud for 15 seconds — Vidora learns how you sound.</small></div><div data-live><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="muted" data-rec-time style="font-size:12px">0:00</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- STUDIO -->
+<section data-view="studio" hidden>
+  <div class="studio">
+    <nav class="st-tools glass">
+      <button class="tt" data-go="home" aria-label="Back"><span data-i="chevron-left"></span>Back</button>
+      <button class="tt active" data-tab="st:media"><span data-i="images"></span>Media</button>
+      <button class="tt" data-tab="st:text"><span data-i="type"></span>Text</button>
+      <button class="tt" data-tab="st:audio"><span data-i="music"></span>Audio</button>
+      <button class="tt" data-tab="st:captions"><span data-i="captions"></span>Captions</button>
+      <button class="tt" data-tab="st:look"><span data-i="palette"></span>Look</button>
+      <button class="tt" data-tab="st:ai"><span data-i="wand-sparkles"></span>AI</button>
+    </nav>
+    <div class="st-prev glass">
+      <div style="display:flex;align-items:center;gap:8px"><b style="font-size:14px">Neon Nights</b><span class="muted" style="font-size:12px">· autosaved</span><span style="flex:1"></span>
+        <div class="chips m-hide" data-chips data-css-target=".screen"><button class="pill on" data-chip data-css="--ar:16/9;--arn:1.7778">16:9</button><button class="pill" data-chip data-css="--ar:9/16;--arn:.5625">9:16</button><button class="pill" data-chip data-css="--ar:1/1;--arn:1">1:1</button></div>
+        <button class="btn btn-p" data-open="export" style="height:36px"><span data-i="upload"></span>Export</button></div>
+      <div class="pv-wrap"><div class="screen"><img data-stage-img data-img="hero1" alt="Preview"><div class="ttl" data-stage-title>Neon Nights</div><div class="cap" data-stage-caption></div></div></div>
+      <div class="trans"><button class="ibtn" data-studio="undo" aria-label="Undo"><span data-i="undo-2"></span></button><button class="ibtn" data-studio="start" aria-label="Start"><span data-i="skip-back"></span></button><button class="pbig" data-studio-play aria-label="Play"><span data-i="play"></span></button><button class="ibtn" data-studio="split" aria-label="Split"><span data-i="scissors"></span></button><span class="tc"><b data-timecode>0:00.00</b> / <span data-total>0:24</span></span></div>
+    </div>
+    <aside class="st-side glass">
+      <div class="sel"><span class="th" data-insp-thumb></span><div><b data-insp-name>Nothing selected</b><small data-insp-kind>Tap a clip</small></div></div>
+      <div class="qa"><button data-studio="split"><span data-i="scissors"></span>Split</button><button data-studio="duplicate"><span data-i="copy"></span>Copy</button><button data-studio="delete"><span data-i="trash-2"></span>Delete</button></div>
+      <div data-pane="st:media" class="active"><h4>Media</h4><div class="mg">
+        <button data-add-clip="video" data-clip-img="city" data-clip-len="4" data-clip-name="Neon city"><img data-img="city"><span class="plus"><span data-i="plus"></span></span></button>
+        <button data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="Nova · rain"><img data-img="hero2"><span class="plus"><span data-i="plus"></span></span></button>
+        <button data-add-clip="video" data-clip-img="jelly" data-clip-len="4" data-clip-name="Jellyfish"><img data-img="jelly"><span class="plus"><span data-i="plus"></span></span></button>
+        <button data-add-clip="video" data-clip-img="car" data-clip-len="3" data-clip-name="Night drive"><img data-img="car"><span class="plus"><span data-i="plus"></span></span></button></div></div>
+      <div data-pane="st:text"><h4>Title</h4><div class="glass" style="border-radius:14px;padding:10px 12px"><input type="text" value="Neon Nights" data-title-input aria-label="Title"></div></div>
+      <div data-pane="st:audio"><h4>Audio</h4><div class="list"><button data-add-clip="music" data-clip-len="12" data-clip-name="Aurora Drift">Aurora Drift<small>Ambient · 2:40</small></button><button data-add-clip="music" data-clip-len="12" data-clip-name="Night Pulse">Night Pulse<small>Synth · 3:12</small></button><button data-go="voice">+ New voice-over<small>Give It A Voice</small></button></div></div>
+      <div data-pane="st:captions"><h4>Captions</h4><button class="btn btn-p" style="width:100%" data-toggle-body="captions-on" data-toast="Captions added" data-toast-icon="captions"><span data-i="captions"></span>Auto-captions</button></div>
+      <div data-pane="st:look"><h4>Look</h4><div class="chips" data-chips data-css-target=".screen"><button class="pill on" data-chip data-css="--filter:none">Natural</button><button class="pill" data-chip data-css="--filter:hue-rotate(-25deg) saturate(1.4)">Aurora</button><button class="pill" data-chip data-css="--filter:grayscale(1) contrast(1.2)">Noir</button></div>
+        <div style="display:grid;grid-template-columns:70px 1fr;gap:10px;align-items:center;margin-top:16px;font-size:13px;color:var(--mu)"><span>Bright</span><input type="range" min="50" max="150" value="100" data-var="--br" data-scale="0.01" data-target=".screen"><span>Color</span><input type="range" min="0" max="200" value="100" data-var="--sat" data-scale="0.01" data-target=".screen"></div></div>
+      <div data-pane="st:ai"><h4>AI tools</h4><div class="list"><button data-toast="Background removed" data-toast-icon="wand-sparkles">Remove background<small>No green screen needed</small></button><button data-toast="Synced to the beat" data-toast-icon="music">Cut to the beat<small>Matches your music</small></button><button data-toast="Upscaling to 4K" data-toast-icon="maximize-2">Upscale to 4K<small>Sharper frames</small></button></div></div>
+    </aside>
+    <div class="mtrans"><button class="ibtn" data-studio="undo" aria-label="Undo"><span data-i="undo-2"></span></button><span class="muted" style="font-size:12px;font-variant-numeric:tabular-nums"><b data-timecode style="color:#fff">0:00.00</b></span><button class="pbig" data-studio-play aria-label="Play" style="width:40px;height:40px"><span data-i="play"></span></button><button class="ibtn" data-studio="split" aria-label="Split"><span data-i="scissors"></span></button><button class="ibtn" data-studio="delete" aria-label="Delete"><span data-i="trash-2"></span></button></div>
+    <div class="st-tl glass">
+      <div class="tlh"><button class="pill" data-studio="split"><span data-i="scissors"></span>Split</button><button class="pill" data-studio="duplicate"><span data-i="copy"></span>Duplicate</button><button class="pill" data-studio="delete"><span data-i="trash-2"></span>Delete</button><div class="z"><input type="range" min="14" max="70" value="30" data-tl-zoom aria-label="Zoom"></div></div>
+      <div data-timeline><div data-tl-scroll><div data-tl-inner>
+        <div data-ruler></div>
+        <div data-track="video">
+          <div class="clip clip-video" data-clip data-len="5" data-img="hero1" data-name="Nova close-up"><span class="clip-name">Nova</span></div>
+          <div class="clip clip-video" data-clip data-len="4" data-img="city" data-name="Neon city"><span class="clip-name">City</span></div>
+          <div class="clip clip-video" data-clip data-len="5" data-img="astro" data-name="Dunes"><span class="clip-name">Dunes</span></div>
+          <div class="clip clip-video" data-clip data-len="4" data-img="jelly" data-name="Jellyfish"><span class="clip-name">Jellyfish</span></div>
+          <div class="clip clip-video" data-clip data-len="6" data-img="dancer" data-name="Dancer"><span class="clip-name">Dancer</span></div>
+        </div>
+        <div data-track="text"><div class="gap" data-len="0.5"></div><div class="clip clip-text" data-clip data-len="3.5" data-text="Neon Nights" data-name="Title"><span class="clip-name"><span data-i="type"></span>Neon Nights</span></div></div>
+        <div data-track="voice"><div class="gap" data-len="1"></div><div class="clip clip-voice" data-clip data-len="9" data-name="Nova · intro"><span class="clip-name"><span data-i="mic"></span>Nova · intro</span><span class="clip-wave" data-wave data-bars="60" data-seed="12"></span></div></div>
+        <div data-track="music"><div class="clip clip-music" data-clip data-len="24" data-name="Aurora Drift"><span class="clip-name"><span data-i="music"></span>Aurora Drift</span><span class="clip-wave" data-wave data-bars="150" data-seed="5"></span></div></div>
+        <div data-playhead></div>
+      </div></div></div>
+    </div>
+    <nav class="mtools glass">
+      <button class="tt" data-go="home"><span data-i="chevron-left"></span>Back</button>
+      <button class="tt" data-tab="st:media" data-toggleable><span data-i="images"></span>Media</button>
+      <button class="tt" data-tab="st:text" data-toggleable><span data-i="type"></span>Text</button>
+      <button class="tt" data-tab="st:audio" data-toggleable><span data-i="music"></span>Audio</button>
+      <button class="tt" data-tab="st:captions" data-toggleable><span data-i="captions"></span>Captions</button>
+      <button class="tt" data-tab="st:look" data-toggleable><span data-i="palette"></span>Look</button>
+      <button class="tt" data-tab="st:ai" data-toggleable><span data-i="wand-sparkles"></span>AI</button>
+    </nav>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section data-view="library" hidden>
+  <span class="eyebrow"><span data-i="folder-open"></span>Library</span>
+  <h1 class="title" style="font-size:44px">Everything <em>you’ve made.</em></h1>
+  <div class="chips"><button class="pill on" data-filter="lib:all">All · <span data-countup="128">0</span></button><button class="pill" data-filter="lib:image"><span data-i="image"></span>Images</button><button class="pill" data-filter="lib:video"><span data-i="clapperboard"></span>Videos</button><button class="pill" data-filter="lib:voice"><span data-i="audio-lines"></span>Voices</button></div>
+  <div class="lib" data-filterable="lib">
+    <div class="it" data-kind="video"><img data-img="hero1"><span class="k glass"><span data-i="clapperboard"></span>0:08</span></div>
+    <div class="it" data-kind="image"><img data-img="chrome"><span class="k glass"><span data-i="image"></span>Image</span></div>
+    <div class="it glass aud" data-kind="voice" data-player data-dur="9"><div style="display:flex;gap:10px;align-items:center"><button class="send" data-play style="width:40px;height:40px" aria-label="Play"><span data-i="play"></span></button><div><b style="font-size:14px">Nova · intro</b><small class="muted" style="display:block;font-size:12px">0:09</small></div></div><div data-wave data-bars="40" data-seed="8"></div></div>
+    <div class="it" data-kind="image"><img data-img="jelly"><span class="k glass"><span data-i="image"></span>Image</span></div>
+    <div class="it" data-kind="video"><img data-img="astro"><span class="k glass"><span data-i="clapperboard"></span>0:10</span></div>
+    <div class="it" data-kind="image"><img data-img="perfume"><span class="k glass"><span data-i="image"></span>Image</span></div>
+    <div class="it" data-kind="image"><img data-img="hero2"><span class="k glass"><span data-i="image"></span>Image</span></div>
+    <div class="it" data-kind="video"><img data-img="dancer"><span class="k glass"><span data-i="clapperboard"></span>0:06</span></div>
+    <div class="it" data-kind="image"><img data-img="forest"><span class="k glass"><span data-i="image"></span>Image</span></div>
+    <div class="it" data-kind="image"><img data-img="kai"><span class="k glass"><span data-i="image"></span>Image</span></div>
+  </div>
+</section>
+
+  </main>
+
+  <!-- COMPOSERS (bottom prompt bars per tool) -->
+  <div class="composer glass for-image">
+    <div class="popover glass settings-image">
+      <div class="pop-grid">
+        <div><h5>Look</h5><div class="chips" data-chips data-label-target="#lookLbl"><button class="pill on" data-chip data-label="Cinematic">Cinematic</button><button class="pill" data-chip data-label="Editorial">Editorial</button><button class="pill" data-chip data-label="Dreamy">Dreamy</button><button class="pill" data-chip data-label="3D">3D</button></div></div>
+        <div><h5>Shape</h5><div class="chips" data-chips data-css-target=".results" data-label-target="#arLbl"><button class="pill" data-chip data-css="--ar:1/1" data-label="1:1">1:1</button><button class="pill on" data-chip data-css="--ar:4/5" data-label="4:5">4:5</button><button class="pill" data-chip data-css="--ar:9/16" data-label="9:16">9:16</button><button class="pill" data-chip data-css="--ar:16/9" data-label="16:9">16:9</button></div></div>
+        <div><h5>Detail</h5><input type="range" min="0" max="100" value="70"></div>
+      </div>
+    </div>
+    <div class="row1"><textarea data-prompt="image" rows="1" data-autogrow aria-label="Describe your image">@Nova on a rainy neon street at night, violet signs reflecting on wet ground</textarea>
+      <button class="send" data-generate="image" data-needs-prompt="image" data-cost="4" data-done="4 images ready" aria-label="Generate"><span data-i="arrow-up"></span></button></div>
+    <div class="row2">
+      <button class="pill on" data-toggle><img data-img="nova">@Nova</button>
+      <button class="pill" data-toggle-body="show-settings"><span data-i="sliders-horizontal"></span><span id="lookLbl">Cinematic</span> · <span id="arLbl">4:5</span></button>
+      <button class="pill" data-enhance="image" data-text="Cinematic film still of @Nova on a rain-soaked neon street at night, black techwear jacket, violet and magenta signs reflecting on wet asphalt, shallow depth of field, moody"><span data-i="wand-sparkles"></span>Improve</button>
+      <span class="sp"></span><span class="meta"><span data-i="zap"></span>4 credits</span>
+    </div>
+  </div>
+  <div class="composer glass for-video">
+    <div class="popover glass settings-video">
+      <div class="pop-grid">
+        <div><h5>Camera</h5><div class="chips" data-chips data-label-target="#camLbl"><button class="pill" data-chip data-label="Still">Still</button><button class="pill on" data-chip data-label="Push in">Push in</button><button class="pill" data-chip data-label="Orbit">Orbit</button><button class="pill" data-chip data-label="Pan">Pan</button><button class="pill" data-chip data-label="Rise">Rise</button></div></div>
+        <div><h5>Length</h5><div class="chips" data-chips data-label-target="#lenLbl"><button class="pill on" data-chip data-label="5s">5s</button><button class="pill" data-chip data-label="10s">10s</button></div></div>
+        <div><h5>Motion</h5><input type="range" min="1" max="10" value="6"></div>
+      </div>
+    </div>
+    <div class="row1"><div class="attach" data-upload="videosrc" data-single data-slot-host title="Change image"><img data-slot="videosrc" data-img="hero1" alt="Source"></div><textarea data-prompt="video" rows="1" data-autogrow aria-label="Describe the motion">She slowly turns to the camera as rain falls and neon flickers</textarea>
+      <button class="send" data-generate="video" data-cost="20" data-done="Your video is ready" data-done-icon="clapperboard" aria-label="Generate video"><span data-i="arrow-up"></span></button></div>
+    <div class="row2"><button class="pill" data-toggle-body="show-settings"><span data-i="video"></span><span id="camLbl">Push in</span> · <span id="lenLbl">5s</span></button><button class="pill on" data-toggle="Sound on" data-toggle-off="Sound off"><span data-i="volume-2"></span>Sound</button><button class="pill" data-enhance="video" data-text="She slowly turns toward the camera, rain falling in soft slow motion, neon signs flicker and reflect on the wet street, hair moves in the wind"><span data-i="wand-sparkles"></span>Improve</button><span class="sp"></span><span class="meta"><span data-i="zap"></span>20 credits</span></div>
+  </div>
+  <div class="composer glass for-voice">
+    <div class="row1"><textarea data-prompt="voice" rows="1" data-autogrow aria-label="What should they say">In a city that never sleeps, one light refused to go out. This is Nova.</textarea>
+      <button class="send" data-generate="voice" data-needs-prompt="voice" data-cost="2" data-done="Voice ready — press play" data-done-icon="audio-lines" aria-label="Generate voice"><span data-i="arrow-up"></span></button></div>
+    <div class="row2"><div class="chips" data-chips style="flex-wrap:nowrap"><button class="pill on" data-chip>Calm</button><button class="pill" data-chip>Warm</button><button class="pill" data-chip>Excited</button><button class="pill" data-chip>Whisper</button></div><button class="pill" data-insert="voice" data-mode="append" data-text="[pause]"><span data-i="pause"></span>Pause</button><span class="sp"></span><span class="meta"><span data-est>~4s</span></span></div>
+  </div>
+
+  <div class="dock-wrap glass">
+    <nav class="dock" data-dock="custom" aria-label="Main"></nav>
+    <span class="dock-sep"></span>
+    <button class="dock-tool" data-open="v-create" aria-label="Create"><span data-i="plus"></span></button>
+    <button class="dock-tool d-only" data-open="v-cmdk" aria-label="Search"><span data-i="search"></span></button>
+    <button class="dock-tool" data-dock-edit aria-label="Customize dock"><span data-i="layout-grid"></span></button>
+  </div>
+</div>
+
+<div class="modal" id="export" data-modal aria-label="Export">
+  <div class="mbox glass" data-gen="export" data-ms="3000" data-steps="Rendering|Mixing audio|Finishing">
+    <div class="mh"><h3 style="font-size:20px">Export</h3><button class="ibtn" data-close aria-label="Close"><span data-i="x"></span></button></div>
+    <div data-show="empty">
+      <div class="lbl">Quality</div><div class="chips" data-chips><button class="pill" data-chip>720p</button><button class="pill on" data-chip>1080p</button><button class="pill" data-chip>4K</button></div>
+      <div class="lbl">Format</div><div class="chips" data-chips><button class="pill on" data-chip>MP4</button><button class="pill" data-chip>MOV</button><button class="pill" data-chip>GIF</button></div>
+      <button class="btn btn-p btn-lg" style="width:100%;margin-top:22px" data-generate="export" data-done="Export complete"><span data-i="upload"></span>Export video</button>
+    </div>
+    <div data-show="loading" style="text-align:center;padding:20px 0"><span class="status glass"><span data-i="loader"></span><span data-step>Rendering</span><span class="pr" data-progress>0%</span></span></div>
+    <div data-show="done" class="done-c"><div class="ok"><span data-i="check"></span></div><h3>Ready to share</h3><p class="muted" style="margin:6px 0 18px">1080p · MP4 · 18.4 MB</p>
+      <div style="display:flex;gap:8px"><button class="btn" style="flex:1" data-copy="https://vidora.ai/v/neon-nights"><span data-i="link"></span>Copy link</button><button class="btn btn-p" style="flex:1" data-close data-reset="export">Done</button></div></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('vidora:view', e => {
+  const n = { home: 'Home', identity: 'Create Your Identity', image: 'Bring To Life · Image', video: 'Bring To Life · Video', voice: 'Give It A Voice', studio: 'Editing Studio', library: 'Library' };
+  const c = document.getElementById('crumb'); if (c) c.textContent = n[e.detail.view] || '';
+  document.body.classList.remove('show-settings');
+});
+document.addEventListener('vidora:done', e => { if (e.detail.key === 'identity') { ['h2','h3'].forEach(id => document.getElementById(id)?.classList.add('on')); document.getElementById('useNova').style.display = 'flex'; } });
+document.addEventListener('click', e => { if (document.body.classList.contains('show-settings') && !e.target.closest('.composer')) document.body.classList.remove('show-settings'); });
+</script>
+<!--@ENGINE-->
+</body>
+</html>

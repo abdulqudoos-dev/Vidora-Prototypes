@@ -1,0 +1,116 @@
+[
+ {
+  "id": "01-obsidian",
+  "n": "01",
+  "name": "Obsidian",
+  "tag": "The signature direction",
+  "url": "https://claude.ai/artifact/4vfVpNeuP3nGwhLMw9sJUY",
+  "desc": "Deep black with refined violet light. Tools are named Persona, Imagine, Motion and Voice, each with a plain-English line underneath. A grouped left sidebar on web, a floating dock with a centre Create button on mobile.",
+  "nav": "Left sidebar \u00b7 floating mobile dock",
+  "type": "Geist + Geist Mono",
+  "best": "A balanced, premium SaaS feel",
+  "sw": [
+   "#060509",
+   "#13101a",
+   "#8b5cf6",
+   "#c4b5fd",
+   "#f4f1fb"
+  ],
+  "path": "./obsidian/"
+ },
+ {
+  "id": "02-clay",
+  "n": "02",
+  "name": "Clay",
+  "tag": "Claymorphism \u2014 friendly and tactile",
+  "url": "https://claude.ai/artifact/7Y4KKhG9a2RyiqGMnMS38h",
+  "desc": "Puffy 3D tiles on dark plum, with one pastel colour per tool so people learn the app by colour. Bolt, a small robot guide, keeps the wording warm and simple.",
+  "nav": "Floating clay sidebar \u00b7 puffy mobile dock",
+  "type": "Fredoka + Nunito",
+  "best": "Creators and first-time users",
+  "sw": [
+   "#130c1b",
+   "#2d1f44",
+   "#b79cff",
+   "#ff9ecf",
+   "#86ecc3"
+  ],
+  "path": "./clay/"
+ },
+ {
+  "id": "03-halo",
+  "n": "03",
+  "name": "Halo",
+  "tag": "Canvas-first glass over aurora",
+  "url": "https://claude.ai/artifact/KfNrr1yW3c8ckcj1gvEHp1",
+  "desc": "The work sits in the centre. You type in a chat-style prompt bar at the bottom, settings open in a popover, and a macOS-style dock works on every screen. Your selfies orbit your face as you upload.",
+  "nav": "Bottom glass dock everywhere (customizable)",
+  "type": "Plus Jakarta Sans",
+  "best": "A modern, chat-like AI experience",
+  "sw": [
+   "#050409",
+   "#5b21b6",
+   "#a855f7",
+   "#e879f9",
+   "#f7f4ff"
+  ],
+  "path": "./halo/"
+ },
+ {
+  "id": "04-atelier",
+  "n": "04",
+  "name": "Atelier",
+  "tag": "Luxury editorial",
+  "url": "https://claude.ai/artifact/M4aESquucyuqvXiVbxmLs8",
+  "desc": "A fashion-magazine feel: serif headlines, hairline rules, numbered tools and sharp corners. Identity is a contact sheet, images come back as plates, and the voice tool is written like a screenplay.",
+  "nav": "Numbered top navigation \u00b7 minimal mobile tab bar",
+  "type": "Instrument Serif + Inter Tight + Plex Mono",
+  "best": "A high-end, brand-led product",
+  "sw": [
+   "#000000",
+   "#131117",
+   "#b9a5ff",
+   "#8c867e",
+   "#efeae2"
+  ],
+  "path": "./atelier/"
+ },
+ {
+  "id": "05-console",
+  "n": "05",
+  "name": "Console",
+  "tag": "Power-user studio",
+  "url": "https://claude.ai/artifact/NtZsQ81baQqDiQgc8HE4s6",
+  "desc": "Dense and keyboard-first. Project tabs, a dashboard, full parameter control, and a live render queue that fills as you generate. The editor has V1/T1/A1/A2 tracks and lock and visibility controls.",
+  "nav": "Slim icon rail + project tabs \u00b7 mobile tab bar",
+  "type": "IBM Plex Sans + JetBrains Mono",
+  "best": "Pros and heavy daily users",
+  "sw": [
+   "#09090b",
+   "#141418",
+   "#7c5cff",
+   "#3ecf8e",
+   "#ededf0"
+  ],
+  "path": "./console/"
+ },
+ {
+  "id": "06-prism",
+  "n": "06",
+  "name": "Prism",
+  "tag": "Guided and spatial",
+  "url": "https://claude.ai/artifact/S8WYu4ma1eBfb8Tk2EgRZr",
+  "desc": "Inspired by spatial interfaces: frosted windows over a blurred photo of the tool you are in, with round app icons. Every tool asks one simple question per screen, with Back and Continue.",
+  "nav": "Floating side ornament \u00b7 bottom pill on mobile",
+  "type": "Sora + DM Sans",
+  "best": "The easiest possible flow for anyone",
+  "sw": [
+   "#07060c",
+   "#221c34",
+   "#9b7bff",
+   "#d6c6ff",
+   "#fbf9ff"
+  ],
+  "path": "./prism/"
+ }
+]

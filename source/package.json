@@ -1,0 +1,18 @@
+{
+  "name": "vidora-prototypes",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "node build.js",
+    "site": "bash build/site.sh ..",
+    "shots": "node shot.js",
+    "test": "node flow.js && node overflow.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lucide-static": "^0.460.0"
+  },
+  "private": true
+}

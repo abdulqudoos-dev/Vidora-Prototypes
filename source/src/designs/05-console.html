@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Vidora — 05 Console</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<!--@ENGINE_CSS-->
+<style>
+:root{
+  --bg:#09090b;--p1:#0f0f12;--p2:#141418;--p3:#1b1b21;--bd:#222228;--bd2:#2e2e36;--tx:#ededf0;--mu:#8b8b96;--mu2:#5c5c66;
+  --ac:#7c5cff;--ac2:#a28bff;--acbg:rgba(124,92,255,.14);--ok:#3ecf8e;--warn:#f5a524;--err:#f04f5f;
+  --r:8px;--ease:cubic-bezier(.2,.8,.2,1);
+  --v-surface:#0f0f12;--v-surface-2:#1b1b21;--v-line:#2e2e36;--v-text:var(--tx);--v-muted:var(--mu);--v-accent:#7c5cff;--v-accent-2:#a28bff;--v-radius:12px;--v-radius-sm:8px;--v-font:'IBM Plex Sans',sans-serif;--v-toast-bg:#141418;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:'IBM Plex Sans',system-ui,sans-serif;font-size:13.5px;-webkit-font-smoothing:antialiased}
+body{height:100dvh;overflow:hidden}
+button{background:none;border:0;padding:0}
+h1,h2,h3,h4{margin:0;font-weight:600;letter-spacing:-.01em}
+p{margin:0}
+.mono{font-family:'JetBrains Mono',monospace;font-size:12px}
+.mu{color:var(--mu)}.mu2{color:var(--mu2)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:32px;padding:0 12px;border-radius:var(--r);border:1px solid var(--bd2);background:var(--p2);font-size:13px;font-weight:500;transition:.15s;white-space:nowrap}
+.btn:hover{background:var(--p3);border-color:#3a3a44}
+.btn .ic{width:15px;height:15px}
+.btn-p{background:var(--ac);border-color:#8f74ff;color:#fff;box-shadow:inset 0 1px 0 rgba(255,255,255,.2),0 4px 14px -4px rgba(124,92,255,.7)}
+.btn-p:hover{background:#8a6cff}
+.btn-p[disabled]{opacity:.4;box-shadow:none}
+.btn-p.busy{background:var(--p3);border-color:var(--bd2);box-shadow:none}
+.btn-lg{height:40px;font-size:14px;padding:0 16px}
+.btn-block{width:100%}
+kbd{font-family:'JetBrains Mono';font-size:10.5px;padding:2px 5px;border-radius:4px;border:1px solid var(--bd2);color:var(--mu);background:var(--p1)}
+.btn-p kbd{background:rgba(0,0,0,.2);border-color:rgba(255,255,255,.25);color:#fff}
+.ib{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;color:var(--mu);transition:.15s}
+.ib:hover{color:var(--tx);background:var(--p3)}
+.ib .ic{width:16px;height:16px}
+.seg{display:flex;padding:2px;border-radius:var(--r);background:var(--p1);border:1px solid var(--bd)}
+.seg button{flex:1;height:26px;padding:0 10px;border-radius:6px;font-size:12.5px;color:var(--mu);transition:.15s;white-space:nowrap}
+.ib.on{color:var(--ac2);background:var(--acbg)}
+.seg button.on,.seg button.active{background:var(--p3);color:var(--tx);box-shadow:0 1px 2px rgba(0,0,0,.5),inset 0 0 0 1px var(--bd2)}
+.tag{display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:5px;font-size:11.5px;font-weight:500;border:1px solid var(--bd2);color:var(--mu);white-space:nowrap}
+.tag .ic{width:12px;height:12px}
+.tag.ok{color:var(--ok);border-color:rgba(62,207,142,.3);background:rgba(62,207,142,.08)}
+.tag.run{color:var(--warn);border-color:rgba(245,165,36,.3);background:rgba(245,165,36,.08)}
+.tag.ac{color:var(--ac2);border-color:rgba(124,92,255,.4);background:var(--acbg)}
+textarea,input[type=text],select{width:100%;background:var(--p1);border:1px solid var(--bd2);border-radius:var(--r);outline:0;color:var(--tx);font:inherit;resize:none;padding:8px 10px;transition:.15s}
+textarea:focus,input[type=text]:focus{border-color:var(--ac);box-shadow:0 0 0 3px rgba(124,92,255,.2)}
+.fld{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+.fld>label,.fld>.lb{display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--mu);font-weight:500}
+.fld>label .mono,.fld>.lb .mono{font-size:11px}
+.rng{display:grid;grid-template-columns:1fr 46px;gap:10px;align-items:center}
+.rng output{font-family:'JetBrains Mono';font-size:11.5px;text-align:right;padding:4px 6px;border:1px solid var(--bd);border-radius:5px;background:var(--p1)}
+input[type=range]{--thumb:13px;--track-h:3px;--range-track:var(--bd2);--thumb-shadow:0 0 0 3px rgba(124,92,255,.35)}
+.pnl{background:var(--p1);border:1px solid var(--bd);border-radius:10px}
+.pnl-h{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-bottom:1px solid var(--bd);font-size:12.5px;font-weight:600}
+.pnl-h .r{margin-left:auto;display:flex;gap:4px;align-items:center}
+.pnl-b{padding:14px}
+.view-in{animation:vin .35s var(--ease) both}
+@keyframes vin{from{opacity:0;transform:translateY(4px)}}
+
+/* shell */
+.app{display:grid;grid-template-columns:56px 1fr 300px;grid-template-rows:42px minmax(0,1fr);height:100dvh}
+body[data-current="welcome"] .app{display:none}
+body.queue-off .app{grid-template-columns:56px 1fr 0}
+body.queue-off .queue{display:none}
+.rail{grid-column:1;grid-row:1/3;border-right:1px solid var(--bd);display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;background:var(--p1)}
+.lg{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--ac);margin-bottom:8px;box-shadow:0 4px 14px -2px rgba(124,92,255,.7)}
+.lg svg{width:16px;height:16px}
+.rail .dock{display:flex;flex-direction:column;gap:4px}
+.dock-item,.rb{position:relative;width:38px;height:38px;border-radius:9px;display:grid;place-items:center;color:var(--mu);transition:.15s}
+.dock-item .ic,.rb .ic{width:18px;height:18px}
+.dock-item:hover,.rb:hover{color:var(--tx);background:var(--p3)}
+.dock-item[aria-current],.rb[aria-current]{color:var(--tx);background:var(--acbg);box-shadow:inset 0 0 0 1px rgba(124,92,255,.45)}
+.dock-item[aria-current] .ic{color:var(--ac2)}
+.dock-label{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);padding:5px 8px;border-radius:6px;background:var(--p3);border:1px solid var(--bd2);font-size:12px;white-space:nowrap;opacity:0;pointer-events:none;transition:.15s;z-index:60;color:var(--tx)}
+.dock-item:hover .dock-label{opacity:1}
+.dock-x{display:none}
+.rail .sp{flex:1}
+.rail .sep{width:22px;height:1px;background:var(--bd);margin:6px 0}
+.tabs{grid-column:2/4;display:flex;align-items:stretch;border-bottom:1px solid var(--bd);background:var(--p1);min-width:0}
+.ptab{display:flex;align-items:center;gap:8px;padding:0 12px;border-right:1px solid var(--bd);font-size:12.5px;color:var(--mu);max-width:200px;white-space:nowrap;position:relative}
+.ptab .ic{width:14px;height:14px}
+.ptab.on{color:var(--tx);background:var(--bg)}
+.ptab.on::after{content:"";position:absolute;left:0;right:0;top:0;height:2px;background:var(--ac)}
+.ptab .x{opacity:.5;width:16px;height:16px;border-radius:4px;display:grid;place-items:center}
+.ptab .x .ic{width:11px;height:11px}
+.tabs .r{margin-left:auto;display:flex;align-items:center;gap:8px;padding:0 10px}
+.cmdbtn{display:flex;align-items:center;gap:8px;height:28px;padding:0 8px 0 10px;border-radius:7px;border:1px solid var(--bd2);color:var(--mu);font-size:12.5px;min-width:220px}
+.cmdbtn .ic{width:14px;height:14px}
+.cmdbtn kbd{margin-left:auto}
+.cbar{display:flex;align-items:center;gap:8px}
+.cbar .m{width:80px;height:4px;border-radius:9px;background:var(--bd2);overflow:hidden}
+.cbar .m i{display:block;height:100%;width:62%;background:var(--ac)}
+.av{width:26px;height:26px;border-radius:50%;object-fit:cover}
+.main{grid-column:2;grid-row:2;min-width:0;min-height:0;overflow:auto}
+.main::-webkit-scrollbar,.queue::-webkit-scrollbar{width:10px}
+.main::-webkit-scrollbar-thumb,.queue::-webkit-scrollbar-thumb{background:var(--p3);border-radius:9px;border:3px solid var(--bg)}
+.pg{padding:20px 22px 40px}
+.ph{display:flex;align-items:center;gap:12px;margin-bottom:18px}
+.ph .ico{width:34px;height:34px;border-radius:9px;display:grid;place-items:center;background:var(--acbg);color:var(--ac2);border:1px solid rgba(124,92,255,.35)}
+.ph .ico .ic{width:17px;height:17px}
+.ph h1{font-size:18px}
+.ph p{font-size:12.5px;color:var(--mu)}
+.ph .r{margin-left:auto;display:flex;gap:8px;align-items:center}
+
+/* queue */
+.queue{grid-column:3;grid-row:2;border-left:1px solid var(--bd);background:var(--p1);display:flex;flex-direction:column;min-height:0}
+.q-h{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-bottom:1px solid var(--bd);font-weight:600;font-size:12.5px}
+.q-h .r{margin-left:auto;display:flex;gap:4px}
+.q-list{flex:1;overflow:auto;padding:8px}
+.job{display:grid;grid-template-columns:44px 1fr;gap:10px;padding:8px;border-radius:8px;border:1px solid transparent;transition:.15s;animation:vin .3s var(--ease)}
+.job:hover{background:var(--p2);border-color:var(--bd)}
+.job .th{width:44px;height:44px;border-radius:6px;overflow:hidden;background:var(--p3);position:relative}
+.job .th img{width:100%;height:100%;object-fit:cover}
+.job .th .ic{position:absolute;inset:0;margin:auto;width:16px;height:16px;color:var(--mu)}
+.job b{font-size:12.5px;font-weight:500;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.job .meta{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:11px;color:var(--mu)}
+.job .bar{height:3px;border-radius:9px;background:var(--bd2);margin-top:6px;overflow:hidden}
+.job .bar i{display:block;height:100%;width:0;background:var(--warn);transition:width .15s linear}
+.job.done .bar{display:none}
+.q-foot{border-top:1px solid var(--bd);padding:12px}
+.usage{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:6px}
+.spark{width:100%;height:42px}
+
+/* dashboard */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:16px}
+.kpi{padding:14px}
+.kpi .l{font-size:12px;color:var(--mu);display:flex;align-items:center;gap:6px}
+.kpi .l .ic{width:14px;height:14px}
+.kpi b{display:block;font-size:24px;font-weight:600;margin:6px 0 2px;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.kpi small{font-size:11.5px;color:var(--ok)}
+.kpi svg{width:100%;height:34px;margin-top:6px}
+.grid2{display:grid;grid-template-columns:1.4fr 1fr;gap:12px}
+.qs{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:16px}
+.qa{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:12px;border-radius:10px;border:1px solid var(--bd);background:var(--p1);text-align:left;transition:.15s;position:relative;overflow:hidden}
+.qa:hover{border-color:rgba(124,92,255,.5);background:var(--p2)}
+.qa .ico{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:var(--p3);color:var(--ac2)}
+.qa .ico .ic{width:16px;height:16px}
+.qa b{font-size:13px;font-weight:500}
+.qa small{font-size:11.5px;color:var(--mu)}
+.qa kbd{position:absolute;top:10px;right:10px}
+.qa img{position:absolute;right:-20px;bottom:-20px;width:90px;height:90px;object-fit:cover;border-radius:12px;opacity:.25;transform:rotate(-8deg);transition:.3s}
+.qa:hover img{opacity:.6}
+table{width:100%;border-collapse:collapse}
+th{font-size:11.5px;font-weight:500;color:var(--mu);text-align:left;padding:8px 12px;border-bottom:1px solid var(--bd)}
+td{padding:8px 12px;border-bottom:1px solid var(--bd);font-size:13px;white-space:nowrap}
+tr:last-child td{border:0}
+tbody tr{cursor:pointer;transition:.1s}
+tbody tr:hover{background:var(--p2)}
+.nm{display:flex;align-items:center;gap:10px}
+.nm img{width:40px;height:26px;border-radius:4px;object-fit:cover}
+.tpls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl{position:relative;aspect-ratio:16/10;border-radius:8px;overflow:hidden;border:1px solid var(--bd);text-align:left}
+.tpl img{width:100%;height:100%;object-fit:cover;transition:.4s}
+.tpl:hover img{transform:scale(1.05)}
+.tpl span{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;background:linear-gradient(transparent,rgba(0,0,0,.85));font-size:12px;font-weight:500}
+
+/* workspace (image/video/voice) */
+.ws{display:grid;grid-template-columns:300px 1fr;gap:12px;align-items:start}
+.ws>*{min-width:0}
+.ws .params{position:sticky;top:0}
+.prompt-top{display:flex;gap:8px;margin-bottom:12px}
+.prompt-top textarea{min-height:44px;font-size:14px;line-height:1.45}
+.prompt-top .btn-p{height:auto;align-self:stretch;min-width:132px;flex-direction:column;gap:2px}
+.prompt-top .btn-p small{font-size:11px;opacity:.75;font-weight:400}
+.who{display:flex;gap:6px;flex-wrap:wrap}
+.who button{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px 0 3px;border-radius:7px;border:1px solid var(--bd2);font-size:12.5px;color:var(--mu)}
+.who img{width:24px;height:24px;border-radius:5px;object-fit:cover}
+.who .on{border-color:var(--ac);color:var(--tx);background:var(--acbg)}
+.canvas{min-height:calc(100dvh - 200px);display:flex;flex-direction:column}
+.cv-h{display:flex;align-items:center;gap:8px;height:40px;padding:0 12px;border-bottom:1px solid var(--bd);font-size:12.5px}
+.cv-h .r{margin-left:auto;display:flex;gap:4px;align-items:center}
+.cv-b{flex:1;padding:14px;display:flex;flex-direction:column}
+.empty{flex:1;display:grid;place-items:center;text-align:center;border:1px dashed var(--bd2);border-radius:8px;background-image:radial-gradient(var(--bd) 1px,transparent 1px);background-size:16px 16px}
+.empty .ic-w{width:42px;height:42px;margin:0 auto 12px;border-radius:10px;display:grid;place-items:center;background:var(--p3);border:1px solid var(--bd2);color:var(--ac2)}
+.empty .ic-w .ic{width:20px;height:20px}
+.empty h3{font-size:14px}.empty p{color:var(--mu);font-size:12.5px;margin-top:4px}
+.empty .keys{display:flex;gap:14px;justify-content:center;margin-top:14px;font-size:12px;color:var(--mu)}
+.res{--ar:4/5;display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.r-card{border-radius:8px;overflow:hidden;border:1px solid var(--bd);background:var(--p2)}
+.r-card .im{aspect-ratio:var(--ar);position:relative;overflow:hidden}
+.r-card img{width:100%;height:100%;object-fit:cover}
+.r-card .hv{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:8px;gap:6px;background:linear-gradient(transparent 50%,rgba(0,0,0,.75));opacity:0;transition:.15s}
+.r-card:hover .hv{opacity:1}
+@media (hover:none){.r-card .hv{opacity:1}}
+.r-card .hv .row{display:flex;gap:4px}
+.r-card .hv .btn{height:28px;font-size:12px;padding:0 8px;flex:1}
+.r-card .ft{display:flex;justify-content:space-between;align-items:center;padding:6px 8px;font-size:11px;color:var(--mu)}
+.sk{aspect-ratio:var(--ar);border-radius:8px;border:1px solid var(--bd);background:var(--p2);position:relative;overflow:hidden}
+.sk::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(124,92,255,.12),transparent);animation:sw 1.2s linear infinite}
+@keyframes sw{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.prog{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:12.5px}
+.prog .b{flex:1;height:3px;border-radius:9px;background:var(--bd2);overflow:hidden}
+.prog .b i{display:block;height:100%;width:calc(var(--prog)*100%);background:var(--ac)}
+.hist{display:flex;gap:6px;padding:10px 12px;border-top:1px solid var(--bd);overflow-x:auto;scrollbar-width:none}
+.hist img{width:52px;height:52px;border-radius:6px;object-fit:cover;opacity:.55;border:1px solid var(--bd);transition:.15s;flex:none}
+.hist img:hover{opacity:1}
+.hist .lbl{font-size:11px;color:var(--mu);writing-mode:vertical-rl;transform:rotate(180deg);text-align:center}
+.src{position:relative;aspect-ratio:16/10;border-radius:8px;overflow:hidden;border:1px solid var(--bd2);cursor:pointer}
+.src img{width:100%;height:100%;object-fit:cover}
+.src .btn{position:absolute;right:6px;bottom:6px;height:26px;font-size:11.5px;background:rgba(15,15,18,.8)}
+.camgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.camgrid button{display:flex;flex-direction:column;align-items:center;gap:5px;padding:9px 0;border-radius:7px;border:1px solid var(--bd2);font-size:11.5px;color:var(--mu)}
+.camgrid .ic{width:16px;height:16px}
+.camgrid .on{border-color:var(--ac);color:var(--tx);background:var(--acbg)}
+.camgrid .on .ic{color:var(--ac2)}
+.player{position:relative;aspect-ratio:16/9;border-radius:8px;overflow:hidden;background:#000;border:1px solid var(--bd2)}
+.player img{width:100%;height:100%;object-fit:cover}
+.player.playing img{animation:kb 8s linear both}
+@keyframes kb{to{transform:scale(1.15) translateX(-2%)}}
+.ctrl{display:flex;align-items:center;gap:10px;padding:8px 0}
+.ctrl .tr{flex:1;height:22px;position:relative;cursor:pointer;border-radius:5px;overflow:hidden;background:var(--p2);border:1px solid var(--bd)}
+.ctrl .tr .frames{position:absolute;inset:0;display:flex;opacity:.55}
+.ctrl .tr .frames span{flex:1;background-size:cover;background-position:center;border-right:1px solid rgba(0,0,0,.4)}
+.ctrl .tr i{position:absolute;top:0;bottom:0;left:calc(var(--t,0)*100%);width:2px;background:#fff;box-shadow:0 0 6px #fff}
+.ppb{width:30px;height:30px;border-radius:7px;display:grid;place-items:center;background:var(--tx);color:#000}
+.ppb .ic{width:13px;height:13px;fill:currentColor}
+.specs{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--bd);border-radius:8px;margin-top:10px}
+.specs div{padding:8px 10px;border-right:1px solid var(--bd);font-size:11.5px;color:var(--mu)}
+.specs div:last-child{border:0}
+.specs b{display:block;color:var(--tx);font-family:'JetBrains Mono';font-weight:400;font-size:12px;margin-top:2px}
+.acts{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+
+/* identity dataset */
+.ds{display:grid;grid-template-columns:1fr 300px;gap:12px;align-items:start}
+.ds>*{min-width:0}
+.drop{display:flex;align-items:center;gap:14px;padding:14px;border:1px dashed var(--bd2);border-radius:8px;cursor:pointer;transition:.15s}
+.drop:hover,.drop.drag{border-color:var(--ac);background:var(--acbg)}
+.drop .ic-w{width:38px;height:38px;border-radius:9px;display:grid;place-items:center;background:var(--p3);color:var(--ac2);flex:none}
+.drop .ic-w .ic{width:18px;height:18px}
+.drop b{font-size:13.5px;font-weight:500}.drop p{font-size:12px;color:var(--mu)}
+.drop .r{margin-left:auto;display:flex;gap:6px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:8px;margin-top:12px;counter-reset:n}
+.dgrid .up-thumb{border-radius:8px;overflow:hidden;border:1px solid var(--bd);background:var(--p2);aspect-ratio:3/4;counter-increment:n}
+.dgrid .up-thumb img{height:100%}
+.dgrid .up-thumb::after{content:"IMG_0" counter(n) " · 98%";position:absolute;left:0;right:0;bottom:0;padding:16px 6px 4px;font-family:'JetBrains Mono';font-size:10px;color:#cfcfe0;background:linear-gradient(transparent,rgba(0,0,0,.85))}
+.dgrid .up-ok{left:auto;right:6px;top:6px;bottom:auto}
+.dgrid .up-x{right:auto;left:6px;border-radius:5px}
+.checks{display:flex;flex-direction:column;gap:2px;margin:6px 0 14px}
+.checks div{display:flex;align-items:center;gap:8px;font-size:12.5px;padding:5px 0;color:var(--mu)}
+.checks .ic{width:14px;height:14px;color:var(--ok)}
+.trainbox{border:1px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:12px;background:var(--bg)}
+.trainbox .row{display:flex;justify-content:space-between;font-size:12px;color:var(--mu);margin-bottom:8px}
+.trainbox .b{height:6px;border-radius:9px;background:var(--bd2);overflow:hidden}
+.trainbox .b i{display:block;height:100%;width:calc(var(--prog)*100%);background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.log{font-family:'JetBrains Mono';font-size:11px;color:var(--mu);margin-top:10px;line-height:1.7}
+.log b{color:var(--ok);font-weight:400}
+.idres{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}
+.idres img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px}
+
+/* voice */
+.lines{border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:var(--bg)}
+.ln{display:grid;grid-template-columns:34px 110px 1fr 90px;align-items:start;border-bottom:1px solid var(--bd)}
+.ln:last-child{border:0}
+.ln .no{font-family:'JetBrains Mono';font-size:11px;color:var(--mu2);padding:12px 0 0 12px}
+.ln .sp{padding:9px 8px}
+.ln .sp span{display:inline-flex;align-items:center;gap:5px;height:24px;padding:0 8px;border-radius:5px;font-size:12px;background:var(--p2);border:1px solid var(--bd2)}
+.ln .sp img{width:16px;height:16px;border-radius:3px;object-fit:cover}
+.ln textarea{border:0;background:transparent;border-radius:0;padding:12px 10px;font-size:14px;line-height:1.5;min-height:44px}
+.ln textarea:focus{box-shadow:none;background:var(--p1)}
+.ln .em{padding:9px 10px 0 0;text-align:right}
+.vlist{display:flex;flex-direction:column;gap:4px}
+.vrow{display:grid;grid-template-columns:30px 1fr 70px;gap:10px;align-items:center;padding:7px 8px;border-radius:7px;border:1px solid transparent;text-align:left}
+.vrow:hover{background:var(--p2)}
+.vrow.on{border-color:rgba(124,92,255,.5);background:var(--acbg)}
+.vrow .f{width:30px;height:30px;border-radius:6px;overflow:hidden;display:grid;place-items:center;background:var(--p3);font-size:12px;font-weight:600}
+.vrow .f img{width:100%;height:100%;object-fit:cover}
+.vrow b{font-size:13px;font-weight:500;display:block}.vrow small{font-size:11px;color:var(--mu)}
+.vrow [data-wave]{--wave-h:18px;--wave-off:var(--bd2)}
+.vrow.on [data-wave]{--wave-off:rgba(162,139,255,.6)}
+.wf{display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--bd);border-radius:8px;background:var(--bg)}
+.wf [data-wave]{flex:1;--wave-h:64px;--wave-gap:2px;--wave-off:var(--bd2);--wave-on:var(--ac2);cursor:pointer}
+.wf .ppb{width:36px;height:36px}
+.rec{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--bd);border-radius:8px}
+.rec .rb{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--err);flex:none}
+.rec .rb .ic{width:15px;height:15px}
+.rec.rec .rb{border-radius:8px;box-shadow:0 0 0 4px rgba(240,79,95,.25)}
+.rec [data-live]{flex:1;--wave-h:26px;--wave-on:var(--err)}
+
+/* studio */
+body[data-current="studio"] .pg{padding:0;height:100%}
+[data-view="studio"]{height:100%}
+.studio{display:grid;grid-template-columns:240px 1fr 260px;grid-template-rows:minmax(0,1fr) 270px;height:100%}
+.st-bin{border-right:1px solid var(--bd);display:flex;flex-direction:column;min-height:0}
+.st-bin .seg{margin:8px}
+.st-bin .bd{flex:1;overflow:auto;padding:0 8px 8px}
+.bin{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.bin button{border-radius:6px;overflow:hidden;border:1px solid var(--bd);text-align:left;background:var(--p2)}
+.bin img{width:100%;aspect-ratio:16/10;object-fit:cover;display:block}
+.bin span{display:flex;justify-content:space-between;padding:4px 6px;font-size:10.5px;color:var(--mu)}
+.blist{display:flex;flex-direction:column;gap:4px}
+.blist button{display:flex;align-items:center;gap:8px;padding:8px;border-radius:6px;border:1px solid var(--bd);text-align:left;font-size:12.5px;background:var(--p2)}
+.blist button:hover{border-color:var(--ac)}
+.blist .ic{width:14px;height:14px;color:var(--ac2)}
+.blist small{margin-left:auto;font-family:'JetBrains Mono';font-size:10.5px;color:var(--mu)}
+.st-view{display:flex;flex-direction:column;min-width:0;min-height:0}
+.st-vh{display:flex;align-items:center;gap:8px;height:40px;padding:0 10px;border-bottom:1px solid var(--bd)}
+.st-vh .r{margin-left:auto;display:flex;gap:6px;align-items:center}
+.pvw{flex:1;min-height:0;padding:14px;display:flex;align-items:center;justify-content:center;container-type:size;background:repeating-conic-gradient(#0d0d10 0 25%,#0b0b0d 0 50%) 0 0/16px 16px}
+.screen{--ar:16/9;--arn:1.7778;width:min(100cqw,calc(100cqh * var(--arn)));aspect-ratio:var(--ar);position:relative;overflow:hidden;background:#000;outline:1px solid var(--bd2);--br:1;--ct:1;--sat:1;--filter:none}
+.screen img{width:100%;height:100%;object-fit:cover;filter:brightness(var(--br)) contrast(var(--ct)) saturate(var(--sat)) var(--filter);transform:scale(calc(1.02 + var(--k,0)*.1))}
+.screen .ttl{position:absolute;inset:auto 0 42% 0;text-align:center;font-weight:600;font-size:clamp(18px,3.4vw,40px);letter-spacing:.3em;text-shadow:0 2px 20px rgba(124,92,255,.9)}
+.screen .cap{position:absolute;left:0;right:0;bottom:7%;text-align:center;font-size:clamp(11px,1.3vw,15px);display:none}
+body.captions-on .screen .cap:not(:empty){display:block}
+.screen .cap{text-shadow:0 1px 4px #000;font-weight:500}
+.safe{position:absolute;inset:5%;border:1px dashed rgba(255,255,255,.18);pointer-events:none}
+.tbar{display:flex;align-items:center;gap:6px;height:44px;padding:0 10px;border-top:1px solid var(--bd)}
+.tbar .tc{font-family:'JetBrains Mono';font-size:13px;padding:4px 8px;border-radius:6px;background:var(--bg);border:1px solid var(--bd);color:var(--ac2)}
+.tbar .tot{font-family:'JetBrains Mono';font-size:12px;color:var(--mu)}
+.tbar .r{margin-left:auto;display:flex;gap:4px;align-items:center}
+.st-insp{border-left:1px solid var(--bd);overflow:auto}
+.st-insp .sec{border-bottom:1px solid var(--bd);padding:12px}
+.st-insp h5{margin:0 0 10px;font-size:11.5px;font-weight:600;color:var(--mu);display:flex;justify-content:space-between}
+.prop{display:grid;grid-template-columns:70px 1fr 40px;gap:8px;align-items:center;font-size:12px;color:var(--mu);margin-bottom:6px}
+.prop output{font-family:'JetBrains Mono';font-size:11px;text-align:right;color:var(--tx)}
+.st-tl{grid-column:1/-1;border-top:1px solid var(--bd);display:flex;flex-direction:column;min-width:0;background:var(--p1)}
+.tl-tb{display:flex;align-items:center;gap:4px;height:36px;padding:0 8px;border-bottom:1px solid var(--bd)}
+.tl-tb .sepv{width:1px;height:18px;background:var(--bd);margin:0 4px}
+.tl-tb .z{margin-left:auto;width:150px}
+.tl-b{flex:1;display:grid;grid-template-columns:160px 1fr;min-height:0}
+.tl-hd{border-right:1px solid var(--bd);padding-top:22px}
+.th-row{height:38px;margin:4px 0;display:flex;align-items:center;gap:4px;padding:0 8px;font-size:12px}
+.th-row.v{height:52px}
+.th-row b{font-family:'JetBrains Mono';font-weight:500;font-size:11px;color:var(--ac2);width:22px}
+.th-row span.n{flex:1;color:var(--mu)}
+.th-row .t{width:22px;height:22px;border-radius:5px;display:grid;place-items:center;color:var(--mu2)}
+.th-row .t .ic{width:13px;height:13px}
+.th-row .t.on{color:var(--tx);background:var(--p3)}
+[data-timeline]{--pps:30;min-width:0;background:var(--bg)}
+[data-tl-scroll]{height:100%}
+[data-ruler]{background:var(--p1);border-bottom:1px solid var(--bd)}
+[data-track]{height:38px;margin:4px 0}[data-track="video"]{height:52px}
+.clip{border-radius:5px;font-size:11px;padding:3px 6px;display:flex;align-items:flex-start;white-space:nowrap;border:1px solid rgba(255,255,255,.12)}
+.clip .clip-name{position:relative;z-index:1;display:inline-flex;gap:4px;align-items:center;font-family:'JetBrains Mono';font-size:10.5px;text-shadow:0 1px 2px #000;background:rgba(0,0,0,.45);padding:1px 4px;border-radius:3px}
+.clip .clip-name .ic{width:11px;height:11px}
+.clip-video{background-color:#1e1a33;border-color:#4b3fa0}
+.clip-text{background:#3a2f7a;border-color:#7c5cff;align-items:center}
+.clip-voice{background:#11302a;border-color:#2b8a6b;flex-direction:column;gap:2px}
+.clip-music{background:#2f2614;border-color:#8a6a2b;flex-direction:column;gap:2px}
+.clip .clip-wave{--wave-h:16px;width:100%}
+.clip-voice .clip-wave{--wave-off:rgba(62,207,142,.6)}
+.clip-music .clip-wave{--wave-off:rgba(245,165,36,.55)}
+.clip.sel{border-color:#fff;box-shadow:0 0 0 1px #fff;z-index:2}
+.clip .h-l,.clip .h-r{background:var(--warn);width:6px}
+[data-playhead]::before{content:"";position:absolute;top:0;bottom:0;left:0;width:1px;background:var(--err)}
+[data-playhead]::after{content:"";position:absolute;top:4px;left:-6px;width:13px;height:14px;background:var(--err);clip-path:polygon(0 0,100% 0,100% 60%,50% 100%,0 60%)}
+.mtools,.mtrans{display:none}
+
+/* library table */
+.lib-h{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.lib-h input{max-width:280px}
+.lib-h .r{margin-left:auto}
+.lgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px}
+.lgrid .it{border-radius:8px;overflow:hidden;border:1px solid var(--bd);background:var(--p1)}
+.lgrid .it .im{aspect-ratio:4/3;position:relative;overflow:hidden}
+.lgrid img{width:100%;height:100%;object-fit:cover}
+.lgrid .it .ft{padding:8px 10px}
+.lgrid .it b{font-size:12.5px;font-weight:500;display:block}
+.lgrid .it small{font-size:11px;color:var(--mu);display:flex;justify-content:space-between;margin-top:2px}
+.lgrid .aud .im{display:flex;align-items:center;padding:14px;background:var(--p2)}
+.lgrid .aud [data-wave]{flex:1;--wave-h:50px;--wave-off:var(--bd2);--wave-on:var(--ac2)}
+.lgrid .tag{position:absolute;left:6px;top:6px;background:rgba(0,0,0,.65)}
+
+/* welcome */
+.welcome{position:relative;height:100dvh;display:grid;grid-template-columns:1fr 1fr;overflow:auto}
+.w-l{display:flex;flex-direction:column;justify-content:center;padding:40px clamp(24px,6vw,80px);gap:16px;border-right:1px solid var(--bd)}
+.w-l h1{font-size:44px;line-height:1.05;letter-spacing:-.03em}
+.w-l h1 span{color:var(--ac2)}
+.w-l p{color:var(--mu);font-size:15px;max-width:440px;line-height:1.55}
+.term{font-family:'JetBrains Mono';font-size:12px;border:1px solid var(--bd);border-radius:10px;background:var(--p1);padding:14px;line-height:1.9;max-width:460px}
+.term .p{color:var(--ac2)}.term .k{color:var(--ok)}.term .m{color:var(--mu)}
+.w-r{position:relative;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:1px;background:var(--bd)}
+.w-r div{position:relative;overflow:hidden;background:#000}
+.w-r img{width:100%;height:100%;object-fit:cover;opacity:.85}
+.w-r .tag{position:absolute;left:12px;top:12px;background:rgba(0,0,0,.7)}
+.w-r .lbl{position:absolute;left:12px;bottom:12px;font-family:'JetBrains Mono';font-size:11px;color:#ddd}
+
+/* modal */
+.modal{align-items:center;justify-content:center;padding:16px}
+.mbox{width:min(460px,100%);background:var(--p1);border:1px solid var(--bd2);border-radius:12px;transform:scale(.98);transition:.25s var(--ease)}
+.modal.open .mbox{transform:none}
+.mbox .pnl-h{height:46px;font-size:14px}
+
+/* mobile */
+.mbar{display:none}
+@media (max-width:900px){
+  body{overflow:auto;height:auto}
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 1fr;height:auto;min-height:100dvh}
+  body.queue-off .app{grid-template-columns:minmax(0,1fr)}
+  .ws>*,.ds>*,.grid2>*{min-width:0;width:100%}
+  .rail,.queue,.ptab,.cmdbtn,.cbar .m{display:none}
+  .tabs{grid-column:1;position:sticky;top:0;z-index:30;height:50px;padding-top:env(safe-area-inset-top);height:calc(50px + env(safe-area-inset-top))}
+  .tabs::before{content:"";width:28px;height:28px;margin:auto 0 auto 12px;border-radius:8px;background:var(--ac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 5l7 14 7-14'/%3E%3C/svg%3E") center/14px no-repeat}
+  .tabs .mtitle{display:flex!important;align-items:center;padding-left:10px;font-weight:600}
+  .main{overflow:visible;grid-column:1}
+  .pg{padding:14px 12px 100px}
+  .kpis{grid-template-columns:1fr 1fr}
+  .qs{grid-template-columns:1fr 1fr}
+  .qs .qa:first-child{grid-column:span 2}
+  .grid2,.ws,.ds{grid-template-columns:1fr}
+  .ws .params{position:static}
+  .ws{display:flex;flex-direction:column-reverse}
+  .res{grid-template-columns:1fr 1fr}
+  .prompt-top{flex-direction:column}
+  .prompt-top .btn-p{min-height:44px;flex-direction:row}
+  .hide-m{display:none!important}
+  .ln{grid-template-columns:28px 1fr}
+  .ln .sp{grid-column:2;padding-bottom:0}
+  .ln textarea{grid-column:2}
+  .ln .em{display:none}
+  .canvas{min-height:auto}
+  .empty{min-height:220px}
+  .mbar{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;align-items:stretch;background:rgba(15,15,18,.95);backdrop-filter:blur(12px);border-top:1px solid var(--bd);padding-bottom:env(safe-area-inset-bottom)}
+  .mbar .dock-item{flex:1;width:auto;height:58px;border-radius:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+  .mbar .dock-label{position:static;opacity:1;transform:none;background:none;border:0;padding:0;font-size:10.5px;color:inherit}
+  .mbar .dock-item[aria-current]{background:none;box-shadow:inset 0 2px 0 var(--ac)}
+  .mbar .dock-fab{width:46px;height:40px;margin:9px 4px;border-radius:10px;background:var(--ac);display:grid;place-items:center}
+  .mbar .dock-fab .ic{width:20px;height:20px}
+  body[data-current="studio"] .mbar{display:none}
+  body[data-current="studio"] .pg{height:calc(100dvh - 50px)}
+  .studio{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto 190px auto;height:100%}
+  .st-bin,.st-insp{display:none}
+  .st-view .tbar{display:none}
+  .screen{--ar:9/16;--arn:.5625}
+  .mtrans{display:flex;align-items:center;justify-content:center;gap:10px;height:44px;border-top:1px solid var(--bd)}
+  .tl-tb{display:none}
+  .tl-b{grid-template-columns:36px 1fr}
+  .th-row span.n,.th-row .t{display:none}
+  .th-row{height:30px}.th-row.v{height:44px}
+  [data-track]{height:30px}[data-track="video"]{height:44px}
+  .mtools{display:flex;overflow-x:auto;border-top:1px solid var(--bd);background:var(--p1);scrollbar-width:none;padding-bottom:env(safe-area-inset-bottom)}
+  .mtools button{flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;width:64px;padding:8px 0;font-size:10.5px;color:var(--mu)}
+  .mtools .ic{width:18px;height:18px}
+  .mtools .active{color:var(--ac2)}
+  body[data-tab_st]:not([data-tab_st=""]) .st-bin{display:flex;position:fixed;left:0;right:0;bottom:calc(58px + env(safe-area-inset-bottom));max-height:44vh;z-index:40;background:var(--p1);border-top:1px solid var(--bd2);animation:vin .3s var(--ease)}
+  body[data-tab_st]:not([data-tab_st=""]) .st-bin>.seg{display:none}
+  .welcome{grid-template-columns:1fr;height:auto;min-height:100dvh}
+  .w-r{height:40vh;order:-1}
+  .w-l{border:0;padding:24px 18px 40px}
+  .w-l h1{font-size:34px}
+}
+@media (min-width:901px){.mtitle{display:none!important}}
+@media (min-width:901px) and (max-width:1300px){.app{grid-template-columns:56px 1fr 0}.queue{display:none}.qs{grid-template-columns:repeat(3,1fr)}.res{grid-template-columns:repeat(2,1fr)}.studio{grid-template-columns:200px 1fr}.st-insp{display:none}}
+</style>
+</head>
+<body data-start="welcome">
+
+<!-- WELCOME -->
+<section class="welcome" data-view="welcome">
+  <div class="w-l">
+    <div style="display:flex;align-items:center;gap:10px;font-weight:600;font-size:16px"><span class="lg" style="margin:0"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l7 14 7-14"/></svg></span>Vidora <span class="tag">Console</span></div>
+    <h1>The fastest way from<br>idea to <span>finished film.</span></h1>
+    <p>Identity, image, video, voice and a real editor — in one keyboard-first workspace built for people who make a lot.</p>
+    <div class="term">
+      <div><span class="p">›</span> train <span class="k">@nova</span> <span class="m">--photos 8</span></div>
+      <div><span class="p">›</span> image <span class="m">"</span>@nova, neon street, rain<span class="m">" --n 4 --ar 4:5</span></div>
+      <div><span class="p">›</span> animate <span class="m">plate_02 --cam push-in --5s</span></div>
+      <div><span class="p">›</span> voice <span class="k">@nova</span> <span class="m">"one light refused to go out"</span></div>
+      <div><span class="k">✓</span> <span class="m">exported neon-nights.mp4 · 1080p · 18.4 MB</span></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:6px"><button class="btn btn-p btn-lg" data-go="home">Open workspace<kbd>↵</kbd></button><button class="btn btn-lg" data-go="home">Sign in with SSO</button></div>
+  </div>
+  <div class="w-r">
+    <div><img data-img="hero1"><span class="tag ac">@nova</span><span class="lbl">identity · v3</span></div>
+    <div><img data-img="chrome"><span class="tag">image</span><span class="lbl">plate_04 · 4:5</span></div>
+    <div><img data-img="astro"><span class="tag">video</span><span class="lbl">dunes · 10s · orbit</span></div>
+    <div><img data-img="singer"><span class="tag">voice</span><span class="lbl">aria · warm · 0:18</span></div>
+  </div>
+</section>
+
+<div class="app">
+  <nav class="rail">
+    <span class="lg"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 5l7 14 7-14"/></svg></span>
+    <button class="rb" data-go="home" aria-label="Dashboard"><span data-i="layout-dashboard"></span></button>
+    <span class="sep"></span>
+    <div class="dock" data-dock="custom"></div>
+    <button class="rb" data-dock-edit aria-label="Customize" title="Customize rail"><span data-i="plus"></span></button>
+    <span class="sp"></span>
+    <button class="rb" data-go="library" aria-label="Library"><span data-i="folder-open"></span></button>
+    <button class="rb" data-toggle-body="queue-off" aria-label="Toggle queue"><span data-i="panel-right"></span></button>
+    <button class="rb" data-toast="Settings open in the full product" data-toast-icon="settings" aria-label="Settings"><span data-i="settings"></span></button>
+  </nav>
+  <header class="tabs">
+    <span class="mtitle" style="display:none" id="mtitle">Dashboard</span>
+    <button class="ptab on" data-go="studio"><span data-i="film"></span>Neon Nights<span class="x"><span data-i="x"></span></span></button>
+    <button class="ptab" data-go="image"><span data-i="image"></span>Amethyst Launch<span class="x"><span data-i="x"></span></span></button>
+    <button class="ptab" data-go="voice"><span data-i="audio-lines"></span>Intro VO<span class="x"><span data-i="x"></span></span></button>
+    <button class="ptab" data-open="v-create" aria-label="New"><span data-i="plus"></span></button>
+    <div class="r">
+      <button class="cmdbtn" data-open="v-cmdk"><span data-i="search"></span>Search or run a command…<kbd>⌘K</kbd></button>
+      <span class="cbar"><span class="mono" style="font-size:12px"><span data-credits>1,240</span> cr</span><span class="m"><i></i></span></span>
+      <button class="ib" data-open="v-cmdk" style="display:none" id="msearch" aria-label="Search"><span data-i="search"></span></button>
+      <img class="av" data-img="s1" alt="Profile">
+    </div>
+  </header>
+
+  <main class="main" data-scroll><div class="pg">
+
+<!-- DASHBOARD -->
+<section data-view="home">
+  <div class="ph"><div><h1>Good evening, Maya</h1><p>3 renders running overnight · last export 12 min ago</p></div><div class="r"><button class="btn" data-open="v-cmdk"><span data-i="command"></span>Commands</button><button class="btn btn-p" data-open="v-create"><span data-i="plus"></span>New<kbd>N</kbd></button></div></div>
+  <div class="kpis">
+    <div class="pnl kpi"><span class="l"><span data-i="zap"></span>Credits left</span><b data-countup="1240">0</b><small>Renews in 12 days</small><svg viewBox="0 0 100 34" preserveAspectRatio="none"><path d="M0 8 L14 10 L28 9 L42 14 L56 13 L70 20 L84 22 L100 26" fill="none" stroke="#7c5cff" stroke-width="1.5"/><path d="M0 8 L14 10 L28 9 L42 14 L56 13 L70 20 L84 22 L100 26 L100 34 L0 34Z" fill="rgba(124,92,255,.12)"/></svg></div>
+    <div class="pnl kpi"><span class="l"><span data-i="image"></span>Renders this week</span><b data-countup="342">0</b><small>↑ 18% vs last week</small><svg viewBox="0 0 100 34" preserveAspectRatio="none"><g fill="#2e2e36"><rect x="2" y="20" width="10" height="14"/><rect x="16" y="14" width="10" height="20"/><rect x="30" y="18" width="10" height="16"/><rect x="44" y="10" width="10" height="24"/><rect x="58" y="12" width="10" height="22"/><rect x="72" y="6" width="10" height="28"/></g><rect x="86" y="2" width="10" height="32" fill="#7c5cff"/></svg></div>
+    <div class="pnl kpi"><span class="l"><span data-i="scan-face"></span>Identities</span><b>3</b><small style="color:var(--mu)">Nova · Kai · Bolt</small><div style="display:flex;margin-top:12px"><img data-img="nova" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--p1)"><img data-img="kai" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--p1);margin-left:-8px"><img data-img="robot" style="width:26px;height:26px;border-radius:50%;object-fit:cover;border:2px solid var(--p1);margin-left:-8px"></div></div>
+    <div class="pnl kpi"><span class="l"><span data-i="hard-drive"></span>Storage</span><b>18.2 <span style="font-size:14px;color:var(--mu)">/ 100 GB</span></b><small style="color:var(--mu)">128 assets</small><div style="height:4px;border-radius:9px;background:var(--bd2);margin-top:20px;overflow:hidden"><i style="display:block;height:100%;width:18%;background:var(--ok)"></i></div></div>
+  </div>
+  <div class="qs">
+    <button class="qa" data-go="identity"><span class="ico"><span data-i="scan-face"></span></span><div><b>Create Your Identity</b><br><small>Train on 6–12 selfies</small></div><kbd>1</kbd><img data-img="nova"></button>
+    <button class="qa" data-go="image"><span class="ico"><span data-i="image"></span></span><div><b>Bring To Life · Image</b><br><small>Prompt → 4 images</small></div><kbd>2</kbd><img data-img="chrome"></button>
+    <button class="qa" data-go="video"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Bring To Life · Video</b><br><small>Image → 5–10s clip</small></div><kbd>3</kbd><img data-img="dancer"></button>
+    <button class="qa" data-go="studio"><span class="ico"><span data-i="scissors"></span></span><div><b>Editing Studio</b><br><small>Multi-track editor</small></div><kbd>4</kbd><img data-img="astro"></button>
+    <button class="qa" data-go="voice"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Give It A Voice</b><br><small>Text → speech, clone</small></div><kbd>5</kbd><img data-img="singer"></button>
+  </div>
+  <div class="grid2">
+    <div class="pnl"><div class="pnl-h">Recent projects<span class="r"><button class="ib" data-go="library" aria-label="All"><span data-i="arrow-up-right"></span></button></span></div>
+      <table><thead><tr><th>Name</th><th>Type</th><th class="hide-m">Length</th><th class="hide-m">Updated</th><th>Status</th></tr></thead><tbody>
+        <tr data-go="studio"><td><span class="nm"><img data-img="hero1">Neon Nights</span></td><td class="mu">Edit</td><td class="mono hide-m">0:24</td><td class="mu hide-m">12 min ago</td><td><span class="tag ok">Exported</span></td></tr>
+        <tr data-go="video"><td><span class="nm"><img data-img="astro">Lavender Dunes</span></td><td class="mu">Video</td><td class="mono hide-m">0:10</td><td class="mu hide-m">Yesterday</td><td><span class="tag run">Rendering</span></td></tr>
+        <tr data-go="image"><td><span class="nm"><img data-img="perfume">Amethyst Launch</span></td><td class="mu">Image</td><td class="mono hide-m">4 × 4:5</td><td class="mu hide-m">2 days ago</td><td><span class="tag">Draft</span></td></tr>
+        <tr data-go="voice"><td><span class="nm"><img data-img="singer">Intro VO</span></td><td class="mu">Voice</td><td class="mono hide-m">0:18</td><td class="mu hide-m">3 days ago</td><td><span class="tag ok">Ready</span></td></tr>
+        <tr data-go="identity"><td><span class="nm"><img data-img="nova">@nova v3</span></td><td class="mu">Identity</td><td class="mono hide-m">8 photos</td><td class="mu hide-m">1 week ago</td><td><span class="tag ac">Trained</span></td></tr>
+      </tbody></table></div>
+    <div class="pnl"><div class="pnl-h">Start from a template</div><div class="pnl-b"><div class="tpls">
+      <button class="tpl" data-go="studio"><img data-img="city"><span>Music video · 9:16</span></button>
+      <button class="tpl" data-go="image"><img data-img="perfume"><span>Product launch</span></button>
+      <button class="tpl" data-go="video"><img data-img="jelly"><span>Dreamy loop</span></button>
+      <button class="tpl" data-go="voice"><img data-img="kai"><span>Talking head</span></button>
+    </div></div></div>
+  </div>
+</section>
+
+<!-- IDENTITY -->
+<section data-view="identity" hidden>
+  <div class="ph"><span class="ico"><span data-i="scan-face"></span></span><div><h1>Create Your Identity</h1><p>Train a private model on 6–12 photos. Use it anywhere with its trigger word.</p></div></div>
+  <div class="ds">
+    <div class="pnl"><div class="pnl-h">Dataset<span class="tag" style="margin-left:6px"><span data-upload-count="identity">0</span> / 12</span><span class="r"><span class="mu" style="font-size:12px;font-weight:400" data-upload-quality="identity">Add photos to start</span></span></div>
+      <div class="pnl-b">
+        <div class="drop" data-upload="identity" data-min="4" data-goal="8" data-max="12"><span class="ic-w"><span data-i="upload"></span></span><div><b>Drop photos or click to upload</b><p>JPG, PNG, HEIC · face clearly visible · min 4</p></div><div class="r"><button class="btn" data-demo-upload="identity"><span data-i="sparkles"></span>Load sample set</button></div></div>
+        <div class="dgrid" data-upload-list="identity"></div>
+      </div></div>
+    <div class="pnl" data-gen="identity" data-ms="5000" data-steps="Preprocessing 8 images|Training · step 400/1200|Training · step 900/1200|Validating">
+      <div class="pnl-h">Training</div>
+      <div class="pnl-b">
+        <div class="fld"><label>Name</label><input type="text" value="Nova" aria-label="Name"></div>
+        <div class="fld"><label>Trigger word <span class="mono mu">used in prompts</span></label><input type="text" value="@nova" class="mono" aria-label="Trigger"></div>
+        <div class="fld"><div class="lb">Preset</div><div class="seg" data-chips><button class="on" data-chip>Balanced</button><button data-chip>Likeness+</button><button data-chip>Fast</button></div></div>
+        <div class="checks"><div><span data-i="circle-check"></span>Face detected in every photo</div><div><span data-i="circle-check"></span>No duplicates</div><div><span data-i="circle-check"></span>Consent confirmed</div></div>
+        <div data-show="empty"><button class="btn btn-p btn-lg btn-block" data-generate="identity" data-requires="identity" data-done="@nova trained · v3">Start training<kbd>⌘↵</kbd></button><p class="mu" style="font-size:11.5px;text-align:center;margin-top:8px">~2 min · free with Pro</p></div>
+        <div data-show="loading"><div class="trainbox"><div class="row"><span data-step>Preprocessing</span><span class="mono" data-progress>0%</span></div><div class="b"><i></i></div><div class="log">loss 0.0412 · lr 1e-4<br><b>✓</b> faces aligned · 8/8</div></div></div>
+        <div data-show="done"><div class="idres"><img data-img="nova" data-reveal><img data-img="hero1" data-reveal><img data-img="hero2" data-reveal><img data-img="s4" data-reveal></div><span class="tag ok" style="margin-bottom:10px"><span data-i="check"></span>@nova v3 ready · likeness 97%</span><button class="btn btn-p btn-lg btn-block" data-go="image" style="margin-top:10px">Use @nova in Image<span data-i="arrow-right"></span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- IMAGE -->
+<section data-view="image" hidden>
+  <div class="ph"><span class="ico"><span data-i="image"></span></span><div><h1>Bring To Life · Image</h1><p>Prompt, tune, generate. Press <kbd>⌘↵</kbd> to run.</p></div></div>
+  <div class="ws">
+    <aside class="pnl params"><div class="pnl-h">Parameters<span class="r"><button class="ib" data-toast="Preset saved" aria-label="Save preset"><span data-i="bookmark"></span></button></span></div><div class="pnl-b">
+      <div class="fld"><div class="lb">Identity</div><div class="who" data-chips><button class="on" data-chip><img data-img="nova">@nova</button><button data-chip><img data-img="kai">@kai</button><button data-chip>None</button></div></div>
+      <div class="fld"><div class="lb">Model</div><div class="seg" data-chips><button class="on" data-chip>Vidora XL</button><button data-chip>Fast</button><button data-chip>Photo</button></div></div>
+      <div class="fld"><div class="lb">Aspect ratio</div><div class="seg" data-chips data-css-target=".res"><button data-chip data-css="--ar:1/1">1:1</button><button class="on" data-chip data-css="--ar:4/5">4:5</button><button data-chip data-css="--ar:9/16">9:16</button><button data-chip data-css="--ar:16/9">16:9</button></div></div>
+      <div class="fld"><div class="lb">Style</div><div class="seg" data-chips><button class="on" data-chip>Cinematic</button><button data-chip>Editorial</button><button data-chip>3D</button></div></div>
+      <div class="fld"><div class="lb">Images <span class="mono">4</span></div><div class="rng"><input type="range" min="1" max="4" value="4" data-out="#c-n"><output id="c-n">4</output></div></div>
+      <div class="fld"><div class="lb">Guidance</div><div class="rng"><input type="range" min="1" max="20" value="7" data-out="#c-g"><output id="c-g">7</output></div></div>
+      <div class="fld"><div class="lb">Seed</div><div style="display:flex;gap:6px"><input type="text" value="482913" class="mono" aria-label="Seed"><button class="btn" data-toast="New seed: 918274" data-toast-icon="dices" aria-label="Random seed"><span data-i="dices"></span></button></div></div>
+      <div class="fld" style="margin:0"><div class="lb">Avoid</div><input type="text" placeholder="blurry, extra fingers, text" aria-label="Negative prompt"></div>
+    </div></aside>
+    <div>
+      <div class="prompt-top"><textarea data-prompt="image" data-autogrow aria-label="Prompt">@nova standing on a rain-soaked neon street at night, violet signs reflecting on wet asphalt, cinematic</textarea><button class="btn btn-p" data-generate="image" data-needs-prompt="image" data-cost="4" data-done="4 images · 6.1s" data-ms="3400">Generate<small>4 cr · ⌘↵</small></button></div>
+      <div class="pnl canvas" data-gen="image" data-ms="3400" data-steps="Encoding prompt|Sampling · 12/30|Sampling · 26/30|Upscaling">
+        <div class="cv-h"><span>Output</span><span class="tag" data-show="done">4 images · 6.1s · seed 482913</span><span class="r"><button class="ib" data-enhance="image" data-text="@nova standing on a rain-soaked neon street at night, black techwear jacket, violet and magenta signs reflecting on wet asphalt, shallow depth of field, anamorphic flare, cinematic grade" aria-label="Enhance prompt" title="Enhance prompt"><span data-i="wand-sparkles"></span></button><button class="ib" data-copy="@nova standing on a rain-soaked neon street" aria-label="Copy prompt"><span data-i="copy"></span></button></span></div>
+        <div class="cv-b">
+          <div class="empty" data-show="empty"><div><div class="ic-w"><span data-i="image"></span></div><h3>No output yet</h3><p>Write a prompt and press Generate.</p><div class="keys"><span><kbd>⌘↵</kbd> generate</span><span><kbd>⌘E</kbd> enhance</span><span><kbd>⌘K</kbd> commands</span></div></div></div>
+          <div data-show="loading"><div class="prog"><span data-step>Encoding prompt</span><span class="b"><i></i></span><span class="mono" data-progress>0%</span></div><div class="res"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div></div>
+          <div class="res" data-show="done">
+            <div class="r-card" data-reveal><div class="im"><img data-img="hero1"><div class="hv"><div class="row"><button class="btn btn-p" data-send="videosrc" data-src-img="hero1" data-go="video"><span data-i="clapperboard"></span>Animate</button><button class="btn" data-toast="Upscaling ×2" data-toast-icon="maximize-2" aria-label="Upscale"><span data-i="maximize-2"></span></button></div></div></div><div class="ft"><span class="mono">#01</span><span>1024×1280</span></div></div>
+            <div class="r-card" data-reveal><div class="im"><img data-img="hero2"><div class="hv"><div class="row"><button class="btn btn-p" data-send="videosrc" data-src-img="hero2" data-go="video"><span data-i="clapperboard"></span>Animate</button><button class="btn" data-toast="Upscaling ×2" data-toast-icon="maximize-2" aria-label="Upscale"><span data-i="maximize-2"></span></button></div></div></div><div class="ft"><span class="mono">#02</span><span>1024×1280</span></div></div>
+            <div class="r-card" data-reveal><div class="im"><img data-img="nova"><div class="hv"><div class="row"><button class="btn btn-p" data-send="videosrc" data-src-img="nova" data-go="video"><span data-i="clapperboard"></span>Animate</button><button class="btn" data-toast="Upscaling ×2" data-toast-icon="maximize-2" aria-label="Upscale"><span data-i="maximize-2"></span></button></div></div></div><div class="ft"><span class="mono">#03</span><span>1024×1280</span></div></div>
+            <div class="r-card" data-reveal><div class="im"><img data-img="city"><div class="hv"><div class="row"><button class="btn btn-p" data-send="videosrc" data-src-img="city" data-go="video"><span data-i="clapperboard"></span>Animate</button><button class="btn" data-toast="Upscaling ×2" data-toast-icon="maximize-2" aria-label="Upscale"><span data-i="maximize-2"></span></button></div></div></div><div class="ft"><span class="mono">#04</span><span>1024×1280</span></div></div>
+          </div>
+        </div>
+        <div class="hist"><span class="lbl">History</span><img data-img="perfume"><img data-img="chrome"><img data-img="jelly"><img data-img="kai"><img data-img="forest"><img data-img="robot"><img data-img="car"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEO -->
+<section data-view="video" hidden>
+  <div class="ph"><span class="ico"><span data-i="clapperboard"></span></span><div><h1>Bring To Life · Video</h1><p>Image to motion. 5 or 10 seconds, up to 1080p.</p></div></div>
+  <div class="ws">
+    <aside class="pnl params"><div class="pnl-h">Shot settings</div><div class="pnl-b">
+      <div class="fld"><div class="lb">Start frame</div><div class="src" data-upload="videosrc" data-single data-slot-host><img data-slot="videosrc" data-img="hero1" alt="Start frame"><button class="btn" data-pick><span data-i="refresh-cw"></span>Replace</button></div></div>
+      <div class="fld"><div class="lb">Camera</div><div class="camgrid" data-chips><button data-chip><span data-i="square"></span>Static</button><button class="on" data-chip><span data-i="zoom-in"></span>Push in</button><button data-chip><span data-i="orbit"></span>Orbit</button><button data-chip><span data-i="move-horizontal"></span>Pan</button><button data-chip><span data-i="move-up"></span>Crane</button><button data-chip><span data-i="vibrate"></span>Handheld</button></div></div>
+      <div class="fld"><div class="lb">Duration</div><div class="seg" data-chips><button class="on" data-chip>5s</button><button data-chip>10s</button></div></div>
+      <div class="fld"><div class="lb">Resolution</div><div class="seg" data-chips><button data-chip>720p</button><button class="on" data-chip>1080p</button></div></div>
+      <div class="fld"><div class="lb">Motion strength</div><div class="rng"><input type="range" min="1" max="10" value="6" data-out="#c-m"><output id="c-m">6</output></div></div>
+      <div class="fld" style="margin:0"><div class="lb">Audio</div><div class="seg" data-chips><button class="on" data-chip>Ambient</button><button data-chip>None</button></div></div>
+    </div></aside>
+    <div>
+      <div class="prompt-top"><textarea data-prompt="video" data-autogrow aria-label="Motion prompt">She slowly turns to camera, rain falls, neon flickers once</textarea><button class="btn btn-p" data-generate="video" data-cost="20" data-done="Clip rendered · 5s" data-done-icon="clapperboard">Render<small>20 cr · ⌘↵</small></button></div>
+      <div class="pnl canvas" data-gen="video" data-ms="4600" data-steps="Analyzing frame|Motion pass · 40/120|Motion pass · 96/120|Encoding · audio">
+        <div class="cv-h"><span>Preview</span><span class="tag" data-show="done">1920×1080 · 24fps · 5.0s</span><span class="r"><button class="ib" data-enhance="video" data-text="She slowly turns toward camera, rain falling in soft slow motion, neon sign flickers once then steadies, hair lifts in wind" aria-label="Enhance"><span data-i="wand-sparkles"></span></button></span></div>
+        <div class="cv-b">
+          <div class="empty" data-show="empty"><div><div class="ic-w"><span data-i="clapperboard"></span></div><h3>Nothing rendered</h3><p>Set a camera move and press Render.</p></div></div>
+          <div data-show="loading"><div class="prog"><span data-step>Analyzing frame</span><span class="b"><i></i></span><span class="mono" data-progress>0%</span></div><div class="sk" style="--ar:16/9"></div></div>
+          <div data-show="done" data-player data-dur="8">
+            <div class="player" data-reveal><img data-slot="videosrc" data-img="hero1" alt="Clip"><div class="safe"></div></div>
+            <div class="ctrl"><button class="ppb" data-play aria-label="Play"><span data-i="play"></span></button><span class="mono" data-time>0:00</span><div class="tr" data-seek><div class="frames"><span data-bg="hero1"></span><span data-bg="hero2"></span><span data-bg="hero1"></span><span data-bg="hero2"></span><span data-bg="hero1"></span><span data-bg="hero2"></span><span data-bg="hero1"></span><span data-bg="hero2"></span></div><i></i></div><span class="mono mu">0:08</span></div>
+            <div class="specs"><div>Camera<b>push-in</b></div><div>Seed<b>77120</b></div><div>Motion<b>6 / 10</b></div><div>Audio<b>ambient</b></div></div>
+            <div class="acts"><button class="btn btn-p" data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="nova_rain.mp4" data-go="studio" data-toast="Appended to V1 · Neon Nights"><span data-i="scissors"></span>Send to timeline</button><button class="btn" data-toast="Extending +5s" data-toast-icon="timer"><span data-i="timer"></span>Extend</button><button class="btn" data-go="voice"><span data-i="audio-lines"></span>Add voice</button><button class="btn" data-toast="Downloaded nova_rain.mp4"><span data-i="download"></span>Download</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VOICE -->
+<section data-view="voice" hidden>
+  <div class="ph"><span class="ico"><span data-i="audio-lines"></span></span><div><h1>Give It A Voice</h1><p>Line-by-line script. Each line can have its own voice and emotion.</p></div></div>
+  <div class="ws" style="grid-template-columns:1fr 300px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="pnl"><div class="pnl-h">Script<span class="tag" style="margin-left:6px"><span data-est>~4s</span></span><span class="r"><button class="btn" data-enhance="voice" data-text="In a city that never sleeps… one light refused to go out." style="height:26px"><span data-i="wand-sparkles"></span>Polish</button></span></div>
+        <div class="pnl-b"><div class="lines">
+          <div class="ln"><span class="no">01</span><span class="sp"><span><img data-img="nova">Nova</span></span><textarea data-prompt="voice" data-autogrow aria-label="Line 1">In a city that never sleeps, one light refused to go out.</textarea><span class="em"><span class="tag">calm</span></span></div>
+          <div class="ln"><span class="no">02</span><span class="sp"><span><img data-img="nova">Nova</span></span><textarea data-autogrow aria-label="Line 2">This is my story.</textarea><span class="em"><span class="tag">warm</span></span></div>
+          <div class="ln"><span class="no">03</span><span class="sp"><span><img data-img="kai">Kai</span></span><textarea data-autogrow aria-label="Line 3">Then tell it.</textarea><span class="em"><span class="tag">serious</span></span></div>
+        </div><button class="btn" style="margin-top:8px" data-toast="Line added" data-toast-icon="plus"><span data-i="plus"></span>Add line</button></div></div>
+      <div class="pnl" data-gen="voice" data-ms="2800" data-steps="Synthesizing line 1/3|Synthesizing line 2/3|Synthesizing line 3/3">
+        <div class="pnl-h">Output<span class="r"><button class="btn btn-p" data-generate="voice" data-needs-prompt="voice" data-cost="2" data-done="3 lines synthesized · 0:09" data-done-icon="audio-lines" style="height:28px">Synthesize<kbd>⌘↵</kbd></button></span></div>
+        <div class="pnl-b">
+          <div class="empty" data-show="empty" style="min-height:110px"><div><p>Press Synthesize to render all lines.</p></div></div>
+          <div data-show="loading"><div class="prog" style="margin:0"><span data-step>Synthesizing</span><span class="b"><i></i></span><span class="mono" data-progress>0%</span></div></div>
+          <div data-show="done"><div class="wf" data-player data-dur="9" data-reveal><button class="ppb" data-play aria-label="Play"><span data-i="play"></span></button><div data-wave data-bars="140" data-seed="8" data-seek></div><span class="mono mu" data-time>0:00</span></div>
+            <div class="acts"><button class="btn btn-p" data-add-clip="voice" data-clip-len="9" data-clip-name="intro_vo.wav" data-go="studio" data-toast="Added to A1 · Neon Nights"><span data-i="scissors"></span>Send to timeline</button><button class="btn" data-toast="Lip-sync queued on nova_rain.mp4" data-toast-icon="scan-face"><span data-i="scan-face"></span>Lip-sync</button><button class="btn" data-toast="Downloaded intro_vo.wav"><span data-i="download"></span>WAV</button></div></div>
+        </div></div>
+    </div>
+    <aside class="pnl params"><div class="pnl-h">Voice — <span data-voice-name style="margin-left:4px">Nova</span></div><div class="pnl-b">
+      <div class="vlist" data-voices style="margin-bottom:14px">
+        <button class="vrow on" data-voice="Nova"><span class="f"><img data-img="nova"></span><span><b>Nova</b><small>Your clone · calm</small></span><div data-wave data-bars="18" data-seed="4"></div></button>
+        <button class="vrow" data-voice="Aria"><span class="f">A</span><span><b>Aria</b><small>Warm narrator</small></span><div data-wave data-bars="18" data-seed="11"></div></button>
+        <button class="vrow" data-voice="Kai"><span class="f"><img data-img="kai"></span><span><b>Kai</b><small>Deep cinematic</small></span><div data-wave data-bars="18" data-seed="23"></div></button>
+        <button class="vrow" data-voice="Atlas"><span class="f">At</span><span><b>Atlas</b><small>Documentary</small></span><div data-wave data-bars="18" data-seed="47"></div></button>
+      </div>
+      <div class="fld"><div class="lb">Emotion</div><div class="seg" data-chips><button class="on" data-chip>Calm</button><button data-chip>Warm</button><button data-chip>Urgent</button></div></div>
+      <div class="fld"><div class="lb">Speed</div><div class="rng"><input type="range" min="5" max="20" value="10" data-out="#c-sp" data-scale="0.1" data-dec="1" data-suffix="×"><output id="c-sp">1.0×</output></div></div>
+      <div class="fld"><div class="lb">Stability</div><div class="rng"><input type="range" min="0" max="100" value="65" data-out="#c-st"><output id="c-st">65</output></div></div>
+      <div class="fld" style="margin:0"><div class="lb">Clone a voice</div><div class="rec" data-rec-host><button class="rb" data-record aria-label="Record"><span data-i="mic"></span></button><div data-live><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="mono mu" data-rec-time>0:00</span></div></div>
+    </div></aside>
+  </div>
+</section>
+
+<!-- STUDIO -->
+<section data-view="studio" hidden>
+  <div class="studio">
+    <div class="st-bin">
+      <div class="seg"><button class="active" data-tab="st:media">Media</button><button data-tab="st:text">Text</button><button data-tab="st:audio">Audio</button><button data-tab="st:fx">FX</button></div>
+      <div class="bd">
+        <div data-pane="st:media" class="active"><div class="bin">
+          <button data-add-clip="video" data-clip-img="city" data-clip-len="4" data-clip-name="city.mp4"><img data-img="city"><span>city.mp4<b class="mono">0:04</b></span></button>
+          <button data-add-clip="video" data-clip-img="hero2" data-clip-len="5" data-clip-name="nova_rain.mp4"><img data-img="hero2"><span>nova_rain<b class="mono">0:05</b></span></button>
+          <button data-add-clip="video" data-clip-img="jelly" data-clip-len="4" data-clip-name="jelly.mp4"><img data-img="jelly"><span>jelly.mp4<b class="mono">0:04</b></span></button>
+          <button data-add-clip="video" data-clip-img="car" data-clip-len="3" data-clip-name="drive.mp4"><img data-img="car"><span>drive.mp4<b class="mono">0:03</b></span></button>
+          <button data-add-clip="video" data-clip-img="forest" data-clip-len="5" data-clip-name="forest.mp4"><img data-img="forest"><span>forest.mp4<b class="mono">0:05</b></span></button>
+          <button data-add-clip="video" data-clip-img="chrome" data-clip-len="3" data-clip-name="chrome.png"><img data-img="chrome"><span>chrome.png<b class="mono">0:03</b></span></button>
+        </div></div>
+        <div data-pane="st:text"><div class="fld"><label>Title text</label><input type="text" value="NEON NIGHTS" data-title-input aria-label="Title"></div><div class="blist"><button data-toggle-body="captions-on" data-toast="Captions generated from A1" data-toast-icon="captions"><span data-i="captions"></span>Auto-captions<small>A1</small></button><button><span data-i="type"></span>Lower third<small>3s</small></button></div></div>
+        <div data-pane="st:audio"><div class="blist"><button data-add-clip="music" data-clip-len="12" data-clip-name="midnight_drive.wav"><span data-i="music"></span>Midnight Drive<small>2:41</small></button><button data-add-clip="music" data-clip-len="12" data-clip-name="glass_rain.wav"><span data-i="music"></span>Glass Rain<small>3:05</small></button><button data-go="voice"><span data-i="mic"></span>New voice-over<small>⌘5</small></button></div></div>
+        <div data-pane="st:fx"><div class="blist" data-chips data-css-target=".screen"><button class="on" data-chip data-css="--filter:none"><span data-i="circle"></span>None</button><button data-chip data-css="--filter:hue-rotate(-20deg) saturate(1.4)"><span data-i="palette"></span>Ultraviolet LUT</button><button data-chip data-css="--filter:grayscale(1) contrast(1.2)"><span data-i="contrast"></span>Mono LUT</button><button data-toast="Background removed on V1" data-toast-icon="wand-sparkles"><span data-i="wand-sparkles"></span>Remove BG<small>AI</small></button><button data-toast="Cuts snapped to beats" data-toast-icon="music"><span data-i="activity"></span>Beat sync<small>AI</small></button></div></div>
+      </div>
+    </div>
+    <div class="st-view">
+      <div class="st-vh"><span class="mono mu">Program</span><b style="font-size:13px">Neon Nights</b><span class="r"><div class="seg" data-chips data-css-target=".screen"><button class="on" data-chip data-css="--ar:16/9;--arn:1.7778">16:9</button><button data-chip data-css="--ar:9/16;--arn:.5625">9:16</button><button data-chip data-css="--ar:1/1;--arn:1">1:1</button></div><button class="btn btn-p" data-open="export" style="height:28px"><span data-i="upload"></span>Export<kbd>⌘E</kbd></button></span></div>
+      <div class="pvw"><div class="screen"><img data-stage-img data-img="hero1" alt="Program"><div class="safe"></div><div class="ttl" data-stage-title>NEON NIGHTS</div><div class="cap" data-stage-caption></div></div></div>
+      <div class="tbar"><span class="tc" data-timecode>0:00.00</span><span class="tot">/ <span data-total>0:24</span></span><span style="flex:1"></span><button class="ib" data-studio="start" aria-label="Start"><span data-i="skip-back"></span></button><button class="ppb" data-studio-play aria-label="Play"><span data-i="play"></span></button><button class="ib" data-toast="Next edit" aria-label="Next"><span data-i="skip-forward"></span></button><span style="flex:1"></span><span class="r"><button class="ib" data-toggle="Loop on" data-toggle-off="Loop off" aria-label="Loop"><span data-i="repeat"></span></button><button class="ib" data-toggle="Muted" data-toggle-off="Unmuted" aria-label="Mute"><span data-i="volume-2"></span></button></span></div>
+    </div>
+    <aside class="st-insp">
+      <div class="sec"><h5>Clip <span class="mono" data-insp-len>—</span></h5><div style="display:flex;gap:10px;align-items:center"><span style="width:56px;height:36px;border-radius:5px;background:var(--p3) center/cover" data-insp-thumb></span><div><b style="font-size:13px;display:block" data-insp-name>Nothing selected</b><small class="mu" data-insp-kind>Click a clip</small></div></div></div>
+      <div class="sec"><h5>Transform</h5>
+        <div class="prop"><span>Scale</span><input type="range" min="50" max="200" value="100" data-out="#p-sc"><output id="p-sc">100</output></div>
+        <div class="prop"><span>Rotation</span><input type="range" min="-45" max="45" value="0" data-out="#p-ro"><output id="p-ro">0</output></div>
+        <div class="prop"><span>Opacity</span><input type="range" min="0" max="100" value="100" data-out="#p-op"><output id="p-op">100</output></div></div>
+      <div class="sec"><h5>Color</h5>
+        <div class="prop"><span>Exposure</span><input type="range" min="50" max="150" value="100" data-var="--br" data-scale="0.01" data-target=".screen" data-out="#p-ex"><output id="p-ex">100</output></div>
+        <div class="prop"><span>Contrast</span><input type="range" min="50" max="150" value="100" data-var="--ct" data-scale="0.01" data-target=".screen" data-out="#p-ct"><output id="p-ct">100</output></div>
+        <div class="prop"><span>Saturation</span><input type="range" min="0" max="200" value="100" data-var="--sat" data-scale="0.01" data-target=".screen" data-out="#p-sa"><output id="p-sa">100</output></div></div>
+      <div class="sec"><h5>Speed</h5><div class="seg" data-chips><button data-chip data-speed="0.5">0.5×</button><button class="on" data-chip data-speed="1">1×</button><button data-chip data-speed="2">2×</button></div></div>
+    </aside>
+    <div class="mtrans"><button class="ib" data-studio="undo" aria-label="Undo"><span data-i="undo-2"></span></button><span class="mono" style="color:var(--ac2)" data-timecode>0:00.00</span><button class="ppb" data-studio-play aria-label="Play"><span data-i="play"></span></button><button class="ib" data-studio="split" aria-label="Split"><span data-i="scissors"></span></button><button class="ib" data-studio="delete" aria-label="Delete"><span data-i="trash-2"></span></button></div>
+    <div class="st-tl">
+      <div class="tl-tb"><button class="ib" data-studio="undo" title="Undo ⌘Z" aria-label="Undo"><span data-i="undo-2"></span></button><button class="ib" data-studio="redo" aria-label="Redo"><span data-i="redo-2"></span></button><span class="sepv"></span><button class="btn" style="height:26px" data-studio="split"><span data-i="scissors"></span>Split<kbd>S</kbd></button><button class="btn" style="height:26px" data-studio="duplicate"><span data-i="copy"></span>Duplicate</button><button class="btn" style="height:26px" data-studio="delete"><span data-i="trash-2"></span>Delete<kbd>⌫</kbd></button><span class="sepv"></span><button class="ib on" data-toggle="Snapping on" data-toggle-off="Snapping off" aria-label="Snap"><span data-i="magnet"></span></button><button class="ib" data-toggle="Ripple on" data-toggle-off="Ripple off" aria-label="Ripple"><span data-i="git-merge"></span></button><div class="z"><input type="range" min="14" max="70" value="30" data-tl-zoom aria-label="Zoom"></div></div>
+      <div class="tl-b">
+        <div class="tl-hd">
+          <div class="th-row v"><b>V1</b><span class="n">Video</span><span class="t on"><span data-i="eye"></span></span><span class="t"><span data-i="lock"></span></span></div>
+          <div class="th-row"><b>T1</b><span class="n">Titles</span><span class="t on"><span data-i="eye"></span></span><span class="t"><span data-i="lock"></span></span></div>
+          <div class="th-row"><b>A1</b><span class="n">Voice</span><span class="t on"><span data-i="volume-2"></span></span><span class="t"><span data-i="lock"></span></span></div>
+          <div class="th-row"><b>A2</b><span class="n">Music</span><span class="t on"><span data-i="volume-2"></span></span><span class="t"><span data-i="lock"></span></span></div>
+        </div>
+        <div data-timeline><div data-tl-scroll><div data-tl-inner>
+          <div data-ruler></div>
+          <div data-track="video">
+            <div class="clip clip-video" data-clip data-len="5" data-img="hero1" data-name="nova_close.mp4"><span class="clip-name">nova_close.mp4</span></div>
+            <div class="clip clip-video" data-clip data-len="4" data-img="city" data-name="city.mp4"><span class="clip-name">city.mp4</span></div>
+            <div class="clip clip-video" data-clip data-len="5" data-img="astro" data-name="dunes.mp4"><span class="clip-name">dunes.mp4</span></div>
+            <div class="clip clip-video" data-clip data-len="4" data-img="forest" data-name="forest.mp4"><span class="clip-name">forest.mp4</span></div>
+            <div class="clip clip-video" data-clip data-len="6" data-img="dancer" data-name="dancer.mp4"><span class="clip-name">dancer.mp4</span></div>
+          </div>
+          <div data-track="text"><div class="gap" data-len="0.5"></div><div class="clip clip-text" data-clip data-len="3.5" data-text="NEON NIGHTS" data-name="Title"><span class="clip-name"><span data-i="type"></span>NEON NIGHTS</span></div></div>
+          <div data-track="voice"><div class="gap" data-len="1"></div><div class="clip clip-voice" data-clip data-len="9" data-name="intro_vo.wav"><span class="clip-name"><span data-i="mic"></span>intro_vo.wav</span><span class="clip-wave" data-wave data-bars="70" data-seed="12"></span></div></div>
+          <div data-track="music"><div class="clip clip-music" data-clip data-len="24" data-name="midnight_drive.wav"><span class="clip-name"><span data-i="music"></span>midnight_drive.wav</span><span class="clip-wave" data-wave data-bars="160" data-seed="5"></span></div></div>
+          <div data-playhead></div>
+        </div></div></div>
+      </div>
+    </div>
+    <nav class="mtools">
+      <button data-go="home"><span data-i="chevron-left"></span>Back</button>
+      <button data-tab="st:media" data-toggleable><span data-i="images"></span>Media</button>
+      <button data-tab="st:text" data-toggleable><span data-i="type"></span>Text</button>
+      <button data-tab="st:audio" data-toggleable><span data-i="music"></span>Audio</button>
+      <button data-tab="st:fx" data-toggleable><span data-i="sparkles"></span>FX</button>
+      <button data-open="export"><span data-i="upload"></span>Export</button>
+    </nav>
+  </div>
+</section>
+
+<!-- LIBRARY -->
+<section data-view="library" hidden>
+  <div class="ph"><span class="ico"><span data-i="folder-open"></span></span><div><h1>Library</h1><p><span data-countup="128">0</span> assets · 18.2 GB</p></div></div>
+  <div class="lib-h"><input type="text" placeholder="Search assets…" aria-label="Search assets"><div class="seg" data-chips><button class="on" data-chip data-filter="lib:all">All</button><button data-chip data-filter="lib:image">Images</button><button data-chip data-filter="lib:video">Video</button><button data-chip data-filter="lib:voice">Audio</button></div><span class="r hide-m"><button class="btn" data-toast="Sorted by newest"><span data-i="arrow-down-wide-narrow"></span>Newest</button></span></div>
+  <div class="lgrid" data-filterable="lib">
+    <div class="it" data-kind="video"><div class="im"><img data-img="hero1"><span class="tag">MP4 · 0:24</span></div><div class="ft"><b>neon_nights_final.mp4</b><small><span>1080p</span><span>12m</span></small></div></div>
+    <div class="it" data-kind="image"><div class="im"><img data-img="chrome"><span class="tag">PNG</span></div><div class="ft"><b>chrome_couture_04.png</b><small><span>1024×1280</span><span>2d</span></small></div></div>
+    <div class="it aud" data-kind="voice" data-player data-dur="9"><div class="im"><button class="ppb" data-play style="margin-right:10px" aria-label="Play"><span data-i="play"></span></button><div data-wave data-bars="40" data-seed="8"></div></div><div class="ft"><b>intro_vo.wav</b><small><span>0:09</span><span>3d</span></small></div></div>
+    <div class="it" data-kind="image"><div class="im"><img data-img="perfume"><span class="tag">PNG</span></div><div class="ft"><b>amethyst_01.png</b><small><span>1024×1024</span><span>2d</span></small></div></div>
+    <div class="it" data-kind="video"><div class="im"><img data-img="astro"><span class="tag">MP4 · 0:10</span></div><div class="ft"><b>dunes_orbit.mp4</b><small><span>1080p</span><span>1d</span></small></div></div>
+    <div class="it" data-kind="image"><div class="im"><img data-img="jelly"><span class="tag">PNG</span></div><div class="ft"><b>medusae_02.png</b><small><span>720×1280</span><span>4d</span></small></div></div>
+    <div class="it" data-kind="video"><div class="im"><img data-img="dancer"><span class="tag">MP4 · 0:06</span></div><div class="ft"><b>leap.mp4</b><small><span>1080p</span><span>5d</span></small></div></div>
+    <div class="it" data-kind="image"><div class="im"><img data-img="kai"><span class="tag">PNG</span></div><div class="ft"><b>kai_study.png</b><small><span>1024×1280</span><span>6d</span></small></div></div>
+  </div>
+</section>
+
+  </div></main>
+
+  <aside class="queue">
+    <div class="q-h"><span data-i="list-video"></span>Render queue<span class="tag run" id="qcount" style="margin-left:4px">1 running</span><span class="r"><button class="ib" data-toggle-body="queue-off" aria-label="Hide queue"><span data-i="x"></span></button></span></div>
+    <div class="q-list" id="qlist">
+      <div class="job"><span class="th"><img data-img="astro"></span><div><b>dunes_orbit_v2.mp4</b><div class="meta"><span class="tag run">Rendering</span><span>~40s</span></div><div class="bar"><i style="width:64%"></i></div></div></div>
+      <div class="job done"><span class="th"><img data-img="hero1"></span><div><b>neon_nights_final.mp4</b><div class="meta"><span class="tag ok">Done</span><span>12m ago</span></div></div></div>
+      <div class="job done"><span class="th"><img data-img="perfume"></span><div><b>amethyst × 4</b><div class="meta"><span class="tag ok">Done</span><span>2d ago</span></div></div></div>
+      <div class="job done"><span class="th"><img data-img="nova"></span><div><b>@nova · training v3</b><div class="meta"><span class="tag ok">Done</span><span>1w ago</span></div></div></div>
+    </div>
+    <div class="q-foot"><div class="usage"><span>Credits used · 7 days</span><span class="mono">412</span></div><svg class="spark" viewBox="0 0 100 42" preserveAspectRatio="none"><path d="M0 34 L12 30 L24 32 L36 22 L48 26 L60 14 L72 18 L84 8 L100 12" fill="none" stroke="#7c5cff" stroke-width="1.5"/><path d="M0 34 L12 30 L24 32 L36 22 L48 26 L60 14 L72 18 L84 8 L100 12 L100 42 L0 42Z" fill="rgba(124,92,255,.12)"/></svg></div>
+  </aside>
+</div>
+<nav class="mbar" data-dock="custom" data-dock-fab aria-label="Main"></nav>
+
+<div class="modal" id="export" data-modal aria-label="Export">
+  <div class="mbox" data-gen="export" data-ms="3000" data-steps="Rendering V1|Mixing A1 + A2|Muxing">
+    <div class="pnl-h">Export<span class="r"><button class="ib" data-close aria-label="Close"><span data-i="x"></span></button></span></div>
+    <div class="pnl-b">
+      <div data-show="empty">
+        <div class="fld"><label>File name</label><input type="text" value="neon_nights_final.mp4" class="mono" aria-label="File name"></div>
+        <div class="fld"><div class="lb">Resolution</div><div class="seg" data-chips><button data-chip>720p</button><button class="on" data-chip>1080p</button><button data-chip>4K</button></div></div>
+        <div class="fld"><div class="lb">Codec</div><div class="seg" data-chips><button class="on" data-chip>H.264</button><button data-chip>HEVC</button><button data-chip>ProRes</button></div></div>
+        <div class="fld"><div class="lb">Frame rate</div><div class="seg" data-chips><button data-chip>24</button><button class="on" data-chip>30</button><button data-chip>60</button></div></div>
+        <button class="btn btn-p btn-lg btn-block" data-generate="export" data-done="Exported neon_nights_final.mp4">Export<kbd>↵</kbd></button>
+      </div>
+      <div data-show="loading"><div class="prog"><span data-step>Rendering V1</span><span class="b"><i></i></span><span class="mono" data-progress>0%</span></div><p class="mu" style="font-size:12px">Also visible in the render queue.</p></div>
+      <div data-show="done"><span class="tag ok"><span data-i="check"></span>Exported · 18.4 MB · 0:24</span><div class="acts"><button class="btn" data-copy="https://vidora.ai/v/neon-nights"><span data-i="link"></span>Copy link</button><button class="btn" data-toast="Downloaded"><span data-i="download"></span>Download</button><button class="btn btn-p" data-close data-reset="export">Done</button></div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// live render queue — every generation shows up here
+(() => {
+  const names = { image: ['image', 'nova_neon × 4', 'hero1'], video: ['clapperboard', 'nova_rain.mp4', 'hero2'], voice: ['audio-lines', 'intro_vo.wav', 'singer'], identity: ['scan-face', '@nova · training v4', 'nova'], export: ['upload', 'neon_nights_final.mp4', 'hero1'] };
+  const running = {};
+  const count = () => { const n = document.querySelectorAll('.job:not(.done)').length; const q = document.getElementById('qcount'); q.textContent = n ? n + ' running' : 'Idle'; q.className = 'tag ' + (n ? 'run' : 'ok'); };
+  document.addEventListener('click', e => {
+    const b = e.target.closest('[data-generate]'); if (!b || b.disabled) return;
+    const k = b.dataset.generate; if (running[k]) return;
+    const [, label, img] = names[k] || ['sparkles', k, 'hero1'];
+    const el = document.createElement('div'); el.className = 'job';
+    el.innerHTML = `<span class="th"><img src="${window.Vidora.IMG[img]}"></span><div><b>${label}</b><div class="meta"><span class="tag run">Running</span><span class="eta">queued</span></div><div class="bar"><i></i></div></div>`;
+    document.getElementById('qlist').prepend(el); running[k] = el; count();
+    const g = document.querySelector(`[data-gen="${k}"]`);
+    const t = setInterval(() => { const p = +getComputedStyle(g).getPropertyValue('--prog') || 0; el.querySelector('.bar i').style.width = (p * 100) + '%'; el.querySelector('.eta').textContent = Math.round(p * 100) + '%'; }, 80);
+    const done = ev => { if (ev.detail.key !== k) return; clearInterval(t); el.classList.add('done'); el.querySelector('.meta').innerHTML = '<span class="tag ok">Done</span><span>just now</span>'; delete running[k]; count(); document.removeEventListener('vidora:done', done); };
+    document.addEventListener('vidora:done', done);
+  });
+  const n = { home: 'Dashboard', identity: 'Identity', image: 'Image', video: 'Video', voice: 'Voice', studio: 'Studio', library: 'Library' };
+  document.addEventListener('vidora:view', e => { const m = document.getElementById('mtitle'); if (m) m.textContent = n[e.detail.view] || ''; });
+  // keyboard: 1-5 open tools, ⌘↵ runs the current tool
+  document.addEventListener('keydown', e => {
+    const tag = (e.target.tagName || '').toLowerCase();
+    if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') { const v = document.body.dataset.current; document.querySelector(`[data-view="${v}"] [data-generate]:not([disabled])`)?.click(); e.preventDefault(); return; }
+    if (tag === 'input' || tag === 'textarea' || e.metaKey || e.ctrlKey) return;
+    const map = { 1: 'identity', 2: 'image', 3: 'video', 4: 'studio', 5: 'voice' };
+    if (map[e.key] && document.body.dataset.current !== 'studio') window.Vidora.go(map[e.key]);
+    if (e.key.toLowerCase() === 'n' && document.body.dataset.current !== 'studio') window.Vidora.openModal('v-create');
+  });
+})();
+</script>
+<!--@ENGINE-->
+</body>
+</html>
