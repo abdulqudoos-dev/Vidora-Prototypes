@@ -1102,13 +1102,6 @@ body.captions-on .stage .cap:not(:empty){display:block}
 </div>
 
 <script>
-window.VIDORA_NAMES = {
-  identity: { label: 'Persona', full: 'Persona', hint: 'Your digital twin — teach Vidora your face' },
-  image: { label: 'Imagine', full: 'Imagine', hint: 'Text to image. Describe it, see it.' },
-  video: { label: 'Motion', full: 'Motion', hint: 'Image to video. Make it move.' },
-  voice: { label: 'Voice', full: 'Voice', hint: 'Text to speech. Type it, hear it.' },
-  studio: { label: 'Studio', full: 'Editing Studio', hint: 'Cut, caption and polish' }
-};
 // page-level touches for this design
 document.addEventListener('vidora:view', e => {
   const names = { home: 'Home', identity: 'Persona', image: 'Imagine', video: 'Motion', voice: 'Voice', studio: 'Editing Studio', library: 'Library' };

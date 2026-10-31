@@ -508,11 +508,11 @@ body.captions-on .screen .cap:not(:empty){display:block}
     <div class="pnl kpi"><span class="l"><span data-i="hard-drive"></span>Storage</span><b>18.2 <span style="font-size:14px;color:var(--mu)">/ 100 GB</span></b><small style="color:var(--mu)">128 assets</small><div style="height:4px;border-radius:9px;background:var(--bd2);margin-top:20px;overflow:hidden"><i style="display:block;height:100%;width:18%;background:var(--ok)"></i></div></div>
   </div>
   <div class="qs">
-    <button class="qa" data-go="identity"><span class="ico"><span data-i="scan-face"></span></span><div><b>Create Your Identity</b><br><small>Train on 6–12 selfies</small></div><kbd>1</kbd><img data-img="nova"></button>
-    <button class="qa" data-go="image"><span class="ico"><span data-i="image"></span></span><div><b>Bring To Life · Image</b><br><small>Prompt → 4 images</small></div><kbd>2</kbd><img data-img="chrome"></button>
-    <button class="qa" data-go="video"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Bring To Life · Video</b><br><small>Image → 5–10s clip</small></div><kbd>3</kbd><img data-img="dancer"></button>
+    <button class="qa" data-go="identity"><span class="ico"><span data-i="scan-face"></span></span><div><b>Persona</b><br><small>Train on 6–12 selfies</small></div><kbd>1</kbd><img data-img="nova"></button>
+    <button class="qa" data-go="image"><span class="ico"><span data-i="image"></span></span><div><b>Imagine</b><br><small>Prompt → 4 images</small></div><kbd>2</kbd><img data-img="chrome"></button>
+    <button class="qa" data-go="video"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Motion</b><br><small>Image → 5–10s clip</small></div><kbd>3</kbd><img data-img="dancer"></button>
     <button class="qa" data-go="studio"><span class="ico"><span data-i="scissors"></span></span><div><b>Editing Studio</b><br><small>Multi-track editor</small></div><kbd>4</kbd><img data-img="astro"></button>
-    <button class="qa" data-go="voice"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Give It A Voice</b><br><small>Text → speech, clone</small></div><kbd>5</kbd><img data-img="singer"></button>
+    <button class="qa" data-go="voice"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Voice</b><br><small>Text → speech, clone</small></div><kbd>5</kbd><img data-img="singer"></button>
   </div>
   <div class="grid2">
     <div class="pnl"><div class="pnl-h">Recent projects<span class="r"><button class="ib" data-go="library" aria-label="All"><span data-i="arrow-up-right"></span></button></span></div>
@@ -521,7 +521,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
         <tr data-go="video"><td><span class="nm"><img data-img="astro">Lavender Dunes</span></td><td class="mu">Video</td><td class="mono hide-m">0:10</td><td class="mu hide-m">Yesterday</td><td><span class="tag run">Rendering</span></td></tr>
         <tr data-go="image"><td><span class="nm"><img data-img="perfume">Amethyst Launch</span></td><td class="mu">Image</td><td class="mono hide-m">4 × 4:5</td><td class="mu hide-m">2 days ago</td><td><span class="tag">Draft</span></td></tr>
         <tr data-go="voice"><td><span class="nm"><img data-img="singer">Intro VO</span></td><td class="mu">Voice</td><td class="mono hide-m">0:18</td><td class="mu hide-m">3 days ago</td><td><span class="tag ok">Ready</span></td></tr>
-        <tr data-go="identity"><td><span class="nm"><img data-img="nova">@nova v3</span></td><td class="mu">Identity</td><td class="mono hide-m">8 photos</td><td class="mu hide-m">1 week ago</td><td><span class="tag ac">Trained</span></td></tr>
+        <tr data-go="identity"><td><span class="nm"><img data-img="nova">@nova v3</span></td><td class="mu">Persona</td><td class="mono hide-m">8 photos</td><td class="mu hide-m">1 week ago</td><td><span class="tag ac">Trained</span></td></tr>
       </tbody></table></div>
     <div class="pnl"><div class="pnl-h">Start from a template</div><div class="pnl-b"><div class="tpls">
       <button class="tpl" data-go="studio"><img data-img="city"><span>Music video · 9:16</span></button>
@@ -534,7 +534,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- IDENTITY -->
 <section data-view="identity" hidden>
-  <div class="ph"><span class="ico"><span data-i="scan-face"></span></span><div><h1>Create Your Identity</h1><p>Train a private model on 6–12 photos. Use it anywhere with its trigger word.</p></div></div>
+  <div class="ph"><span class="ico"><span data-i="scan-face"></span></span><div><h1>Persona</h1><p>Train a private model on 6–12 photos. Use it anywhere with its trigger word.</p></div></div>
   <div class="ds">
     <div class="pnl"><div class="pnl-h">Dataset<span class="tag" style="margin-left:6px"><span data-upload-count="identity">0</span> / 12</span><span class="r"><span class="mu" style="font-size:12px;font-weight:400" data-upload-quality="identity">Add photos to start</span></span></div>
       <div class="pnl-b">
@@ -550,7 +550,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
         <div class="checks"><div><span data-i="circle-check"></span>Face detected in every photo</div><div><span data-i="circle-check"></span>No duplicates</div><div><span data-i="circle-check"></span>Consent confirmed</div></div>
         <div data-show="empty"><button class="btn btn-p btn-lg btn-block" data-generate="identity" data-requires="identity" data-done="@nova trained · v3">Start training<kbd>⌘↵</kbd></button><p class="mu" style="font-size:11.5px;text-align:center;margin-top:8px">~2 min · free with Pro</p></div>
         <div data-show="loading"><div class="trainbox"><div class="row"><span data-step>Preprocessing</span><span class="mono" data-progress>0%</span></div><div class="b"><i></i></div><div class="log">loss 0.0412 · lr 1e-4<br><b>✓</b> faces aligned · 8/8</div></div></div>
-        <div data-show="done"><div class="idres"><img data-img="nova" data-reveal><img data-img="hero1" data-reveal><img data-img="hero2" data-reveal><img data-img="s4" data-reveal></div><span class="tag ok" style="margin-bottom:10px"><span data-i="check"></span>@nova v3 ready · likeness 97%</span><button class="btn btn-p btn-lg btn-block" data-go="image" style="margin-top:10px">Use @nova in Image<span data-i="arrow-right"></span></button></div>
+        <div data-show="done"><div class="idres"><img data-img="nova" data-reveal><img data-img="hero1" data-reveal><img data-img="hero2" data-reveal><img data-img="s4" data-reveal></div><span class="tag ok" style="margin-bottom:10px"><span data-i="check"></span>@nova v3 ready · likeness 97%</span><button class="btn btn-p btn-lg btn-block" data-go="image" style="margin-top:10px">Use @nova in Imagine<span data-i="arrow-right"></span></button></div>
       </div>
     </div>
   </div>
@@ -558,7 +558,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- IMAGE -->
 <section data-view="image" hidden>
-  <div class="ph"><span class="ico"><span data-i="image"></span></span><div><h1>Bring To Life · Image</h1><p>Prompt, tune, generate. Press <kbd>⌘↵</kbd> to run.</p></div></div>
+  <div class="ph"><span class="ico"><span data-i="image"></span></span><div><h1>Imagine</h1><p>Prompt, tune, generate. Press <kbd>⌘↵</kbd> to run.</p></div></div>
   <div class="ws">
     <aside class="pnl params"><div class="pnl-h">Parameters<span class="r"><button class="ib" data-toast="Preset saved" aria-label="Save preset"><span data-i="bookmark"></span></button></span></div><div class="pnl-b">
       <div class="fld"><div class="lb">Identity</div><div class="who" data-chips><button class="on" data-chip><img data-img="nova">@nova</button><button data-chip><img data-img="kai">@kai</button><button data-chip>None</button></div></div>
@@ -592,7 +592,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- VIDEO -->
 <section data-view="video" hidden>
-  <div class="ph"><span class="ico"><span data-i="clapperboard"></span></span><div><h1>Bring To Life · Video</h1><p>Image to motion. 5 or 10 seconds, up to 1080p.</p></div></div>
+  <div class="ph"><span class="ico"><span data-i="clapperboard"></span></span><div><h1>Motion</h1><p>Image to motion. 5 or 10 seconds, up to 1080p.</p></div></div>
   <div class="ws">
     <aside class="pnl params"><div class="pnl-h">Shot settings</div><div class="pnl-b">
       <div class="fld"><div class="lb">Start frame</div><div class="src" data-upload="videosrc" data-single data-slot-host><img data-slot="videosrc" data-img="hero1" alt="Start frame"><button class="btn" data-pick><span data-i="refresh-cw"></span>Replace</button></div></div>
@@ -623,7 +623,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- VOICE -->
 <section data-view="voice" hidden>
-  <div class="ph"><span class="ico"><span data-i="audio-lines"></span></span><div><h1>Give It A Voice</h1><p>Line-by-line script. Each line can have its own voice and emotion.</p></div></div>
+  <div class="ph"><span class="ico"><span data-i="audio-lines"></span></span><div><h1>Voice</h1><p>Line-by-line script. Each line can have its own voice and emotion.</p></div></div>
   <div class="ws" style="grid-template-columns:1fr 300px">
     <div style="display:flex;flex-direction:column;gap:12px">
       <div class="pnl"><div class="pnl-h">Script<span class="tag" style="margin-left:6px"><span data-est>~4s</span></span><span class="r"><button class="btn" data-enhance="voice" data-text="In a city that never sleeps… one light refused to go out." style="height:26px"><span data-i="wand-sparkles"></span>Polish</button></span></div>
@@ -795,7 +795,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
     const done = ev => { if (ev.detail.key !== k) return; clearInterval(t); el.classList.add('done'); el.querySelector('.meta').innerHTML = '<span class="tag ok">Done</span><span>just now</span>'; delete running[k]; count(); document.removeEventListener('vidora:done', done); };
     document.addEventListener('vidora:done', done);
   });
-  const n = { home: 'Dashboard', identity: 'Identity', image: 'Image', video: 'Video', voice: 'Voice', studio: 'Studio', library: 'Library' };
+  const n = { home: 'Dashboard', identity: 'Persona', image: 'Imagine', video: 'Motion', voice: 'Voice', studio: 'Studio', library: 'Library' };
   document.addEventListener('vidora:view', e => { const m = document.getElementById('mtitle'); if (m) m.textContent = n[e.detail.view] || ''; });
   // keyboard: 1-5 open tools, ⌘↵ runs the current tool
   document.addEventListener('keydown', e => {

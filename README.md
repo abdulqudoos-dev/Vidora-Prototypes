@@ -8,13 +8,15 @@ The site is fully static: plain HTML with no build step needed to deploy it. Eve
 
 | Path | What it is |
 |---|---|
-| `/` | **Overview** — “Six directions. One simple flow.” Links to each direction |
-| `/obsidian/` | 01 · Obsidian — signature dark/violet look. Tools: **Persona · Imagine · Motion · Voice · Editing Studio** |
+| `/` | **Overview** — “Six directions. One simple flow.” |
+| `/obsidian/` | 01 · Obsidian — signature dark/violet look |
 | `/clay/` | 02 · Clay — claymorphism, playful and guided by a mascot |
 | `/halo/` | 03 · Halo — glass over aurora, canvas-first, bottom dock everywhere |
 | `/atelier/` | 04 · Atelier — luxury editorial |
 | `/console/` | 05 · Console — power-user studio with a live render queue |
 | `/prism/` | 06 · Prism — spatial, step-by-step guided flows |
+
+All six use the same tool names: **Persona** (your digital twin), **Imagine** (text to image), **Motion** (image to video), **Voice** (text to speech) and **Editing Studio**.
 
 Each prototype supports deep links, for example `/obsidian/#image`, `/prism/#voice` or `/halo/#studio`.
 Views: `welcome`, `home`, `identity`, `image`, `video`, `voice`, `studio`, `library`.
@@ -29,8 +31,8 @@ Any static host works. The repository root is the site.
 
 ## Try this in any prototype (about 60 seconds)
 
-1. Get started → **Create Your Identity** (Persona in Obsidian) → “Use sample photos” → Create
-2. **Image** → Generate → on any picture press **Animate**
+1. Get started → **Persona** → “Use sample photos” → Create
+2. **Imagine** → Generate → on any picture press **Animate**
 3. Generate the video → **Open in Studio** → Space to play, **S** to split, drag a trim handle
 4. **Voice** → Generate → **Add to timeline** → **Export**
 
@@ -61,6 +63,6 @@ npm run site      # rebuilds ../index.html and ../<direction>/index.html
 npm test          # needs Playwright + Chromium
 ```
 
-To rename tools in a single design without affecting the others, set `window.VIDORA_NAMES` in that design file (see `01-obsidian.html`).
+Tool names live in `TOOLS` in `src/core.js`. To rename tools in one design only, set `window.VIDORA_NAMES = { image: { label, full, hint } }` in that design file. The favicon is `assets/favicon.svg`, and it is embedded into every page at build time.
 
 Images in the prototypes were generated with AI for this exploration.

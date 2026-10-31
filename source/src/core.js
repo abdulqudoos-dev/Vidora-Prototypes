@@ -13,11 +13,11 @@
 
   const TOOLS = [
     { id: 'home', label: 'Home', full: 'Home', icon: 'house', hint: 'Your projects and quick start' },
-    { id: 'identity', label: 'Identity', full: 'Create Your Identity', icon: 'scan-face', hint: 'Teach Vidora your face' },
-    { id: 'image', label: 'Image', full: 'Bring To Life · Image', icon: 'image', hint: 'Describe it. See it.' },
-    { id: 'video', label: 'Video', full: 'Bring To Life · Video', icon: 'clapperboard', hint: 'Turn any image into motion' },
+    { id: 'identity', label: 'Persona', full: 'Persona', icon: 'scan-face', hint: 'Your digital twin — teach Vidora your face' },
+    { id: 'image', label: 'Imagine', full: 'Imagine', icon: 'image', hint: 'Text to image. Describe it, see it.' },
+    { id: 'video', label: 'Motion', full: 'Motion', icon: 'clapperboard', hint: 'Image to video. Make it move.' },
     { id: 'studio', label: 'Studio', full: 'Editing Studio', icon: 'scissors', hint: 'Cut, caption and polish' },
-    { id: 'voice', label: 'Voice', full: 'Give It A Voice', icon: 'audio-lines', hint: 'Type it. Hear it.' },
+    { id: 'voice', label: 'Voice', full: 'Voice', icon: 'audio-lines', hint: 'Text to speech. Type it, hear it.' },
     { id: 'library', label: 'Library', full: 'Library', icon: 'folder-open', hint: 'Everything you have made' }
   ];
   // a design can rename tools: window.VIDORA_NAMES = { image: { label, full, hint } }

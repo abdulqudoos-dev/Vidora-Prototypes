@@ -464,9 +464,9 @@ body.captions-on .screen .cap:not(:empty){display:block}
   <aside class="side"><div class="side-in clay">
     <span class="blob logo-blob">V</span>
     <button class="sbtn" data-go="home"><span class="blob b-lav"><span data-i="house"></span></span>Home</button>
-    <button class="sbtn" data-go="identity"><span class="blob b-lav"><span data-i="scan-face"></span></span>Identity</button>
-    <button class="sbtn" data-go="image"><span class="blob b-pink"><span data-i="image"></span></span>Image</button>
-    <button class="sbtn" data-go="video"><span class="blob b-sky"><span data-i="clapperboard"></span></span>Video</button>
+    <button class="sbtn" data-go="identity"><span class="blob b-lav"><span data-i="scan-face"></span></span>Persona</button>
+    <button class="sbtn" data-go="image"><span class="blob b-pink"><span data-i="image"></span></span>Imagine</button>
+    <button class="sbtn" data-go="video"><span class="blob b-sky"><span data-i="clapperboard"></span></span>Motion</button>
     <button class="sbtn" data-go="studio"><span class="blob b-peach"><span data-i="scissors"></span></span>Studio</button>
     <button class="sbtn" data-go="voice"><span class="blob b-mint"><span data-i="audio-lines"></span></span>Voice</button>
     <span class="sp"></span>
@@ -497,11 +497,11 @@ body.captions-on .screen .cap:not(:empty){display:block}
     </div>
   </div>
   <div class="tools">
-    <button class="tool clay" data-go="identity"><span class="num">01</span><span class="blob b-lav"><span data-i="scan-face"></span></span><div><h3>Create Your Identity</h3><p>Add selfies. Become the star.</p></div><div class="peek"><img data-img="nova"></div></button>
-    <button class="tool clay" data-go="image"><span class="num">02</span><span class="blob b-pink"><span data-i="image"></span></span><div><h3>Bring To Life · Image</h3><p>Type an idea. Get a picture.</p></div><div class="peek"><img data-img="chrome"></div></button>
-    <button class="tool clay" data-go="video"><span class="num">03</span><span class="blob b-sky"><span data-i="clapperboard"></span></span><div><h3>Bring To Life · Video</h3><p>Make any picture move.</p></div><div class="peek"><img data-img="dancer"></div></button>
+    <button class="tool clay" data-go="identity"><span class="num">01</span><span class="blob b-lav"><span data-i="scan-face"></span></span><div><h3>Persona</h3><p>Add selfies. Become the star.</p></div><div class="peek"><img data-img="nova"></div></button>
+    <button class="tool clay" data-go="image"><span class="num">02</span><span class="blob b-pink"><span data-i="image"></span></span><div><h3>Imagine</h3><p>Type an idea. Get a picture.</p></div><div class="peek"><img data-img="chrome"></div></button>
+    <button class="tool clay" data-go="video"><span class="num">03</span><span class="blob b-sky"><span data-i="clapperboard"></span></span><div><h3>Motion</h3><p>Make any picture move.</p></div><div class="peek"><img data-img="dancer"></div></button>
     <button class="tool clay" data-go="studio"><span class="num">04</span><span class="blob b-peach"><span data-i="scissors"></span></span><div><h3>Editing Studio</h3><p>Cut, add music, finish.</p></div><div class="peek"><img data-img="astro"></div></button>
-    <button class="tool clay" data-go="voice"><span class="num">05</span><span class="blob b-mint"><span data-i="audio-lines"></span></span><div><h3>Give It A Voice</h3><p>Type words. Hear them.</p></div><div class="peek"><img data-img="singer"></div></button>
+    <button class="tool clay" data-go="voice"><span class="num">05</span><span class="blob b-mint"><span data-i="audio-lines"></span></span><div><h3>Voice</h3><p>Type words. Hear them.</p></div><div class="peek"><img data-img="singer"></div></button>
   </div>
   <div class="sec"><h2>Your recent stuff</h2><button class="mini" data-go="library">See all<span data-i="arrow-right"></span></button></div>
   <div class="shelf">
@@ -514,7 +514,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- IDENTITY -->
 <section data-view="identity" hidden>
-  <div class="ph"><span class="blob b-lav"><span data-i="scan-face"></span></span><div><h1>Create Your Identity</h1><p>Show me your face a few times. I’ll remember it.</p></div></div>
+  <div class="ph"><span class="blob b-lav"><span data-i="scan-face"></span></span><div><h1>Persona</h1><p>Show me your face a few times. I’ll remember it.</p></div></div>
   <div class="steps"><span class="step on"><i>1</i>Add photos</span><span class="step" id="s2"><i>2</i>Name it</span><span class="step" id="s3"><i>3</i>Ready!</span></div>
   <div class="two">
     <div>
@@ -555,7 +555,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- IMAGE -->
 <section data-view="image" hidden>
-  <div class="ph"><span class="blob b-pink"><span data-i="image"></span></span><div><h1>Bring To Life · Image</h1><p>Type an idea. I’ll paint it.</p></div></div>
+  <div class="ph"><span class="blob b-pink"><span data-i="image"></span></span><div><h1>Imagine</h1><p>Type an idea. I’ll paint it.</p></div></div>
   <div class="promptcard clay">
     <div class="field"><textarea data-prompt="image" data-autogrow aria-label="Your idea">@Nova on a rainy neon street at night, purple lights everywhere</textarea>
       <div class="field-foot"><button class="mini ai" data-enhance="image" data-text="@Nova standing on a rainy neon street at night, black jacket, purple and pink signs glowing and reflecting in puddles, dreamy movie look"><span data-i="wand-sparkles"></span>Make it better</button><button class="mini" data-insert="image" data-mode="append" data-text="movie look"><span data-i="film"></span>Movie look</button><button class="mini" data-insert="image" data-mode="append" data-text="soft pastel colors"><span data-i="palette"></span>Pastel</button></div></div>
@@ -587,7 +587,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- VIDEO -->
 <section data-view="video" hidden>
-  <div class="ph"><span class="blob b-sky"><span data-i="clapperboard"></span></span><div><h1>Bring To Life · Video</h1><p>Pick a picture. Tell it how to move.</p></div></div>
+  <div class="ph"><span class="blob b-sky"><span data-i="clapperboard"></span></span><div><h1>Motion</h1><p>Pick a picture. Tell it how to move.</p></div></div>
   <div class="work">
     <div class="panel clay">
       <div><div class="label">Your picture</div><div class="src" data-upload="videosrc" data-single data-slot-host><img data-slot="videosrc" data-img="hero1" alt="Source"><button class="mini" data-pick><span data-i="refresh-cw"></span>Change</button></div></div>
@@ -613,7 +613,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 
 <!-- VOICE -->
 <section data-view="voice" hidden>
-  <div class="ph"><span class="blob b-mint"><span data-i="audio-lines"></span></span><div><h1>Give It A Voice</h1><p>Type what to say. Pick who says it.</p></div></div>
+  <div class="ph"><span class="blob b-mint"><span data-i="audio-lines"></span></span><div><h1>Voice</h1><p>Type what to say. Pick who says it.</p></div></div>
   <div class="two">
     <div style="display:flex;flex-direction:column;gap:22px">
       <div class="clay" style="padding:20px">
@@ -692,7 +692,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
           <button class="mtile" data-add-clip="video" data-clip-img="forest" data-clip-len="5" data-clip-name="Forest"><img data-img="forest"><span class="pl"><span data-i="plus"></span></span></button>
         </div></div>
       <div data-pane="st:text"><h4>Title</h4><div class="field" style="padding:12px 14px"><input type="text" value="Neon Nights" data-title-input aria-label="Title"></div></div>
-      <div data-pane="st:music"><h4>Music</h4><div class="opt"><button class="optb" data-add-clip="music" data-clip-len="12" data-clip-name="Happy Bounce"><b>Happy Bounce</b><small>Upbeat · 2:10</small></button><button class="optb" data-add-clip="music" data-clip-len="12" data-clip-name="Night Glow"><b>Night Glow</b><small>Chill · 3:01</small></button><button class="optb" data-go="voice"><b>+ Record a voice</b><small>Opens Give It A Voice</small></button></div></div>
+      <div data-pane="st:music"><h4>Music</h4><div class="opt"><button class="optb" data-add-clip="music" data-clip-len="12" data-clip-name="Happy Bounce"><b>Happy Bounce</b><small>Upbeat · 2:10</small></button><button class="optb" data-add-clip="music" data-clip-len="12" data-clip-name="Night Glow"><b>Night Glow</b><small>Chill · 3:01</small></button><button class="optb" data-go="voice"><b>+ Record a voice</b><small>Opens Voice</small></button></div></div>
       <div data-pane="st:captions"><h4>Captions</h4><p class="muted" style="font-size:13px;margin-bottom:12px">I’ll listen and write the words for you.</p><button class="btn btn-p btn-block" data-toggle-body="captions-on" data-toast="Captions on!" data-toast-icon="captions"><span data-i="captions"></span>Add captions</button></div>
       <div data-pane="st:filters"><h4>Filters</h4><div class="chips" data-chips data-css-target=".screen"><button class="chip on" data-chip data-css="--filter:none">Normal</button><button class="chip" data-chip data-css="--filter:hue-rotate(-25deg) saturate(1.5)">Candy</button><button class="chip" data-chip data-css="--filter:grayscale(1)">B&amp;W</button><button class="chip" data-chip data-css="--filter:sepia(.5)">Warm</button></div>
         <div class="srow" style="margin-top:16px"><span>Bright</span><input type="range" min="50" max="150" value="100" data-var="--br" data-scale="0.01" data-target=".screen" data-out="#c-br"><output id="c-br">100</output></div></div>
@@ -768,7 +768,7 @@ body.captions-on .screen .cap:not(:empty){display:block}
 </div>
 
 <script>
-document.addEventListener('vidora:view', e => { const n = { home: 'Home', identity: 'Create Your Identity', image: 'Bring To Life · Image', video: 'Bring To Life · Video', voice: 'Give It A Voice', studio: 'Editing Studio', library: 'Library' }; const c = document.getElementById('crumb'); if (c) c.textContent = n[e.detail.view] || ''; });
+document.addEventListener('vidora:view', e => { const n = { home: 'Home', identity: 'Persona', image: 'Imagine', video: 'Motion', voice: 'Voice', studio: 'Editing Studio', library: 'Library' }; const c = document.getElementById('crumb'); if (c) c.textContent = n[e.detail.view] || ''; });
 document.addEventListener('vidora:done', e => { if (e.detail.key === 'identity') { document.getElementById('s2')?.classList.add('on'); document.getElementById('s3')?.classList.add('on'); } });
 </script>
 <!--@ENGINE-->

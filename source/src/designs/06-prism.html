@@ -415,11 +415,11 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
 <section data-view="home">
   <div class="hello"><h1>Hi Maya. What do you<br>want to <span>make today?</span></h1><p>Tap a tool. We’ll guide you, one simple step at a time.</p></div>
   <div class="apps">
-    <button class="appi" data-go="identity"><span class="circ"><img data-img="nova"><span class="glyph"><span data-i="scan-face"></span></span></span><b>Create Your Identity</b><small>3 steps · 2 min</small></button>
-    <button class="appi" data-go="image"><span class="circ"><img data-img="chrome"><span class="glyph"><span data-i="image"></span></span></span><b>Bring To Life · Image</b><small>4 steps</small></button>
-    <button class="appi" data-go="video"><span class="circ"><img data-img="dancer"><span class="glyph"><span data-i="clapperboard"></span></span></span><b>Bring To Life · Video</b><small>3 steps</small></button>
+    <button class="appi" data-go="identity"><span class="circ"><img data-img="nova"><span class="glyph"><span data-i="scan-face"></span></span></span><b>Persona</b><small>3 steps · 2 min</small></button>
+    <button class="appi" data-go="image"><span class="circ"><img data-img="chrome"><span class="glyph"><span data-i="image"></span></span></span><b>Imagine</b><small>4 steps</small></button>
+    <button class="appi" data-go="video"><span class="circ"><img data-img="dancer"><span class="glyph"><span data-i="clapperboard"></span></span></span><b>Motion</b><small>3 steps</small></button>
     <button class="appi" data-go="studio"><span class="circ"><img data-img="astro"><span class="glyph"><span data-i="scissors"></span></span></span><b>Editing Studio</b><small>Free editing</small></button>
-    <button class="appi" data-go="voice"><span class="circ"><img data-img="singer"><span class="glyph"><span data-i="audio-lines"></span></span></span><b>Give It A Voice</b><small>3 steps</small></button>
+    <button class="appi" data-go="voice"><span class="circ"><img data-img="singer"><span class="glyph"><span data-i="audio-lines"></span></span></span><b>Voice</b><small>3 steps</small></button>
   </div>
   <div class="ask win"><span data-i="sparkles"></span><input type="text" data-prompt="home" aria-label="Or just describe it" data-typing="Or just describe it… a dancer in violet silk|Or just describe it… me, starring in a sci-fi film"><button class="btn btn-p" data-go="image" style="height:46px">Go</button></div>
   <p class="sec-t">Continue where you left off</p>
@@ -433,7 +433,7 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
 <!-- IDENTITY (guided) -->
 <section data-view="identity" hidden>
   <div class="flow win" data-gen="identity" data-ms="5000" data-steps="Looking at your photos|Learning your features|Building your identity|Almost ready">
-    <div class="flow-h"><span class="ico"><span data-i="scan-face"></span></span><div><b>Create Your Identity</b><small>So you can star in anything</small></div><div class="r"><div class="dots dots-idt"><i></i><i></i><i></i></div></div></div>
+    <div class="flow-h"><span class="ico"><span data-i="scan-face"></span></span><div><b>Persona</b><small>So you can star in anything</small></div><div class="r"><div class="dots dots-idt"><i></i><i></i><i></i></div></div></div>
     <div data-show="empty">
       <div class="step active" data-pane="idt:1">
         <h2 class="q">First, add some photos of you.</h2><p class="qsub">6 to 12 clear selfies. Different angles help.</p>
@@ -464,7 +464,7 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
 <!-- IMAGE (guided) -->
 <section data-view="image" hidden>
   <div class="flow win" data-gen="image" data-ms="3600" data-steps="Reading your idea|Placing Nova in the scene|Adding light and detail|Finishing up">
-    <div class="flow-h"><span class="ico"><span data-i="image"></span></span><div><b>Bring To Life · Image</b><small>Describe it. See it.</small></div><div class="r"><div class="dots dots-img"><i></i><i></i><i></i><i></i></div></div></div>
+    <div class="flow-h"><span class="ico"><span data-i="image"></span></span><div><b>Imagine</b><small>Describe it. See it.</small></div><div class="r"><div class="dots dots-img"><i></i><i></i><i></i><i></i></div></div></div>
     <div data-show="empty">
       <div class="step active" data-pane="img:1">
         <h2 class="q">What do you want to see?</h2><p class="qsub">Describe it like you’d tell a friend.</p>
@@ -519,7 +519,7 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
 <!-- VIDEO (guided) -->
 <section data-view="video" hidden>
   <div class="flow win" data-gen="video" data-ms="4600" data-steps="Studying your picture|Planning the motion|Creating every frame|Adding sound">
-    <div class="flow-h"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Bring To Life · Video</b><small>Turn a picture into motion</small></div><div class="r"><div class="dots dots-vid"><i></i><i></i><i></i></div></div></div>
+    <div class="flow-h"><span class="ico"><span data-i="clapperboard"></span></span><div><b>Motion</b><small>Turn a picture into motion</small></div><div class="r"><div class="dots dots-vid"><i></i><i></i><i></i></div></div></div>
     <div data-show="empty">
       <div class="step active" data-pane="vid:1">
         <h2 class="q">Which picture should move?</h2><p class="qsub">Choose one of yours, or upload a new one.</p>
@@ -561,7 +561,7 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
 <!-- VOICE (guided) -->
 <section data-view="voice" hidden>
   <div class="flow win" data-gen="voice" data-ms="2800" data-steps="Reading your words|Warming up the voice|Adding feeling">
-    <div class="flow-h"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Give It A Voice</b><small>Type it. Hear it.</small></div><div class="r"><div class="dots dots-voc"><i></i><i></i><i></i></div></div></div>
+    <div class="flow-h"><span class="ico"><span data-i="audio-lines"></span></span><div><b>Voice</b><small>Type it. Hear it.</small></div><div class="r"><div class="dots dots-voc"><i></i><i></i><i></i></div></div></div>
     <div data-show="empty">
       <div class="step active" data-pane="voc:1">
         <h2 class="q">What should be said?</h2><p class="qsub">Type the words exactly as you want them spoken. <span data-est>~4s</span></p>
@@ -617,7 +617,7 @@ body[data-tab_idt="2"] .dots-idt i:nth-child(-n+2),body[data-tab_idt="3"] .dots-
         <button data-add-clip="video" data-clip-img="jelly" data-clip-len="4" data-clip-name="Jellyfish"><img data-img="jelly"></button>
         <button data-add-clip="video" data-clip-img="forest" data-clip-len="5" data-clip-name="Forest"><img data-img="forest"></button></div></div>
       <div data-pane="st:text"><h4>Title</h4><div class="bigfield" style="padding:12px 16px;border-radius:20px"><input type="text" value="NEON NIGHTS" data-title-input aria-label="Title" style="font-family:Sora;font-size:18px"></div></div>
-      <div data-pane="st:music"><h4>Music</h4><div class="lst"><button data-add-clip="music" data-clip-len="12" data-clip-name="Starlight"><span data-i="music"></span><span>Starlight<small>Dreamy · 2:40</small></span></button><button data-add-clip="music" data-clip-len="12" data-clip-name="City Pulse"><span data-i="music"></span><span>City Pulse<small>Upbeat · 3:01</small></span></button><button data-go="voice"><span data-i="mic"></span><span>New voice<small>Give It A Voice</small></span></button></div></div>
+      <div data-pane="st:music"><h4>Music</h4><div class="lst"><button data-add-clip="music" data-clip-len="12" data-clip-name="Starlight"><span data-i="music"></span><span>Starlight<small>Dreamy · 2:40</small></span></button><button data-add-clip="music" data-clip-len="12" data-clip-name="City Pulse"><span data-i="music"></span><span>City Pulse<small>Upbeat · 3:01</small></span></button><button data-go="voice"><span data-i="mic"></span><span>New voice<small>Voice</small></span></button></div></div>
       <div data-pane="st:captions"><h4>Captions</h4><button class="btn btn-p" style="width:100%" data-toggle-body="captions-on" data-toast="Captions added" data-toast-icon="captions"><span data-i="captions"></span>Add captions for me</button></div>
       <div data-pane="st:look"><h4>Look</h4><div class="lst" data-chips data-css-target=".screen"><button class="on" data-chip data-css="--filter:none"><span data-i="sun"></span>Natural</button><button data-chip data-css="--filter:hue-rotate(-20deg) saturate(1.4)"><span data-i="sparkles"></span>Prism</button><button data-chip data-css="--filter:grayscale(1) contrast(1.2)"><span data-i="contrast"></span>Black &amp; white</button></div></div>
     </aside>

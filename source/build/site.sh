@@ -10,4 +10,5 @@ for d in obsidian clay halo atelier console prism; do
   mkdir -p "$OUT/$d"; cp dist/0*-"$d".html "$OUT/$d/index.html"
 done
 touch "$OUT/.nojekyll"
+cp assets/favicon.svg assets/apple-touch-icon.png "$OUT/"
 echo "site built in $OUT"
